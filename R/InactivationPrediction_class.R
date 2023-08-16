@@ -228,7 +228,9 @@ plot_constant_inactivation <- function(x, y=NULL, ...,
 
 }
 
-#'
+#' Plots for fynamic inactivation experiments
+#' 
+#' @importFrom cowplot plot_grid
 #'
 plot_dynamic_inactivation <- function(x,
                                       add_factor = add_factor,
@@ -259,11 +261,27 @@ plot_dynamic_inactivation <- function(x,
       facet_wrap("name", scales = "free")
 
   } else if (type == 3) {  # Plot of the effects of each factor
-
-    x$sec_effects$delta %>%
-      pivot_longer(-time) %>%
-      ggplot() +
-      geom_line(aes(x = time, y = value, colour = name))
+    
+    my_plots <- lapply(x$sec_effects, function(this_par) {
+      
+      if (ncol(this_par) == 1) {  # Constant
+        
+        ggplot()
+        
+      } else {
+        
+        this_par %>%
+          pivot_longer(-time) %>%
+          ggplot() +
+          geom_line(aes(x = time, y = value, colour = name))
+        
+      }
+      
+    })
+    
+    plot_grid(plotlist = my_plots,
+              labels = names(x$sec_effects)
+              )
 
   } else {
     stop(paste0("type must be 1, 2 or 3. Got: ", type))
