@@ -4,7 +4,15 @@
 \alias{fit_primary}
 \title{AA}
 \usage{
-fit_primary(fit_data, model_name, start, known, upper = NULL, lower = NULL)
+fit_primary(
+  fit_data,
+  model_name,
+  start,
+  known,
+  upper = NULL,
+  lower = NULL,
+  check = TRUE
+)
 }
 \description{
 AA

@@ -6,9 +6,9 @@ predict_inactivation <- function(times,
                                  primary_model,
                                  environment = "constant",
                                  secondary_models = NULL,
-                                 env_conditions = NULL
+                                 env_conditions = NULL,
                                  # ...,
-                                 # check = TRUE,
+                                 check = TRUE
                                  # logbase_mu = logbase_logN,
                                  # logbase_logN = 10,
                                  # formula = . ~ time
@@ -22,51 +22,38 @@ predict_inactivation <- function(times,
     my_pars <- primary_model
     my_pars$model <- NULL
 
-    ## Make the log transformations needed
+    ## Undo the log transformations needed in the parameters
 
     for (each_par in names(my_pars)) {
 
       if (grepl("log", each_par)) {
 
         my_pars[[gsub("log", "", each_par)]] <- 10^my_pars[[each_par]]
+        my_pars[[each_par]] <- NULL  # To avoid issues later
 
       }
 
     }
 
-    # ## Make it work both with N0 and logN0
-    #
-    # if ("N0" %in% names(my_pars)) {
-    #   my_pars$logN0 <- log10(my_pars$N0)
-    # }
+    ## Give a warning if someone defined environmental conditions
 
-    # if (check) {
-    #
-    #   if (is.null(my_model)) {
-    #     stop("primary model must include a 'model' entry")
-    #   }
-    #
-    # }
-#
-#     ## Give a warning if someone defined environmental conditions
-#
-#     if (! is.null(env_conditions)) {
-#       warning("env_conditions are ignored for 'constant' predictions")
-#     }
-#
-#     ## Give a warning if someone defined secondary models
-#
-#     if (! is.null(secondary_models)) {
-#       warning("secondary_models are ignored for 'constant' predictions")
-#     }
+    if (! is.null(env_conditions)) {
+      warning("env_conditions are ignored for environment = 'constant'")
+    }
+
+    ## Give a warning if someone defined secondary models
+
+    if (! is.null(secondary_models)) {
+      warning("secondary_models are ignored for environment = 'constant'")
+    }
 
     ## Call the prediction function
 
     my_sim <- predict_constant_inactivation(times,
                                   my_model,
-                                  my_pars #,
+                                  my_pars,
                                   # ...,
-                                  # check = TRUE,
+                                  check = check
                                   # logbase_logN = 10
                                   )
 

@@ -24,7 +24,7 @@ library(deSolve)
 
 ```{r}
 times <- seq(0, 10, length = 1000)
-primary_model <- list(model = "Mafart", logN0 = 8, delta = 2, p = .6)
+primary_model <- list(model = "Mafart", logN0 = 8, delta = 2, p = 2)
 
 aa <- predict_inactivation(times, primary_model)
 class(aa)
@@ -141,10 +141,10 @@ plot(aa)
 
 
 ```{r}
-guess <- list(logN0 = 8, logdelta = 2, p = 1)
+guess <- list(logN0 = 8, logD = 2)
 known <- list()
 
-aa <- fit_inactivation("primary", d, "Mafart", guess, known)
+aa <- fit_inactivation("primary", d, "Bigelow", guess, known)
 summary(aa)
 plot(aa)
 ```
@@ -157,6 +157,13 @@ aa <- fit_inactivation("primary", d, "Mafart", guess, known)
 summary(aa)
 plot(aa)
 ```
+
+```{r}
+fit_inactivation("primary", d, "Peleg",
+                       make_guess_primary(d, "Peleg"), known = c()) %>%
+  plot()
+```
+
 
 ## Dynamic fitting
 

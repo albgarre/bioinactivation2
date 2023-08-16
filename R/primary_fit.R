@@ -17,8 +17,8 @@ primary_residuals <- function(this_p,
   my_model$model <- model_name
 
   pred <- predict_inactivation(times,
-                       my_model
-                       # check = FALSE,
+                       my_model,
+                       check = FALSE
                        # logbase_mu = logbase_mu,
                        # logbase_logN = logbase_logN
                        )
@@ -43,26 +43,26 @@ fit_primary <- function(fit_data,
                         start,
                         known,
                         upper = NULL,
-                        lower = NULL
+                        lower = NULL,
                         # approach_logN0 = "unique",  # or "logS" or "different",
                         # secondary_models = NULL
                         # algorithm = "regression",
                         # env_conditions = NULL,
                         # niter = NULL,
                         # ...,
-                        # check = TRUE,
+                        check = TRUE
                         # logbase_mu = logbase_logN,
                         # logbase_logN = 10,  # TODO
                         # formula = logN ~ time
 ) {
 
-  # ## Check the model parameters
-  #
-  # if (isTRUE(check)) {
-  #
-  #   check_primary_pars(model_name, c(starting_point, known_pars))
-  #
-  # }
+  ## Check the model parameters
+
+  if (isTRUE(check)) {
+
+    check_primary_pars(model_name, c(start, known))
+
+  }
   #
   # ## Apply the formula
   #

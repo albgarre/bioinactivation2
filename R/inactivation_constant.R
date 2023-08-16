@@ -4,23 +4,21 @@
 #'
 predict_constant_inactivation <- function(times,
                                           model_name,
-                                          model_pars #,
+                                          model_pars,
                                           # ...,
-                                          # check = TRUE,
+                                          check = TRUE
                                           # logbase_logN = 10
 ) {
-
+  
   ## Check the model parameters
 
-  ## TODO
+  model_pars <- as.list(model_pars)
 
-  # model_pars <- as.list(model_pars)
-  #
-  # if (isTRUE(check)) {
-  #
-  #   check_primary_pars(model_name, model_pars)
-  #
-  # }
+  if (isTRUE(check)) {
+
+    check_primary_pars(model_name, model_pars)
+
+  }
 
   ## Calculate the prediction
 

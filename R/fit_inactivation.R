@@ -16,9 +16,9 @@ fit_inactivation <- function(method,
                              secondary_models = NULL,
                              algorithm = "regression",
                              env_conditions = NULL,
-                             niter = NULL
+                             niter = NULL,
                              # ...,
-                             # check = TRUE,
+                             check = TRUE
                              # logbase_mu = logbase_logN,
                              # logbase_logN = 10,  # TODO
                              # formula = logN ~ time
@@ -28,7 +28,8 @@ fit_inactivation <- function(method,
 
     ## Fit the model
 
-    my_fit <-  fit_primary(fit_data, primary_model_name, guess, known)
+    my_fit <-  fit_primary(fit_data, primary_model_name, guess, known,
+                           check = check)
 
     ## Calculate the best prediction
 

@@ -15,7 +15,8 @@ fit_inactivation(
   secondary_models = NULL,
   algorithm = "regression",
   env_conditions = NULL,
-  niter = NULL
+  niter = NULL,
+  check = TRUE
 )
 }
 \description{
