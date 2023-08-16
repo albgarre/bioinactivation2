@@ -16,6 +16,8 @@ predict_inactivation_uncertainty <- function(model_name,
 
   # ## Checks
   #
+  # TODO
+  #
   # if (isTRUE(check)) {
   #
   #   check_stochastic_pars(model_name, pars, corr_matrix)
@@ -61,7 +63,7 @@ predict_inactivation_uncertainty <- function(model_name,
     # split(.$iter) %>%
     map(as.list) %>%
     map(
-      ~ predict_inactivation(times, .)
+      ~ predict_inactivation(times, ., check = FALSE)
     ) %>%
     imap_dfr(~ mutate(.x$simulation, iter = .y))
 

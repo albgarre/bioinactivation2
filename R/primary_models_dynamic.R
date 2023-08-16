@@ -79,3 +79,14 @@ dyna_Peleg <- function(time, state, primary_pars, env_interpolator, secondary_mo
   list(c(N = dN))
 
 }
+
+
+
+
+
+
+
+
+
+
+
