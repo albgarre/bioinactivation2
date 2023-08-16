@@ -52,7 +52,7 @@ predict_dynamic_inactivation <- function(times,
   yini <- c(N = primary_model$N0)
 
   if ("C0" %in% names(primary_model)) {
-    yini[["C"]] <- primary_model$C
+    yini[["C"]] <- primary_model$C0
   }
 
   ## Assign names to the secondary models
@@ -68,6 +68,13 @@ predict_dynamic_inactivation <- function(times,
                       Bigelow = dyna_Bigelow,
                       Mafart = dyna_Mafart,
                       Peleg = dyna_Peleg,
+                      Geeraerd = dyna_Geeraerd,
+                      Geeraerd_noTail = dyna_Geeraerd_noTail,
+                      Geeraerd_noShoulder = dyna_Geeraerd_noSL,
+                      Geeraerd_k = dyna_Geeraerd_k,
+                      Geeraerd_k_noTail = dyna_Geeraerd_noTail_k,
+                      Geeraerd_k_noShoulder = dyna_Geeraerd_noSL_k,
+                      
                       stop("Uknown model: ", primary_model$model)
                       )
 

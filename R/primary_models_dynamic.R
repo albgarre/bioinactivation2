@@ -80,8 +80,167 @@ dyna_Peleg <- function(time, state, primary_pars, env_interpolator, secondary_mo
 
 }
 
+#'
+#'
+dyna_Geeraerd <- function(time, state, primary_pars, env_interpolator, secondary_models) {
+  
+  
+  # browser()
+  
+  ## Get the environmental conditions
+  
+  env_conditions <-  map(env_interpolator, ~.(time))
+  
+  ## Apply the secondary models
+  
+  p <- apply_secondary_models(env_conditions, secondary_models)
+  
+  state <- as.list(state)
+  
+  dC <- -log(10)*state$C/p$D
+  
+  alpha <- 1/(1 + state$C)
+  beta <- (1 - p$Nres/state$N)
+  
+  dN <- -log(10)*state$N/p$D * alpha * beta
+  
+  res <- c(dN, dC)
+  return(list(res))
+  
+}
 
+#'
+#'
+dyna_Geeraerd_k <- function(time, state, primary_pars, env_interpolator, secondary_models) {
+  
+  ## Get the environmental conditions
+  
+  env_conditions <-  map(env_interpolator, ~.(time))
+  
+  ## Apply the secondary models
+  
+  p <- apply_secondary_models(env_conditions, secondary_models)
+  
+  state <- as.list(state)
+  
+  dC <- - p$k * state$C
+  
+  alpha <- 1/(1 + state$C)
+  beta <- (1 - p$Nres/state$N)
+  
+  dN <- - p$k * state$N * alpha * beta
+  
+  res <- c(dN, dC)
+  return(list(res))
+  
+}
 
+#'
+#'
+dyna_Geeraerd_noTail <- function(time, state, primary_pars, env_interpolator, secondary_models) {
+  
+  
+  # browser()
+  
+  ## Get the environmental conditions
+  
+  env_conditions <-  map(env_interpolator, ~.(time))
+  
+  ## Apply the secondary models
+  
+  p <- apply_secondary_models(env_conditions, secondary_models)
+  
+  state <- as.list(state)
+  
+  dC <- -log(10)*state$C/p$D
+  
+  alpha <- 1/(1 + state$C)
+  beta <- 1
+  
+  dN <- -log(10)*state$N/p$D * alpha * beta
+  
+  res <- c(dN, dC)
+  return(list(res))
+  
+}
+
+#'
+#'
+dyna_Geeraerd_noTail_k <- function(time, state, primary_pars, env_interpolator, secondary_models) {
+  
+  ## Get the environmental conditions
+  
+  env_conditions <-  map(env_interpolator, ~.(time))
+  
+  ## Apply the secondary models
+  
+  p <- apply_secondary_models(env_conditions, secondary_models)
+  
+  state <- as.list(state)
+  
+  dC <- - p$k * state$C
+  
+  alpha <- 1/(1 + state$C)
+  beta <- 1
+  
+  dN <- - p$k * state$N * alpha * beta
+  
+  res <- c(dN, dC)
+  return(list(res))
+  
+}
+
+#'
+#'
+dyna_Geeraerd_noSL <- function(time, state, primary_pars, env_interpolator, secondary_models) {
+  
+  ## Get the environmental conditions
+  
+  env_conditions <-  map(env_interpolator, ~.(time))
+  
+  ## Apply the secondary models
+  
+  p <- apply_secondary_models(env_conditions, secondary_models)
+  
+  state <- as.list(state)
+  
+  # dC <- -log(10)*state$C/p$D
+  
+  alpha <- 1
+  beta <- (1 - p$Nres/state$N)
+  
+  dN <- -log(10)*state$N/p$D * alpha * beta
+  
+  res <- c(dN)
+  return(list(res))
+  
+}
+
+#'
+#'
+dyna_Geeraerd_noSL_k <- function(time, state, primary_pars, env_interpolator, secondary_models) {
+  
+  ## Get the environmental conditions
+  
+  env_conditions <-  map(env_interpolator, ~.(time))
+  
+  ## Apply the secondary models
+  
+  p <- apply_secondary_models(env_conditions, secondary_models)
+  
+  state <- as.list(state)
+  
+  # dC <- - p$k * state$C
+  
+  alpha <- 1
+  beta <- (1 - p$Nres/state$N)
+  
+  dN <- - p$k * state$N * alpha * beta
+  
+  res <- c(dN)
+  return(list(res))
+  
+}
 
 
 
