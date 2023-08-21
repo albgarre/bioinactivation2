@@ -74,3 +74,76 @@ secondary_model_data <- function(model_name=NULL) {
   }
   
 }
+
+#' Basic check of parameters for fitting secondary models
+#'
+#' Checks that: the model name is correct, the right number of model
+#' parameters have been defined and that the parameters have the right names
+#'
+#' @param model_name Model identifier
+#' @param pars A named list of model parameters
+#'
+#' @return If there is no error, the model function.
+#'
+check_secondary_pars <- function(model_name, pars, vars) {
+  
+  ## (Indirectly) check that model name is correct
+  
+  my_data <- secondary_model_data(model_name)
+  model_pars <- my_data$pars
+  
+  ## Check the reference conditions
+  
+  if (!("ref" %in% names(pars) || "logref" %in% names(pars))) {
+    warning("Value at reference conditions not identified")
+  }
+  
+  ## Do checks for each factor
+  
+  lapply(vars, function(each_factor) {
+    
+    ## Get the parameter for this factor
+    
+    this_p <- pars[grepl(paste0(each_factor, "_"), names(pars))]
+    
+    ## Check the number of parameters
+    
+    if (length(model_pars) != length(this_p)) {
+      
+      warning(paste0("The length of the parameters (", length(this_p),
+                     ") does not match the one of the model (", length(model_pars),
+                     ").")
+      )
+    }
+    
+    ## Remove the factor name from the parameter
+    
+    par_names <- str_replace(names(this_p), paste0(each_factor, "_"), "")
+    
+    ## Undo log-transformations 
+    
+    par_names <- str_replace(par_names, "log", "")
+    
+    ## Check parameter names
+    
+    for(each_name in par_names) {
+      
+      if (!(each_name %in% model_pars)) {
+        warning(paste("Not recognized parameter name:", each_name))
+      }
+      
+    }
+    
+    
+  })
+  
+  ## Return
+  
+  my_data$model
+  
+}
+
+
+
+
+

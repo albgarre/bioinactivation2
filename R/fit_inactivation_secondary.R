@@ -107,28 +107,6 @@ fit_inactivation_secondary <- function(fit_data,
                                        formula = my_par ~ temp
                                        ) {
 
-  # ## Check the model parameters
-  #
-  # if (isTRUE(check)) {
-  #
-  #   check_primary_pars(model_name, c(starting_point, known_pars))
-  #
-  # }
-  #
-  # ## Apply the formula
-  #
-  # if (length(get.vars(formula)) > 2) {
-  #   stop("Only formulas with 2 terms are supported.")
-  # }
-  #
-  # y_col <- lhs(formula)
-  # x_col <- rhs(formula)
-  #
-  # fit_data <- select(fit_data,
-  #                    time = x_col,
-  #                    logN = y_col
-  # )
-
   ## Apply the formula
 
   y_col <- lhs(formula)
@@ -140,10 +118,14 @@ fit_inactivation_secondary <- function(fit_data,
                      my_par = y_col,
                      matches(vars)
   )
+  
+  ## Check the model parameters
+  
+  check_secondary_pars(model_name, c(start, known), vars)
+  
+  ## Fit the model
 
   if (algorithm == "regression") {
-
-    ## Fit the model
 
     my_fit <- modFit(secondary_residuals,
                      unlist(start),
