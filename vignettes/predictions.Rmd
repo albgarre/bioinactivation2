@@ -1,0 +1,269 @@
+---
+title: "predictions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{predictions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidyverse)
+library(bioinactivation2)
+```
+
+## The function `predict_inactivation()`
+
+AA
+
+## Inactivation predictions under constant environmental conditions 
+
+AA
+
+```{r}
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Mafart", logN0 = 8, delta = 2, p = 2)
+
+aa <- predict_inactivation(times, primary_model)
+class(aa)
+aa
+plot(aa)
+
+predict_inactivation(times, primary_model) %>% plot()
+
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Mafart", N0 = 1e8, delta = 2, p = .6)
+
+predict_inactivation(times, primary_model) %>% plot()
+```
+
+
+
+### For different scales
+
+AA
+
+```{r}
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Mafart", N0 = 1e8, delta = 2, p = .6)
+
+predict_inactivation(times, primary_model) %>%
+  plot()
+
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Mafart", logN0 = 8, logdelta = log10(2), logp = log10(.6))
+
+predict_inactivation(times, primary_model) %>%
+  plot()
+```
+
+## Inactivation under dynamic environmental conditions
+
+
+```{r}
+
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Mafart", logN0 = 7)
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(55, 60, 55),
+                         pH = c(7, 7, 4))
+
+secondary_models <- list(
+  list(par = "logdelta",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       pH = c("xref" = 7, z = 2, n=1),
+       ref = 1
+  ),
+  list(par = "logp",
+       model = "Bigelow",
+       ref = 0
+  )
+)
+
+aa <- predict_inactivation(times, primary_model, environment = "dynamic",
+                     secondary_models, env_conditions)
+
+plot(aa)
+plot(aa, type = 2)
+plot(aa, type = 3)
+```
+
+```{r}
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Bigelow", logN0 = 7)
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(55, 60, 55),
+                         pH = c(7, 7, 4))
+
+secondary_models <- list(
+  list(par = "logD",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       pH = c("xref" = 7, z = 2, n=1),
+       ref = 1
+  )
+)
+
+aa <- predict_inactivation(times, primary_model, environment = "dynamic",
+                     secondary_models, env_conditions)
+
+plot(aa)
+plot(aa, type = 2)
+plot(aa, type = 3)
+```
+
+```{r}
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Geeraerd", logN0 = 7, C0 = 100)
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(55, 60, 55),
+                         pH = c(7, 7, 4))
+
+secondary_models <- list(
+  list(par = "logD",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       pH = c("xref" = 7, z = 2, n=1),
+       ref = 1
+  ),
+  list(par = "logNres",
+       model = "Bigelow",
+       ref = 2)
+)
+
+aa <- predict_inactivation(times, primary_model, environment = "dynamic",
+                     secondary_models, env_conditions)
+
+plot(aa)
+plot(aa, type = 2)
+plot(aa, type = 3)
+```
+
+```{r}
+
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Geeraerd_noTail", logN0 = 7, C0 = 100)
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(55, 60, 55),
+                         pH = c(7, 7, 4))
+
+secondary_models <- list(
+  list(par = "logD",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       pH = c("xref" = 7, z = 2, n=1),
+       ref = 1
+  )
+)
+
+aa <- predict_inactivation(times, primary_model, environment = "dynamic",
+                     secondary_models, env_conditions)
+
+plot(aa)
+```
+
+```{r}
+
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Geeraerd_noShoulder", logN0 = 7)
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(55, 60, 55),
+                         pH = c(7, 7, 4))
+
+secondary_models <- list(
+  list(par = "logD",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       pH = c("xref" = 7, z = 2, n=1),
+       ref = 1
+  ),
+  list(par = "logNres",
+       model = "Bigelow",
+       ref = 2)
+)
+
+aa <- predict_inactivation(times, primary_model, environment = "dynamic",
+                     secondary_models, env_conditions)
+
+plot(aa)
+plot(aa, type = 2)
+plot(aa, type = 3)
+```
+
+
+
+
+```{r}
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Geeraerd_k_noTail", logN0 = 7, C0 = 100)
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(55, 60, 55),
+                         pH = c(7, 7, 4))
+
+secondary_models <- list(
+  list(par = "logk",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       ref = .1
+  )
+  # list(par = "logNres",
+  #      model = "Bigelow",
+  #      ref = 2)
+)
+
+aa <- predict_inactivation(times, primary_model, environment = "dynamic",
+                     secondary_models, env_conditions)
+
+plot(aa)
+plot(aa, type = 2)
+```
+
+```{r}
+times <- seq(0, 10, length = 1000)
+primary_model <- list(model = "Geeraerd_k_noShoulder", logN0 = 7)
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(55, 60, 55),
+                         pH = c(7, 7, 4))
+
+secondary_models <- list(
+  list(par = "logk",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       ref = .1
+  ),
+  list(par = "logNres",
+       model = "Bigelow",
+       ref = 2)
+)
+
+aa <- predict_inactivation(times, primary_model, environment = "dynamic",
+                     secondary_models, env_conditions)
+
+plot(aa)
+```
+
+
+
+
+
+
+
+
+
+
+

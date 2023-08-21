@@ -1,0 +1,52 @@
+---
+title: "predictions_uncertainty"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{predictions_uncertainty}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidyverse)
+library(bioinactivation2)
+```
+
+## The `predict_inactivation_uncertainty()` function
+
+AA
+
+
+```{r}
+
+## Definition of the simulation settings
+
+my_model <- "Mafart"
+my_times <- seq(0, 30, length = 100)
+n_sims <- 300
+
+library(tibble)
+
+pars <- tribble(
+  ~par, ~mean, ~sd, ~scale,
+  "logN0", 0, .2, "original",
+  "delta", 2, .3, "original",
+  "p", 1, .1, "original"
+)
+
+## Calling the function
+
+aa <- predict_inactivation_uncertainty(my_model, my_times, n_sims, pars)
+aa
+
+predict_inactivation_uncertainty(my_model, my_times, n_sims, pars) %>%
+  plot()
+
+```

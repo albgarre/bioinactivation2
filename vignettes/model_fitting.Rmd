@@ -1,0 +1,402 @@
+---
+title: "model_fitting"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{model_fitting}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidyverse)
+library(bioinactivation2)
+```
+
+## The `fit_inactivation()` function
+
+AA
+
+## Fitting primary models
+
+```{r}
+d <- tibble(time = 0:7,
+            logN = c(8, 7.3, 6.9, 6.2, 5.4, 5.2, 4.8, 4.2))
+
+make_guess_primary(d, "Geeraerd")
+# ggplot(d) + geom_point(aes(time, logN))
+
+
+# guess <- list(logN0 = 8, logD = 2)
+known <- list()
+
+aa <- fit_inactivation("primary", d, "Bigelow",
+                       make_guess_primary(d, "Bigelow"), known)
+coef(aa)
+summary(aa)
+plot(aa)
+```
+
+
+```{r}
+guess <- list(logN0 = 8, logD = 2)
+known <- list()
+
+aa <- fit_inactivation("primary", d, "Bigelow", guess, known)
+summary(aa)
+plot(aa)
+```
+
+```{r}
+guess <- list(logN0 = 8, delta = 1, p = 1)
+known <- list()
+
+aa <- fit_inactivation("primary", d, "Mafart", guess, known)
+summary(aa)
+plot(aa)
+```
+
+```{r}
+fit_inactivation("primary", d, "Peleg",
+                       make_guess_primary(d, "Peleg"), known = c()) %>%
+  plot()
+```
+
+
+## Dynamic fitting
+
+```{r}
+
+
+times <- seq(0, 10, length = 20)
+primary_model <- list(model = "Mafart", 
+                      logN0 = 7
+                      )
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(55, 60, 55),
+                         pH = c(7, 7, 4))
+
+secondary_models <- list(
+  list(par = "logdelta",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       pH = c("xref" = 7, z = 2, n=1),
+       ref = 1
+  ),
+  list(par = "logp",
+       model = "Bigelow",
+       ref = 0
+  )
+)
+
+aa <- predict_inactivation(times, primary_model, environment = "dynamic",
+                           secondary_models, env_conditions) 
+
+
+d <- aa$simulation %>%
+  mutate(logN = logN + rnorm(nrow(.), mean = 0, sd = .1)) %>%
+  select(time, logN)
+
+####
+
+primary_model <- list(model = "Mafart", 
+                      logN0 = 7
+)
+
+sec_models <- list(
+  list(par = "delta",
+       model = "Bigelow",
+       depends_on = c("temp", "pH")
+  ),
+  list(par = "p",
+       model = "Bigelow",
+       depends_on = c()
+  )
+)
+
+guess <- c(logN0 = 7,
+           delta_temp_logz = .69,
+           delta_pH_z = 2,
+           delta_logref = 1,
+           p_logref = 0
+)
+
+known <- c(delta_temp_xref = 55,
+           delta_pH_xref = 7
+           )
+
+aa <- fit_inactivation("dynamic", 
+                 d, 
+                 "Mafart",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env_conditions,
+                 algorithm = "regression")
+
+plot(aa)
+```
+
+## One-step fit
+
+```{r}
+
+primary_model <- list(model = "Mafart", 
+                      logN0 = 7
+                      )
+
+secondary_models <- list(
+  list(par = "logdelta",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       pH = c("xref" = 7, z = 2, n=1),
+       ref = 1
+  ),
+  list(par = "logp",
+       model = "Bigelow",
+       ref = 0
+  )
+)
+
+cond <- tibble(
+  time = runif(25, 0, 10),
+  temp = runif(25, 57, 62),
+  pH = runif(25, 5, 7)
+)
+
+pred <- lapply(1:nrow(cond), function(i) {
+  
+  env <- bind_rows(cond[i,], cond[i,])
+  env$time[1] <- 0
+  
+  predict_inactivation(environment = "dynamic",
+                       seq(0, env$time[2], length = 10), 
+                       primary_model, 
+                       secondary_models, 
+                       env)$simulation %>%
+    tail(1) %>% 
+    pull(logN)
+  
+}) %>%
+  unlist()
+
+d <- cond %>%
+  mutate(logN = pred + rnorm(nrow(.), mean = 0, sd = .1))
+
+
+####
+
+primary_model <- list(model = "Mafart", 
+                      logN0 = 7
+)
+
+sec_models <- list(
+  list(par = "delta",
+       model = "Bigelow",
+       depends_on = c("temp", "pH")
+  ),
+  list(par = "p",
+       model = "Bigelow",
+       depends_on = c()
+  )
+)
+
+guess <- c(logN0 = 7,
+           delta_temp_logz = .69,
+           delta_pH_z = 2,
+           delta_logref = 1,
+           p_logref = 0
+)
+
+known <- c(delta_temp_xref = 55,
+           delta_pH_xref = 7
+           )
+
+
+# bioinactivation2:::onestep_residuals(guess,
+#                                      d,
+#                                      primary_model_name = "Mafart",
+#                                      sec_models,
+#                                      known)
+
+aa <- fit_inactivation("one-step", 
+                 d, 
+                 "Mafart",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env_conditions,
+                 algorithm = "regression")
+
+summary(aa)
+plot(aa)
+```
+
+
+## Two-steps fitting
+
+```{r}
+
+
+do_shit <- function(pH, temp) {
+  
+  times <- seq(0, 15, length = 15)
+  primary_model <- list(model = "Mafart", logN0 = 7)
+  
+  env_conditions <- tibble(time = c(0, 10),
+                           temp = c(temp),
+                           pH = c(pH))
+  
+  secondary_models <- list(
+    list(par = "logdelta",
+         model = "genBigelow",
+         temp = c("xref" = 55, logz = .69, n=1),
+         pH = c("xref" = 7, z = 2, n=1),
+         ref = 1
+    ),
+    list(par = "logp",
+         model = "Bigelow",
+         ref = .2
+    )
+  )
+  
+  predict_inactivation(times, primary_model, environment = "dynamic",
+                       secondary_models, env_conditions)$simulation %>%
+    mutate(logN = logN + rnorm(nrow(.), mean = 0, sd = .2))
+  
+}
+
+conds <- expand.grid(pH = c(5, 6, 7),
+            temp = c(55, 56, 57)) 
+
+sims <- conds %>%
+  mutate(i = row_number()) %>%
+  split(.$i) %>%
+  map(., ~ do_shit(.$pH, .$temp))
+
+d <- conds %>%
+  mutate(i = row_number()) %>%
+  split(.$i) %>%
+  map2_dfr(., sims,
+           ~ bind_cols(.x, .y)
+  ) %>%
+  select(pH, temp, time, logN)
+
+d %>%
+  ggplot() + geom_point(aes(time, logN, colour = factor(temp))) + facet_wrap("pH")
+
+##
+
+
+primary_model <- list(model = "Mafart", 
+                      logN0 = 7
+)
+
+sec_models <- list(
+  list(par = "delta",
+       model = "Bigelow",
+       depends_on = c("temp", "pH")
+  ),
+  list(par = "p",
+       model = "Bigelow",
+       depends_on = c()
+  )
+)
+
+guess <- c(logN0 = 7,
+           delta_temp_logz = .69,
+           delta_pH_z = 2,
+           delta_logref = 1,
+           p_logref = 0
+)
+
+known <- c(delta_temp_xref = 55,
+           delta_pH_xref = 7
+           )
+
+aa <- fit_inactivation("two-steps", 
+                 d, 
+                 "Mafart",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env_conditions,
+                 algorithm = "regression")
+
+coef(aa)
+coef(aa, step = 1)
+summary(aa)
+summary(aa, step = 1)
+
+```
+
+
+## Fitting secondary models - the `fit_inactivation_secondary()` function
+
+```{r}
+secondary_models <- list(
+  list(par = "logdelta",
+       model = "genBigelow",
+       temp = c("xref" = 55, logz = .69, n=1),
+       pH = c("xref" = 7, z = 2, n=1),
+       ref = 1
+  ),
+  list(par = "logp",
+       model = "Bigelow",
+       ref = 0
+  )
+)
+
+d <- tibble(
+  temp = list(seq(55, 60, length = 5)),
+  pH = list(seq(5, 7, length = 5))
+) %>%
+  unnest(temp) %>%
+  unnest(pH) %>%
+  mutate(
+    eff_temp = bioinactivation2:::sec_Bigelow(temp, 
+                                              secondary_models[[1]]$temp[["xref"]], 
+                                              10^secondary_models[[1]]$temp[["logz"]]),
+    eff_pH = bioinactivation2:::sec_Bigelow(pH, 
+                                              secondary_models[[1]]$pH[["xref"]], 
+                                              secondary_models[[1]]$pH[["z"]])
+  ) %>%
+  mutate(
+    logdelta = secondary_models[[1]]$ref + eff_temp + eff_pH + rnorm(nrow(.), mean = 0, sd = .1),
+    delta = 10^logdelta
+  ) %>%
+  select(-eff_temp, -eff_pH, -logdelta)
+  # rename(par = delta)
+
+d
+
+##
+
+make_guess_secondary(d, "genBigelow", formula = delta ~ temp + pH)
+
+guess <- c(temp_logz = .69,
+           pH_z = 2,
+           logref = 1
+)
+
+known <- c(temp_xref = 55,
+           pH_xref = 7
+)
+
+aa <- fit_inactivation_secondary(d,
+                           "Bigelow",
+                           start = guess,
+                           known = known,
+                           formula = delta ~ temp + pH
+)
+coef(aa)
+summary(aa)
+```
+
