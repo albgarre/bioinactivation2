@@ -1,5 +1,84 @@
 
-#'
+#' Prediction of microbial inactivation
+#' 
+#' @description 
+#' `r lifecycle::badge("stable")`
+#' 
+#' This function provides a top-level interface for predicting population inactivation. 
+#' Predictions can be made either under constant or dynamic environmental conditions. 
+#' See below for details on the calculations.
+#' 
+#' @details 
+#' To ease data input, parameters can be defined with or without a log transformation.
+#' For that, one has to include 'log' before the parameter name in parameter definition.
+#' For instance, c(D=6) would define a D-value of 6 (units), whereas c(logD=6) would define
+#' a D-value of 6 log-units. Please see examples and the package vignettes for further
+#' examples.
+#' 
+#' @section Predictions in constant environments:
+#' Predictions under constant environments are calculated using only the algebraic
+#' form of the primary models (see vignette for details).
+#' Consequently, the arguments "secondary_models" and "env_conditions" are ignored.
+#' If these were passed, the function would return a warning.
+#' 
+#' The inactivation model is defined through the "primary_model" argument using a named list.
+#' One of the list elements must be named "model" and must take take one of the valid 
+#' keys returned by [primary_model_data()]. The remaining entries of the list define the
+#' values of the parameters of the selected model. A list of valid keys can be retrieved
+#' using [primary_model_data()] (see example below). Note that parameters can be defined
+#' in different scales (see Details).
+#' 
+#' @section Predictions in dynamic environments:
+#' Predictions under dynamic environments are calculated by solving numerically
+#' the differential equation of the primary inactivation model. The effect of
+#' changes in the environmental conditions in the inactivation rate are calculated
+#' according to the secondary model defined by the user. Hence, predictions under
+#' dynamic conditions require the definition of both primary and secondary models.
+#' 
+#' The dynamic environmental conditions are defined using a tibble (or data.frame)
+#' through the "env_conditions" argument. It must include one column named "time" stating the elapsed
+#' time and as many additional columns as environmental conditions included in the model
+#' For values of time not included in the tibble, the values of the environmental conditions
+#' are calculated by linear interpolation.
+#' 
+#' Primary models are defined as a named list through the "primary_model" argument. It is
+#' defined in a similar way as for predictions under constant conditions. It is a named list
+#' with an element named 'model' defining the primary model (according to `dynamic_model_data()`).
+#' Additional arguments define the initial concentration (N0) and, for the Geeraerd model, the initial
+#' value of the ideal substance C.
+#' 
+#' Secondary models are defined as a nested list through the "secondary_models" argument.
+#' The list must have one entry per model parameter (according to `dynamic_model_data()`).
+#' Then, the secondary model for each parameter is defined as a list with several arguments:
+#' * par: the parameter defined (according to `dynamic_model_data()`).
+#' * model: the secondary model used for this parameter (according to `secondary_model_data()`)
+#' * ref: the value of the parameter for reference conditions. Note that defining the parameter
+#' name as 'log'+name.
+#' * As many additional entries as environmental factors that affect the parameter. Each
+#' of these entries must be a named numeric vector defining the model parameters as
+#' per `secondary_model_data()`. For instance, pH = c("xref" = 7, z = 2) would define
+#' a dependency with respect to pH with x_ref of 7 and z-value of 2. Please see the
+#' examples and the vignettes for additional data.
+#' 
+#' @param times numeric vector of time points for making the predictions
+#' @param primary_model  named list defining the values of the parameters of the primary inactivation model
+#' @param environment type of environment. Either "constant" (default) or "dynamic" (see below for details 
+#' on the calculations for each condition)
+#' @param secondary_models a nested list describing the secondary models. See below for details
+#' @param env_conditions Tibble describing the variation of the environmental
+#' conditions for dynamic experiments. It must have with the elapsed time (named `time` 
+#' by default; can be changed with the "formula" argument), 
+#' and as many additional columns as environmental factors. Ignored for "constant" environments.
+#' @param ... Additional arguments for [ode()].
+#' @param check Whether to check the validity of the models. `TRUE` by default.
+#' @param logbase_logN Base of the logarithm for the population size. By default,
+#' 10 (i.e. log10). See vignette about units for details.
+#' @param formula An object of class "formula" describing the x variable for predictions 
+#' under dynamic conditions. `. ~ time` as a default.
+#' 
+#' @return An instance of [InactivationPrediction].
+#' 
+#' 
 #' @export
 #'
 predict_inactivation <- function(times,
