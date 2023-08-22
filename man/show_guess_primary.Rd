@@ -6,6 +6,16 @@
 \usage{
 show_guess_primary(fit_data, primary_model_name, guess)
 }
+\arguments{
+\item{fit_data}{data for the fit. A tibble with two columns: 'time' and 'logN'}
+
+\item{primary_model_name}{model identifier as per \code{\link[=primary_model_data]{primary_model_data()}}}
+
+\item{guess}{a named numeric vector with the initial guess, as in \code{\link[=predict_inactivation]{predict_inactivation()}}}
+}
+\value{
+an instance of ggplot comparing the prediction against the data.
+}
 \description{
 Showing initial guesses for primary models
 }

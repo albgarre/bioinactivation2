@@ -139,6 +139,15 @@ known <- c(delta_temp_xref = 55,
            delta_pH_xref = 7
            )
 
+
+check_inactivation_guess("dynamic", 
+                         d,
+                         primary_model_name = "Mafart",
+                         c(guess, known),
+                         secondary_models = sec_models,
+                         env_conditions = env_conditions
+                         )
+
 aa <- fit_inactivation("dynamic", 
                  d, 
                  "Mafart",

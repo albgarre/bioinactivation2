@@ -14,6 +14,9 @@ check_inactivation_guess(
   formula = logN ~ time
 )
 }
+\value{
+an instance of ggplot comparing the prediction against the data.
+}
 \description{
 Checking guesses for inactivation models
 }

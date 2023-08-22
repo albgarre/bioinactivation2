@@ -25,6 +25,52 @@ show_guess_primary <- function(fit_data, primary_model_name, guess) {
   
 }
 
+#' Showing initial guesses for dynamic conditions
+#' 
+#' @inheritParams show_guess_primary
+#' @param sec_models a nested list defining the secondary models as in [fit_inactivation()]
+#' @param env_conditions a tibble (or data.frame) describing the environmental conditions as
+#' in [fit_inactivation()]
+#' 
+#' @importFrom stringr str_detect
+#' 
+#' @returns an instance of ggplot comparing the prediction against the data
+#' 
+show_guess_dynamic <- function(fit_data, primary_model_name, guess,
+                               sec_models, env_conditions) {
+  
+  ## Calculate the prediction
+  
+  primary_model <- list(model = primary_model_name)
+  
+  initial <- guess[str_detect(names(guess), "N0")]
+  aa <- initial
+  names(aa) <- NULL
+  primary_model[[names(initial)]] <- aa
+  
+  if (str_detect(primary_model_name, "Geeraerd")) {
+    initial <- guess[str_detect(names(guess), "C0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+  }
+  
+  t <- seq(0, max(fit_data$time), length = 1000)
+  
+  sec <- convert_dynamic_guess(sec_models, guess, c())
+  
+  pred <- predict_inactivation(t,
+                               primary_model,
+                               environment = "dynamic",
+                               sec,
+                               env_conditions)
+  
+  ## Make the plot
+  
+  plot(pred) +
+    geom_point(aes(x = time, y = logN), data = fit_data)
+  
+}
 
 #' Checking guesses for inactivation models
 #' 
@@ -72,7 +118,8 @@ check_inactivation_guess <- function(method,
     
   } else if (method == "dynamic") {
     
-    ## AA
+    show_guess_dynamic(fit_data, primary_model_name, guess,
+                       sec_models, env_conditions)
     
   } else if (method == "global") {
     
