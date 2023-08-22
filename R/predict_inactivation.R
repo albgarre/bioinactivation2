@@ -88,7 +88,6 @@ predict_inactivation <- function(times,
                                  env_conditions = NULL,
                                  # ...,
                                  check = TRUE
-                                 # logbase_mu = logbase_logN,
                                  # logbase_logN = 10,
                                  # formula = . ~ time
 ) {

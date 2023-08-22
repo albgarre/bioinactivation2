@@ -30,7 +30,12 @@ d <- tibble(t = 0:7,
             logN = c(8, 7.3, 6.9, 6.2, 5.4, 5.2, 4.8, 4.2))
 
 make_guess_primary(d, "Geeraerd", formula = logN ~ t)
-# ggplot(d) + geom_point(aes(time, logN))
+
+
+check_inactivation_guess("primary", d, "Geeraerd",
+                         make_guess_primary(d, "Geeraerd", formula = logN ~ t),
+                         formula = logN ~ t
+                         )
 
 
 # guess <- list(logN0 = 8, logD = 2)
