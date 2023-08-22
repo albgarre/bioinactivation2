@@ -1,14 +1,24 @@
 
 
-#'
+#' Predicting inactivation under constant environmental conditions
+#' 
+#' Predictions using only primary inactivation models. In principle, these models
+#' would be valid for constant environmental conditions.
+#' 
+#' @param times a numeric vector of time points where to calculate the prediction
+#' @param model_name a model identifier as per [primary_model_data()]
+#' @param model_pars a numeric vector (or list) describing the values of the model
+#' parameters as defined by [primary_model_data()]
+#' @param check whether to due some model checks. `TRUE` by default
+#' 
+#' @returns a tibble with two columnes ('time' and 'logN') with the results of the
+#' calculation.
 #'
 predict_constant_inactivation <- function(times,
                                           model_name,
                                           model_pars,
-                                          # ...,
                                           check = TRUE
-                                          # logbase_logN = 10
-) {
+                                          ) {
   
   ## Check the model parameters
 
@@ -82,27 +92,9 @@ predict_constant_inactivation <- function(times,
                  stop(paste("Unknown model:", model_name))
   )
 
-  ## Convert logN to logbase_logN
-
-  # logN <- logN/log10(logbase_logN)
-
-
   ## Prepare the output
 
   my_sim <- tibble(time = times, logN = logN)
-
-  ## TODO
-
-  # out <- list(simulation = my_sim,
-  #             model = model_name,
-  #             pars = model_pars,
-  #             logbase_mu = logbase_mu,
-  #             logbase_logN = logbase_logN
-  # )
-  #
-  # class(out) <- c("IsothermalGrowth", class(out))
-  #
-  # out
 
   my_sim
 

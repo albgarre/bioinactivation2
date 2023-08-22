@@ -2,6 +2,18 @@
 
 #' Predictions under dynamic environmental conditions
 #' 
+#' The solution is calculated by solving the differential equation using numerical
+#' methods through the ode function from package deSolve.
+#' 
+#' @param times a numeric vector of time points where to calculate the solution
+#' @param primary_model a list defining the primary model as in [predict_inactivation()]
+#' @param env_conditions a tibble (or data.frame) describing the variation of the environmental
+#' conditions as in [predict_inactivation()]
+#' @param secondary_models a nested list describing the secondary models for each parameter,
+#' as defined in [predict_inactivation]
+#' @param ... additional arguments passed to ode
+#' @param check whether to do some basic model checks. `TRUE` by default
+#' 
 #' @importFrom deSolve ode
 #' 
 #' 
@@ -10,12 +22,10 @@ predict_dynamic_inactivation <- function(times,
                                          primary_model,
                                          env_conditions,
                                          secondary_models,
-                                         # ...,
+                                         ...,
                                          check = TRUE
-                                         # logbase_logN = 10
-                                         # logbase_mu = logbase_logN,
                                          # formula = . ~ time
-) {
+                                         ) {
 
   # ## Apply the formula
   #
@@ -70,7 +80,9 @@ predict_dynamic_inactivation <- function(times,
 
   out <- ode(yini, times, ode_model, primary_model,
              env_interpolator = my_env, 
-             secondary_models = secondary_models) %>%
+             secondary_models = secondary_models,
+             ...
+             ) %>%
     as.data.frame() %>%
     as_tibble() %>%
     mutate(logN = log(.data$N))

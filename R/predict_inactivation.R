@@ -71,8 +71,6 @@
 #' and as many additional columns as environmental factors. Ignored for "constant" environments.
 #' @param ... Additional arguments for [ode()].
 #' @param check Whether to check the validity of the models. `TRUE` by default.
-#' @param logbase_logN Base of the logarithm for the population size. By default,
-#' 10 (i.e. log10). See vignette about units for details.
 #' @param formula An object of class "formula" describing the x variable for predictions 
 #' under dynamic conditions. `. ~ time` as a default.
 #' 
@@ -86,7 +84,7 @@ predict_inactivation <- function(times,
                                  environment = "constant",
                                  secondary_models = NULL,
                                  env_conditions = NULL,
-                                 # ...,
+                                 ...,
                                  check = TRUE
                                  # logbase_logN = 10,
                                  # formula = . ~ time
@@ -130,9 +128,7 @@ predict_inactivation <- function(times,
     my_sim <- predict_constant_inactivation(times,
                                   my_model,
                                   my_pars,
-                                  # ...,
                                   check = check
-                                  # logbase_logN = 10
                                   )
 
     ## Prepare the output class
@@ -144,7 +140,6 @@ predict_inactivation <- function(times,
       environment = "constant",
       secondary_models = NULL,
       env_conditions = NULL
-      # logbase_logN = 10,
     )
 
     ## Calculate the variation of the primary model (constant for isothermal)
@@ -172,27 +167,27 @@ predict_inactivation <- function(times,
 
     ## Check arguments specific for dynamic conditions
 
-    # if (check) {
-    #
-    #   if (is.null(env_conditions)) {
-    #     stop("env_conditions must be defined for predictions in dynamic environments")
-    #   }
-    #
-    #   if (is.null(secondary_models)) {
-    #     stop("secondary_models must be defined for predictions in dynamic environments")
-    #   }
-    #
-    # }
-    #
-    # ## Check that times starts at 0. Give a warning otherwise
-    #
-    # if (min(times) != 0) {
-    #   warning(paste("times does not start at t=0.",
-    #                 "Be mindful that the calculation assumes that the first value of times indicates the initial time for the simulation (i.e., the time point where N = N0)",
-    #                 "If this is not what you intend, just pass c(0, times)."
-    #   )
-    #   )
-    # }
+    if (check) {
+
+      if (is.null(env_conditions)) {
+        stop("env_conditions must be defined for predictions in dynamic environments")
+      }
+
+      if (is.null(secondary_models)) {
+        stop("secondary_models must be defined for predictions in dynamic environments")
+      }
+
+    }
+
+    ## Check that times starts at 0. Give a warning otherwise
+
+    if (min(times) != 0) {
+      warning(paste("times does not start at t=0.",
+                    "Be mindful that the calculation assumes that the first value of times indicates the initial time for the simulation (i.e., the time point where N = N0)",
+                    "If this is not what you intend, just pass c(0, times)."
+      )
+      )
+    }
 
     ## Make the log transformations needed for the primary model
 
@@ -260,15 +255,10 @@ predict_inactivation <- function(times,
                                            primary_model,
                                            env_conditions,
                                            secondary_models,
-                                           # ... #,
+                                           ...,
                                            check = check
                                            # formula = formula,
-                                           # logbase_logN = logbase_logN
                                            )
-
-    # ## Return
-    #
-    # out
 
     ## Prepare the output class
 

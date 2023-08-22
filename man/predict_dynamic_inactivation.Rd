@@ -9,9 +9,26 @@ predict_dynamic_inactivation(
   primary_model,
   env_conditions,
   secondary_models,
+  ...,
   check = TRUE
 )
 }
+\arguments{
+\item{times}{a numeric vector of time points where to calculate the solution}
+
+\item{primary_model}{a list defining the primary model as in \code{\link[=predict_inactivation]{predict_inactivation()}}}
+
+\item{env_conditions}{a tibble (or data.frame) describing the variation of the environmental
+conditions as in \code{\link[=predict_inactivation]{predict_inactivation()}}}
+
+\item{secondary_models}{a nested list describing the secondary models for each parameter,
+as defined in \link{predict_inactivation}}
+
+\item{...}{additional arguments passed to ode}
+
+\item{check}{whether to do some basic model checks. \code{TRUE} by default}
+}
 \description{
-Predictions under dynamic environmental conditions
+The solution is calculated by solving the differential equation using numerical
+methods through the ode function from package deSolve.
 }

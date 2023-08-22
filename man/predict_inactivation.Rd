@@ -10,6 +10,7 @@ predict_inactivation(
   environment = "constant",
   secondary_models = NULL,
   env_conditions = NULL,
+  ...,
   check = TRUE
 )
 }
@@ -28,12 +29,9 @@ conditions for dynamic experiments. It must have with the elapsed time (named \c
 by default; can be changed with the "formula" argument),
 and as many additional columns as environmental factors. Ignored for "constant" environments.}
 
-\item{check}{Whether to check the validity of the models. \code{TRUE} by default.}
-
 \item{...}{Additional arguments for \code{\link[=ode]{ode()}}.}
 
-\item{logbase_logN}{Base of the logarithm for the population size. By default,
-10 (i.e. log10). See vignette about units for details.}
+\item{check}{Whether to check the validity of the models. \code{TRUE} by default.}
 
 \item{formula}{An object of class "formula" describing the x variable for predictions
 under dynamic conditions. \code{. ~ time} as a default.}
