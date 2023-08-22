@@ -2,7 +2,7 @@
 % Please edit documentation in R/primary_fit.R
 \name{fit_primary}
 \alias{fit_primary}
-\title{AA}
+\title{Fitting of primary inactivation models}
 \usage{
 fit_primary(
   fit_data,
@@ -14,6 +14,24 @@ fit_primary(
   check = TRUE
 )
 }
+\arguments{
+\item{fit_data}{aa}
+
+\item{model_name}{description}
+
+\item{start}{description}
+
+\item{known}{description}
+
+\item{upper}{description}
+
+\item{lower}{description}
+
+\item{check}{description}
+}
+\value{
+An instance of modFit with the fitted model.
+}
 \description{
-AA
+Fitting of primary inactivation models
 }

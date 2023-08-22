@@ -16,8 +16,35 @@ fit_inactivation(
   algorithm = "regression",
   env_conditions = NULL,
   niter = NULL,
-  check = TRUE
+  check = TRUE,
+  formula = logN ~ time
 )
+}
+\arguments{
+\item{method}{method for model fitting. One of 'primary', 'two-steps', 'one-step',
+'dynamic' or 'global'.}
+
+\item{fit_data}{a tibble with the data to use for model fitting. See sections below for further information.}
+
+\item{primary_model_name}{aa}
+
+\item{guess}{description}
+
+\item{known}{aa}
+
+\item{upper}{aa}
+
+\item{lower}{description}
+
+\item{secondary_models}{description}
+
+\item{algorithm}{description}
+
+\item{niter}{description}
+
+\item{check}{aa}
+
+\item{env_conditinos}{description}
 }
 \description{
 Fits an inactivation model using different methods from predictive microbiology
