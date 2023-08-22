@@ -1,13 +1,18 @@
 
 
-#'
+#' Predictions under dynamic environmental conditions
+#' 
+#' @importFrom deSolve ode
+#' 
+#' 
+#' 
 predict_dynamic_inactivation <- function(times,
                                          primary_model,
                                          env_conditions,
-                                         secondary_models,
-                                         ...,
+                                         secondary_models
+                                         # ...,
                                          # check = TRUE,
-                                         logbase_logN = 10
+                                         # logbase_logN = 10
                                          # logbase_mu = logbase_logN,
                                          # formula = . ~ time
 ) {
@@ -81,10 +86,11 @@ predict_dynamic_inactivation <- function(times,
   ## Call ode
 
   out <- ode(yini, times, ode_model, primary_model,
-             env_interpolator = my_env, secondary_models = secondary_models) %>%
+             env_interpolator = my_env, 
+             secondary_models = secondary_models) %>%
     as.data.frame() %>%
-    as_tibble() %>%
-    mutate(logN = log(.data$N, base = logbase_logN))
+    as_tibble() # %>%
+    # mutate(logN = log(.data$N, base = logbase_logN))
 
   ## Return
 

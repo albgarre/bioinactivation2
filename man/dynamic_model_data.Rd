@@ -18,6 +18,6 @@ If model_name name is not a valid identifier, raises an error.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 Provides different types of meta-data about the primary inactivation models included
-in bioinactivation2. This information is the basis of the automatic checks, and can also
+in bioinactivation2 for dynamic calculations. This information is the basis of the automatic checks, and can also
 help in the definition of models for \code{\link[=predict_inactivation]{predict_inactivation()}} and \code{\link[=fit_inactivation]{fit_inactivation()}}.
 }

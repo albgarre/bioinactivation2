@@ -2,7 +2,7 @@
 % Please edit documentation in R/metainfo_secondary.R
 \name{check_secondary_pars}
 \alias{check_secondary_pars}
-\title{Basic check of parameters for secondary models}
+\title{Basic check of parameters for fitting secondary models}
 \usage{
 check_secondary_pars(model_name, pars, vars)
 }
