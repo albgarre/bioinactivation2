@@ -2,7 +2,22 @@
 
 
 #' Fits an inactivation model using different methods from predictive microbiology
-#'
+#' 
+#' @param method method for model fitting. One of 'primary', 'two-steps', 'one-step',
+#' 'dynamic' or 'global'.
+#' @param fit_data a tibble with the data to use for model fitting. See sections below for further information.
+#' @param primary_model_name aa
+#' @param guess description
+#' @param known aa
+#' @param upper aa
+#' @param lower description
+#' @param secondary_models description
+#' @param algorithm description
+#' @param env_conditinos description
+#' @param niter description
+#' @param check aa
+#' 
+#' 
 #' @export
 #'
 fit_inactivation <- function(method,
@@ -18,18 +33,36 @@ fit_inactivation <- function(method,
                              env_conditions = NULL,
                              niter = NULL,
                              # ...,
-                             check = TRUE
+                             check = TRUE,
                              # logbase_mu = logbase_logN,
                              # logbase_logN = 10,  # TODO
-                             # formula = logN ~ time
+                             formula = logN ~ time
                              ) {
 
   if (method == "primary") {
+    
+    ## Apply the formula
+    
+    if (length(get.vars(formula)) > 2) {
+      stop("Only formulas with 2 terms are supported.")
+    }
+    
+    y_col <- lhs(formula)
+    x_col <- rhs(formula)
+    
+    fit_data <- select(fit_data,
+                       time = x_col,
+                       logN = y_col
+    )
 
     ## Fit the model
 
-    my_fit <-  fit_primary(fit_data, primary_model_name, guess, known,
-                           check = check)
+    my_fit <-  fit_primary(fit_data, 
+                           primary_model_name, 
+                           guess, known,
+                           check = check
+                           )
+    
 
     ## Calculate the best prediction
 

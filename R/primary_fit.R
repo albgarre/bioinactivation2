@@ -1,5 +1,14 @@
 
-#'
+#' Residuals for fitting primary inactivation models
+#' 
+#' The function is prepared to be called by modFit or modMCMC
+#' 
+#' @param this_p named numeric vector with the candidate model parameters
+#' @param fit_data data for the fit, as a tibble (or data frame) with two columns: time and logN
+#' @param model_name model identifier
+#' @param known named numeric vector with the known parameters
+#' 
+#' @returns an instance of modCost
 #'
 primary_residuals <- function(this_p,
                               fit_data,
@@ -19,11 +28,8 @@ primary_residuals <- function(this_p,
   pred <- predict_inactivation(times,
                        my_model,
                        check = FALSE
-                       # logbase_mu = logbase_mu,
                        # logbase_logN = logbase_logN
                        )
-
-  ## TODO: change the pred when I define the class
 
   ## Return the residuals
 
@@ -34,9 +40,19 @@ primary_residuals <- function(this_p,
 }
 
 
-#' AA
+#' Fitting of primary inactivation models
+#' 
+#' @param fit_data aa
+#' @param model_name description
+#' @param start description
+#' @param known description
+#' @param upper description
+#' @param lower description
+#' @param check description
 #'
 #' @importFrom FME modFit modCost
+#' 
+#' @returns An instance of modFit with the fitted model.
 #'
 fit_primary <- function(fit_data,
                         model_name,
@@ -51,9 +67,6 @@ fit_primary <- function(fit_data,
                         # niter = NULL,
                         # ...,
                         check = TRUE
-                        # logbase_mu = logbase_logN,
-                        # logbase_logN = 10,  # TODO
-                        # formula = logN ~ time
 ) {
 
   ## Check the model parameters
@@ -63,24 +76,8 @@ fit_primary <- function(fit_data,
     check_primary_pars(model_name, c(start, known))
 
   }
-  #
-  # ## Apply the formula
-  #
-  # if (length(get.vars(formula)) > 2) {
-  #   stop("Only formulas with 2 terms are supported.")
-  # }
-  #
-  # y_col <- lhs(formula)
-  # x_col <- rhs(formula)
-  #
-  # fit_data <- select(fit_data,
-  #                    time = x_col,
-  #                    logN = y_col
-  # )
 
   ## Fit the model
-
-  # browser()
 
   my_fit <- modFit(primary_residuals,
                    unlist(start),
