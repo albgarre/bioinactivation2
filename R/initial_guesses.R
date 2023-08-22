@@ -148,25 +148,25 @@ make_guess_primary <- function(fit_data, primary_model,
                                formula = logN ~ time
 ) {
 
-  # ## Check that we know the model
-  #
-  # if ( ! (primary_model %in% primary_model_data()) ) {
-  #   stop("Unkonwn model: ", primary_model)
-  # }
-  #
-  # ## Apply the formula
-  #
-  # if (length(get.vars(formula)) > 2) {
-  #   stop("Only formulas with 2 terms are supported.")
-  # }
-  #
-  # y_col <- lhs(formula)
-  # x_col <- rhs(formula)
-  #
-  # fit_data <- select(fit_data,
-  #                    time = x_col,
-  #                    logN = y_col
-  # )
+  ## Check that we know the model
+
+  if ( ! (primary_model %in% primary_model_data()) ) {
+    stop("Unkonwn model: ", primary_model)
+  }
+
+  ## Apply the formula
+
+  if (length(get.vars(formula)) > 2) {
+    stop("Only formulas with 2 terms are supported.")
+  }
+
+  y_col <- lhs(formula)
+  x_col <- rhs(formula)
+
+  fit_data <- select(fit_data,
+                     time = x_col,
+                     logN = y_col
+  )
 
   if (primary_model == "Weibull_2phase") {
     stop("Automagicical initial guesses cannot be calculated for the 2-phase Weibull model")
