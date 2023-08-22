@@ -48,7 +48,8 @@ dynamic_residuals <- function(this_p,
                                primary_model,
                                environment = "dynamic",
                                sec,
-                               env_conditions)
+                               env_conditions,
+                               check = FALSE)
 
   ## Calculate residuals
 

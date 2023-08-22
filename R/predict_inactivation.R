@@ -206,6 +206,7 @@ predict_inactivation <- function(times,
       if (grepl("log", each_par)) {
 
         my_pars[[gsub("log", "", each_par)]] <- 10^my_pars[[each_par]]
+        my_pars <- my_pars[names(my_pars) != each_par]  # Remove the log-transformed to avoid issues
 
       }
 
@@ -259,11 +260,10 @@ predict_inactivation <- function(times,
     my_sim <- predict_dynamic_inactivation(times,
                                            primary_model,
                                            env_conditions,
-                                           secondary_models
+                                           secondary_models,
                                            # ... #,
-                                           # check = check,
+                                           check = check
                                            # formula = formula,
-                                           # logbase_mu = logbase_mu,
                                            # logbase_logN = logbase_logN
                                            )
 

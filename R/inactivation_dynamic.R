@@ -9,9 +9,9 @@
 predict_dynamic_inactivation <- function(times,
                                          primary_model,
                                          env_conditions,
-                                         secondary_models
+                                         secondary_models,
                                          # ...,
-                                         # check = TRUE,
+                                         check = TRUE
                                          # logbase_logN = 10
                                          # logbase_mu = logbase_logN,
                                          # formula = . ~ time
@@ -23,30 +23,13 @@ predict_dynamic_inactivation <- function(times,
   #
   # env_conditions <- rename(env_conditions, time = x_col)
   #
-  # ## Check model parameters
-  #
-  # if (isTRUE(check)) {
-  #
-  #   sec_model_names <- secondary_models %>%
-  #     map(~ .$model) %>%
-  #     unlist()
-  #
-  #   check_pars_names <- lapply(names(secondary_models), function(each_factor) {
-  #
-  #     this_model <- secondary_models[[each_factor]]
-  #     this_model$model <- NULL
-  #     paste0(each_factor, "_", names(this_model))
-  #   }) %>%
-  #     unlist()
-  #
-  #   check_pars <- rep(1, length(check_pars_names))  # I do not check values, so it does not matter
-  #   names(check_pars) <- check_pars_names
-  #
-  #
-  #   check_secondary_pars(check_pars, unlist(primary_pars), sec_model_names,
-  #                        primary_pars = c("mu_opt", "N0", "Nmax", "Q0"))
-  #
-  # }
+  ## Check model parameters
+
+  if (isTRUE(check)) {
+    
+    check_dynamic_pars(primary_model, secondary_models)
+
+  }
 
   ## Approximate the env conditions
 
@@ -89,7 +72,8 @@ predict_dynamic_inactivation <- function(times,
              env_interpolator = my_env, 
              secondary_models = secondary_models) %>%
     as.data.frame() %>%
-    as_tibble() # %>%
+    as_tibble() %>%
+    mutate(logN = log(.data$N))
     # mutate(logN = log(.data$N, base = logbase_logN))
 
   ## Return

@@ -8,7 +8,8 @@ predict_dynamic_inactivation(
   times,
   primary_model,
   env_conditions,
-  secondary_models
+  secondary_models,
+  check = TRUE
 )
 }
 \description{

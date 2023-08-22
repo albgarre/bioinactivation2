@@ -7,9 +7,11 @@
 check_secondary_pars(model_name, pars, vars)
 }
 \arguments{
-\item{model_name}{Model identifier}
+\item{model_name}{model identifier}
 
-\item{pars}{A named list of model parameters}
+\item{pars}{a named list of model parameters}
+
+\item{vars}{a character vector of environmental factors included in the model}
 }
 \value{
 If there is no error, the model function.

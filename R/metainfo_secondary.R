@@ -80,8 +80,9 @@ secondary_model_data <- function(model_name=NULL) {
 #' Checks that: the model name is correct, the right number of model
 #' parameters have been defined and that the parameters have the right names
 #'
-#' @param model_name Model identifier
-#' @param pars A named list of model parameters
+#' @param model_name model identifier
+#' @param pars a named list of model parameters
+#' @param vars a character vector of environmental factors included in the model
 #'
 #' @return If there is no error, the model function.
 #'
