@@ -14,9 +14,28 @@ check_inactivation_guess(
   formula = logN ~ time
 )
 }
+\arguments{
+\item{method}{the fitting method. One of 'primary', 'two-steps', 'one-step', dynamic'
+or 'global'}
+
+\item{fit_data}{the data used for the fit, as defined in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{primary_model_name}{a model identifier as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{guess}{a named numeric vector defining the model parameters as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{secondary_models}{a nested list defining the secondary models for each parameter
+as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{env_conditions}{a tibble (or data.frame) describing the environmental conditions
+during the treatment as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{formula}{a formula defining the variables of the primary model. By default, logN ~ time}
+}
 \value{
 an instance of ggplot comparing the prediction against the data.
 }
 \description{
-Checking guesses for inactivation models
+Makes a plot comparing the prediction corresponding to some parameter values
+against the experimental data
 }

@@ -81,12 +81,12 @@ make_guess_secondary <- function(fit_data,
                                  formula = my_par ~ temp
                                  ) {
 
-  # ## Check that we know the model
-  #
-  # if ( ! (primary_model %in% primary_model_data()) ) {
-  #   stop("Unkonwn model: ", primary_model)
-  # }
-  #
+  ## Check that we know the model
+
+  if ( ! (model_name %in% secondary_model_data()) ) {
+    stop("Unkonwn model: ", model_name)
+  }
+
 
   ## Apply the formula
 
@@ -144,9 +144,10 @@ make_guess_secondary <- function(fit_data,
 #' @export
 #'
 #'
-make_guess_primary <- function(fit_data, primary_model,
+make_guess_primary <- function(fit_data, 
+                               primary_model,
                                formula = logN ~ time
-) {
+                               ) {
 
   ## Check that we know the model
 

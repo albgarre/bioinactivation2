@@ -74,6 +74,20 @@ show_guess_dynamic <- function(fit_data, primary_model_name, guess,
 
 #' Checking guesses for inactivation models
 #' 
+#' Makes a plot comparing the prediction corresponding to some parameter values
+#' against the experimental data
+#' 
+#' @param method the fitting method. One of 'primary', 'two-steps', 'one-step', dynamic'
+#' or 'global'
+#' @param fit_data the data used for the fit, as defined in [fit_inactivation()]
+#' @param primary_model_name a model identifier as in [fit_inactivation()]
+#' @param guess a named numeric vector defining the model parameters as in [fit_inactivation()]
+#' @param secondary_models a nested list defining the secondary models for each parameter
+#' as in [fit_inactivation()]
+#' @param env_conditions a tibble (or data.frame) describing the environmental conditions
+#' during the treatment as in [fit_inactivation()]
+#' @param formula a formula defining the variables of the primary model. By default, logN ~ time 
+#' 
 #' @returns an instance of ggplot comparing the prediction against the data.
 #' 
 #' @export
@@ -130,6 +144,83 @@ check_inactivation_guess <- function(method,
   }
   
 }
+
+#' Checking guesses for secondary inactivation models
+#' 
+#' @param fit_data a tibble (or data.frame) with the data to use for the fit, as in
+#' [fit_inactivation_secondary()]
+#' @param model_name a secondary model name as in [secondary_model_data()]
+#' @param guess a named numeric vector with the model parameters
+#' @param formula a formula defining the model variables as in [fit_inactivation_secondary()]
+#' 
+#' @importFrom cowplot plot_grid
+#' 
+#' @returns an instance of ggplot with two subplots: an observed vs predicted plot 
+#' and a predicted vs residuals plot
+#' 
+#' @export
+#' 
+check_secondary_guess <- function(fit_data,
+                                  model_name,
+                                  guess,
+                                  formula = my_par ~ temp
+                                  ) {
+  
+  ## Apply the formula
+  
+  y_col <- lhs(formula)
+  
+  vars <- all.vars(formula)
+  vars <- vars[vars != y_col]
+  
+  fit_data <- select(fit_data,
+                     my_par = y_col,
+                     matches(vars)
+  )
+  
+  ## Check the model parameters
+  
+  check_secondary_pars(model_name, c(start, known), vars)
+  
+  ## Calculate the residuals
+  
+  res <- secondary_residuals(guess, model_name, fit_data, c())
+  
+  fit_data <- fit_data %>%
+    mutate(res = res,
+           pred = my_par - res)
+  
+  p1 <- ggplot(fit_data, aes(x = my_par, y = pred)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    geom_abline(slope = 1, intercept = 0, linetype = 2)
+  
+  p2 <- ggplot(fit_data, aes(x = pred, y = res)) +
+    geom_point() +
+    geom_smooth(se = FALSE) +
+    geom_hline(yintercept = 0, linetype = 2) 
+  
+  plot_grid(p1, p2)
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

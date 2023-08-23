@@ -1,10 +1,18 @@
 
-#'
+#' Residuals for fitting secondary models
+#' 
+#' The function is defined to be called within modFit or modMCMC
+#' 
+#' @param this_p named numeric vector of parameter values
+#' @param model_name identifier of the secondary model as per [secondary_model_data()]
+#' @param fit_data a tibble (or data.frame) defining the data as in [fit_inactivation_secondary()]
+#' @param known a named numeric vector of known model parameters
+#' 
+#' @returns a numeric vector of model residuals
 #'
 secondary_residuals <- function(this_p,
                                 model_name,
                                 fit_data,
-                                # sec_models,
                                 known
                                 ) {
 
@@ -27,20 +35,6 @@ secondary_residuals <- function(this_p,
   names(pars_log) <- str_replace(names(pars_log), "log", "")
   p <- c(p, pars_log)
   p <- p[!str_detect(names(p), "log")]  # remove the logs to avoid problems
-
-  # ## Prepare the secondary models
-  #
-  # sec_models
-  #
-  # sec <- convert_dynamic_guess(sec_models, p, c())
-  #
-  # cond <- select(fit_data, -x)
-  #
-  # primary_pars <- lapply(1:nrow(cond), function(i) {
-  #   apply_secondary_models(cond[i,], sec) %>% as_tibble()
-  # }) %>%
-  #   bind_rows() %>%
-  #   mutate(time = fit_data$time)
 
   ## Calculate the effect of the environmental factors
 
@@ -168,9 +162,6 @@ fit_inactivation_secondary <- function(fit_data,
   } else {
     stop("Algorithm must be 'regression' or 'MCMC', got: ", algorithm)
   }
-
-
-
 
 }
 
