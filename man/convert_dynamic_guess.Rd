@@ -2,10 +2,22 @@
 % Please edit documentation in R/helpers.R
 \name{convert_dynamic_guess}
 \alias{convert_dynamic_guess}
-\title{A helper to convert guesses to the format for predictions}
+\title{A helper to convert parameter definitions from fitting to prediction format}
 \usage{
 convert_dynamic_guess(sec_models, guess, known)
 }
+\arguments{
+\item{sec_models}{a list defining model dependencies for secondary models as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{guess}{a named numeric vector of parameter values (as in \code{\link[=fit_inactivation]{fit_inactivation()}})}
+
+\item{known}{a named numeric vector of parameter values (as in \code{\link[=fit_inactivation]{fit_inactivation()}})}
+}
+\value{
+a nested list with a secondary model definition compatible with \code{\link[=predict_inactivation]{predict_inactivation()}}
+}
 \description{
-A helper to convert guesses to the format for predictions
+Model fitting needs that guesses of model parameters are defined as named numeric vectors,
+whereas prediction needs that they are defined as nested lists. This function converts
+between both formats.
 }

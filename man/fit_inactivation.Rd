@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit_inactivation.R
 \name{fit_inactivation}
 \alias{fit_inactivation}
-\title{Fits an inactivation model using different methods from predictive microbiology}
+\title{Fitting inactivation models}
 \usage{
 fit_inactivation(
   method,
@@ -26,26 +26,159 @@ fit_inactivation(
 
 \item{fit_data}{a tibble with the data to use for model fitting. See sections below for further information.}
 
-\item{primary_model_name}{aa}
+\item{primary_model_name}{a model identifier compatible with \code{\link[=primary_model_data]{primary_model_data()}} or
+\code{\link[=dynamic_model_data]{dynamic_model_data()}} depending on the fitting method.}
 
-\item{guess}{description}
+\item{guess}{a named numeric vector of initial guesses for the model parameters. See details
+for conventions on how to define them}
 
-\item{known}{aa}
+\item{known}{a named numeric vector of parameter values that are considered known.}
 
-\item{upper}{aa}
+\item{upper}{a named numeric vector with upper limits for the parameter estimates}
 
-\item{lower}{description}
+\item{lower}{a named numeric vector with lower limits for the parameter estimates}
 
-\item{secondary_models}{description}
+\item{secondary_models}{a nested list defining the structure of the secondary models.
+See Details for further info.}
 
-\item{algorithm}{description}
+\item{algorithm}{the fitting algorithm to use. Either 'regression' or 'MCMC'.}
 
-\item{niter}{description}
+\item{env_conditions}{a tibble describing the change in the environmental conditions. Must have a column
+named 'time' (although this can be changed using the formula argument) and as many
+additional columns as environmental factors included in the model (with names matching
+those in the \code{secondary_models} argument).}
 
-\item{check}{aa}
+\item{niter}{number of iterations of the MCMC algorithm. Ignored when algorithm = 'regression'}
 
-\item{env_conditinos}{description}
+\item{check}{whether to do some basic checks of input consistency. By default, TRUE.}
+}
+\value{
+an instance of \link{InactivationFit} with the fitted model
 }
 \description{
-Fits an inactivation model using different methods from predictive microbiology
+This is a top-level function to fit inactivation models using different methods
+from predictive microbiology. The function can fit primary models to a set of data
+gathered (in principle) under constant environmental conditions, a unique model
+(primary + secondary model) to a set of independent experiments at different
+(constant) environmental conditions, a unique model (primary + secondary model)
+to data obtained under dynamic environmental conditions or a unique model (
+primary + secondary model) to a set of independent experiments under dynamic (or not)
+environmental conditions. Please see the sections below for additional information
+on how each fitting must be defined.
 }
+\section{Fitting primary models}{
+
+Setting \code{method = "primary"} fits a primary inactivation model to a dataset describing
+the inactivation of a population. In principles, this approach is valid to data
+gathered under constant environmental conditions.
+
+In this case, the data is defined through \code{fit_data} as a tibble
+(or data.frame) with two columns: one describing the elapsed time (\code{time}) and a second
+one describing the variation in the log-microbial concentration (\code{logN}). Note that
+these column names can be changed using the \code{formula} argument.
+
+The function allows fixing any model parameter before doing the fit using the \code{known}
+argument. This is useful for cases where the parameter is not "biological" (e.g., \code{xref})
+or when there are  identifiability issues. Initial guesses must be provided to
+the rest of the model parameters, due to the requirements of the fitting algorithms
+implemented in the function. In either case, the parameters are defined as a
+named numeric vector with names matching those returned by \code{\link[=primary_model_data]{primary_model_data()}}.
+The fitting can also be done on the log-transformed parameter. To do this, you
+just have to include "log" before the parameter name (e.g., \code{c(logD = 2)} instead
+of \code{c(D = 2)}). Please see the examples below for more info.
+Note that \code{\link[=make_guess_primary]{make_guess_primary()}} and \code{\link[=check_inactivation_guess]{check_inactivation_guess()}} can aid in the
+definition of initial guesses for the parameters.
+}
+
+\section{Defining secondary models for fitting}{
+
+Every fitting approach but \code{method = "primary"} requires the definition of secondary
+models. This is done in two steps: defining the model structure using \code{secondary_models}
+and defining initial guesses for the parameter values using \code{guess} (or known values
+using \code{known}).
+
+The structure of the secondary models is defined using the \code{secondary_models} argument.
+This is a nested list, where each element is a list that defines the secondary
+model for one parameter of the primary model. These lists must have three elements:
+\itemize{
+\item \code{par}: the name of the model parameter (as in \code{\link[=primary_model_data]{primary_model_data()}})
+\item \code{model}: a model identifier (as per \code{\link[=secondary_model_data]{secondary_model_data()}})
+\item \code{depends_on}: a character vector with the names of the environmental factors that
+affect this parameter. Note that these names must match those in \code{fit_data}. If the
+parameter does not depend on any environmental condition, an empty vector (\code{c()})
+should be passed here.
+}
+
+Each model parameter must be assigned either an initial guess (\code{guess}) or a fixed
+value (\code{known}) as a named numeric vector. The conventions for the names are \code{primary-parameter}
+\itemize{
+\item \verb{_} + \code{factor-name} + \code{secondary-parameter}. For instance, the name \code{delta_temperature_z} would provide
+the guess for the z-value of the secondary model of parameter \code{delta} with respect to the factor
+named "temperature". The names of the parameters must match those returned by
+\code{\link[=primary_model_data]{primary_model_data()}} and \code{\link[=secondary_model_data]{secondary_model_data()}}. Note that the fitting can
+also be done in log-scale be including "log" before the parameter name:
+e.g., \code{delta_temperature_logz}.
+}
+}
+
+\section{Fitting models to several experiments using the one-step method}{
+
+Setting \code{method = "one-step"} fits a unique model (defined as a primary + secondary model)
+to a dataset containing the inactivation of a population obtained under independent
+experiments at (different) constant environmental conditions. In this approach,
+the complete model (i.e., the combination of primary and secondary model) is
+fitted to the complete dataset in a single step using nonlinear regression (or an
+equivalent MCMC algorithm).
+
+The data is defined through \code{fit_data} as a tibble (or data.frame) with at least three columns.
+The first two ones describe the elapsed time of the experiment (\code{time}) and the
+log-microbial concentration observed (\code{logN}). Note that these names can be changed
+using the \code{formula} argument. Then, additional columns define the values of the environmental
+conditions of the experiment. In this sense, the function admits an arbitrary number
+of environmental conditions. Note that the function does not make any consideration
+regarding the number of experiments (it can be seen as each row being predicted independently),
+so there is no requirement regarding the number of data points per experiment (
+unlike for the two-steps fitting).
+}
+
+\section{Fitting models to several experiments using the two-steps method}{
+
+Setting \code{method = "two-steps"} fits a unique model (defined as a primary + secondary model)
+to a dataset containing the inactivation of a population obtained under independent
+experiments at (different) constant environmental conditions. In this approach,
+a primary model is fitted to each experiment. Then, on a second step, a secondary
+model is fitted to the parameters of the primary model estimated on the first step.
+
+The data is defined through \code{fit_data} as a tibble (or data.frame) with the same conventions
+as for the one-step fitting. That is, two columns  describe the elapsed time of the experiment (\code{time}) and the
+log-microbial concentration observed (\code{logN}). Note that these names can be changed
+using the \code{formula} argument. Then, additional columns define the values of the environmental
+conditions of the experiment. In this sense, the function admits an arbitrary number
+of environmental conditions, with the function identifying each experiment as rows
+sharing the same environmental conditions. Hence, it is important that each experiment
+includes enough data points to fit a primary model. Otherwise, the fitting algorithm is
+unlikely to converge.
+}
+
+\section{Fitting models to a dynamic experiment}{
+
+Setting \code{method = "dynamic"} fits a unique model (a primary + secondary models)
+to a dataset containing the inactivation of a population under an experiment with
+varying environmental conditions. This is done by estimating the parameters of the model
+defined directly as a differential equation (which is solved numerically).
+
+The microbial data is defined through \code{fit_data} with the same conventions as for
+fitting primary models: a tibble (or data.frame) with two columns describing the
+treatment time (\code{time}) and the observed log-microbial concentration (\code{logN}).
+Then, the environmental conditions during the experiment are defined using the
+\code{env_conditions} argument. This is a tibble (or data.frame) with one column named
+\code{time} and as many additional columns as environmental conditions included in the model.
+Model predictions are made by linear interpolation between the values provided in
+\code{env_conditions}.
+}
+
+\section{Fitting models to a set of dynamic experiments}{
+
+aa
+}
+

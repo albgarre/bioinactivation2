@@ -178,9 +178,9 @@ check_secondary_guess <- function(fit_data,
                      matches(vars)
   )
   
-  ## Check the model parameters
-  
-  check_secondary_pars(model_name, c(start, known), vars)
+  # ## Check the model parameters
+  # 
+  # check_secondary_pars(model_name, c(start, known), vars)
   
   ## Calculate the residuals
   

@@ -1,5 +1,16 @@
 
-#'
+#' Effects of the environmental conditions on the reference value 
+#' 
+#' The function calculates the effect of each environmental factor on the reference
+#' value according to the secondary model defined.
+#' 
+#' @param this_par a nested list defining the secondary model as in [fit_inactivation()].
+#' Note that anti-log transformations must be applied before calling this function.
+#' @param env_conditions a named numeric vector with the values fo the environmental conditions
+#' (just 1 time point)
+#' 
+#' @returns a named numeric vector with the effect of each factor on the reference
+#' value.
 #'
 get_effects <- function(this_par, env_conditions) {
 
@@ -14,8 +25,6 @@ get_effects <- function(this_par, env_conditions) {
   this_par$ref <- NULL
 
   ## Calculate the effect for each factor
-
-  # browser()
 
   effects <- this_par %>%
     imap_dbl(.,
@@ -41,7 +50,6 @@ get_effects <- function(this_par, env_conditions) {
                         k = .x[["k"]], xc = .x[["Xcrit"]]),
                       stop(paste("Unknown model:", this_model))
              )
-             # ~ sec_Bigelow(x = env_conditions[[.y]], xref = .x[["xref"]], z = .x[["z"]])
     )
 
   effects
@@ -111,10 +119,20 @@ approx_env <- function(env_conditions) {
 }
 
 
-
-#' A helper to convert guesses to the format for predictions
+#' A helper to convert parameter definitions from fitting to prediction format
+#' 
+#' Model fitting needs that guesses of model parameters are defined as named numeric vectors,
+#' whereas prediction needs that they are defined as nested lists. This function converts
+#' between both formats.
+#' 
+#' @param sec_models a list defining model dependencies for secondary models as in [fit_inactivation()]
+#' @param guess a named numeric vector of parameter values (as in [fit_inactivation()])
+#' @param known a named numeric vector of parameter values (as in [fit_inactivation()])
+#' 
 #'
 #' @importFrom stringr str_detect str_replace
+#' 
+#' @returns a nested list with a secondary model definition compatible with [predict_inactivation()]
 #'
 #'
 convert_dynamic_guess <- function(sec_models, guess, known) {

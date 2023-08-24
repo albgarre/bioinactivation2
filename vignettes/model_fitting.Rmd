@@ -32,7 +32,9 @@ d <- tibble(t = 0:7,
 make_guess_primary(d, "Geeraerd", formula = logN ~ t)
 
 
-check_inactivation_guess("primary", d, "Geeraerd",
+check_inactivation_guess("primary", 
+                         d, 
+                         "Geeraerd",
                          make_guess_primary(d, "Geeraerd", formula = logN ~ t),
                          formula = logN ~ t
                          )
@@ -41,7 +43,9 @@ check_inactivation_guess("primary", d, "Geeraerd",
 # guess <- list(logN0 = 8, logD = 2)
 known <- list()
 
-aa <- fit_inactivation("primary", d, "Bigelow",
+aa <- fit_inactivation("primary", 
+                       d, 
+                       "Bigelow",
                        make_guess_primary(d, "Bigelow", formula = logN ~ t), 
                        known,
                        formula = logN ~ t)
@@ -397,6 +401,11 @@ d
 
 make_guess_secondary(d, "genBigelow", formula = delta ~ temp + pH)
 
+check_secondary_guess(d, "genBigelow", 
+                      make_guess_secondary(d, "genBigelow", formula = delta ~ temp + pH),
+                      formula = delta ~ temp + pH
+                      )
+
 guess <- c(temp_logz = .69,
            pH_z = 2,
            logref = 1
@@ -414,5 +423,10 @@ aa <- fit_inactivation_secondary(d,
 )
 coef(aa)
 summary(aa)
+
+check_secondary_guess(d, "Bigelow", 
+                      c(coef(aa), known),
+                      formula = delta ~ temp + pH
+)
 ```
 
