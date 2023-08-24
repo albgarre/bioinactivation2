@@ -392,25 +392,3 @@ fit_inactivation <- function(method,
 
 }
 
-#'
-#' @export
-#'
-make_fitting_guess <- function(method) {
-
-  if (method == "primary") {
-
-  } else if (method == "two-step") {
-
-  } else if (method == "one-step") {
-
-  } else if (method == "dynamic") {
-
-  } else if (method == "global") {
-
-  } else {
-    stop("Unknown fitting method: ", method)
-  }
-
-}
-
-
