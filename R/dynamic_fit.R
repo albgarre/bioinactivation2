@@ -79,7 +79,6 @@ fit_dynamic_inactivation <- function(fit_data,
                                      niter
                                      # ...,
                                      # check = TRUE,
-                                     # logbase_logN = 10,  # TODO
                                      # formula = logN ~ time
 ) {
 

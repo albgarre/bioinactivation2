@@ -430,3 +430,97 @@ check_secondary_guess(d, "Bigelow",
 )
 ```
 
+## Global fitting
+
+```{r}
+primary_model <- list(model = "Bigelow", 
+                      logN0 = 6
+                      )
+
+secondary_models <- list(
+  list(par = "logD",
+       model = "Bigelow",
+       temp = c("xref" = 55, logz = .69),
+       pH = c("xref" = 7, z = 5),
+       ref = 1
+  )
+)
+
+times <- seq(0, 10, length = 20)
+
+e1 <- tibble(time = c(0, 5, 10),
+                         temp = c(55, 60, 55),
+                         pH = c(7, 7, 4))
+
+e2 <- tibble(time = c(0, 5, 10),
+             temp = c(60, 55, 60),
+             pH = c(7, 7, 4))
+
+
+
+p1 <- predict_inactivation(times, primary_model, environment = "dynamic",
+                           secondary_models, e1) 
+
+p2 <- predict_inactivation(times, primary_model, environment = "dynamic",
+                           secondary_models, e2) 
+
+plot(p1)
+plot(p2)
+
+d1 <- p1$simulation %>%
+  mutate(logN = logN + rnorm(nrow(.), mean = 0, sd = .1)) %>%
+  select(time, logN)
+
+d2 <- p2$simulation %>%
+  mutate(logN = logN + rnorm(nrow(.), mean = 0, sd = .1)) %>%
+  select(time, logN)
+
+d <- list(exp1 = d1, exp2 = d2)
+env <- list(exp1 = e1, exp2 = e2)
+
+####
+
+sec_models <- list(
+  list(par = "D",
+       model = "Bigelow",
+       depends_on = c("temp", "pH")
+  )
+)
+
+guess <- c(logN0 = 7,
+           D_temp_logz = .69,
+           D_pH_z = 2,
+           D_logref = 1
+)
+
+known <- c(D_temp_xref = 55,
+           D_pH_xref = 7
+           )
+
+
+# check_inactivation_guess("dynamic", 
+#                          d,
+#                          primary_model_name = "Bigelow",
+#                          c(guess, known),
+#                          secondary_models = sec_models,
+#                          env_conditions = env_conditions
+#                          )
+
+aa <- fit_inactivation("global", 
+                 d, 
+                 "Bigelow",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env,
+                 algorithm = "regression")
+
+plot(aa)
+```
+
+
+
+
+
+
+

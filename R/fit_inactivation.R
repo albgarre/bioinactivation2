@@ -1,6 +1,4 @@
 
-
-
 #' Fitting inactivation models
 #' 
 #' This is a top-level function to fit inactivation models using different methods 
@@ -384,7 +382,40 @@ fit_inactivation <- function(method,
 
   } else if (method == "global") {
 
-    ## TODO
+    my_fit <- fit_multiple_inactivation(fit_data,
+                                        primary_model_name,
+                                        guess,
+                                        known,
+                                        upper,
+                                        lower,
+                                        secondary_models,
+                                        algorithm,
+                                        env_conditions,
+                                        niter)
+    
+    ## Prepare the output
+    
+    out <- list(
+      method = method,
+      algorithm = "regression",
+      data = fit_data,
+      guess = guess,
+      known = known,
+      primary_model = primary_model_name,
+      fit_results = my_fit,
+      # best_prediction = best_prediction,
+      # sec_models = sec,
+      env_conditions = env_conditions,
+      niter = niter
+      # logbase_logN = NULL,
+      # approach_logN0 = NULL
+    )
+    
+    class(out) <- c("InactivationFit", class(out))
+    
+    ## Return
+    
+    out
 
   } else {
     stop("Unknown fitting method: ", method)
