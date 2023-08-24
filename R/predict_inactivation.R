@@ -248,7 +248,7 @@ predict_inactivation <- function(times,
 
 
     }
-
+    
     ## Call the calculation function
 
     my_sim <- predict_dynamic_inactivation(times,

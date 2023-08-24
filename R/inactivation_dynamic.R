@@ -40,7 +40,7 @@ predict_dynamic_inactivation <- function(times,
     check_dynamic_pars(primary_model, secondary_models)
 
   }
-
+  
   ## Approximate the env conditions
 
   my_env <- approx_env(env_conditions)
@@ -85,7 +85,7 @@ predict_dynamic_inactivation <- function(times,
              ) %>%
     as.data.frame() %>%
     as_tibble() %>%
-    mutate(logN = log(.data$N))
+    mutate(logN = log10(.data$N))
     # mutate(logN = log(.data$N, base = logbase_logN))
 
   ## Return
