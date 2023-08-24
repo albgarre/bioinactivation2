@@ -9,7 +9,8 @@ dynamic_residuals <- function(this_p,
                               fit_data,
                               primary_model_name,
                               sec_models,
-                              known
+                              known,
+                              env_conditions
                               ) {
 
   # browser()
@@ -115,7 +116,8 @@ fit_dynamic_inactivation <- function(fit_data,
                      fit_data = fit_data,
                      primary_model_name = model_name,
                      sec_models = secondary_models,
-                     known = unlist(known)
+                     known = unlist(known),
+                     env_conditions = env_conditions
                      # logbase_logN = logbase_logN,
                      # ...
     )

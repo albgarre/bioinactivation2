@@ -4,7 +4,14 @@
 \alias{dynamic_residuals}
 \title{Residuals for dynamic fitting}
 \usage{
-dynamic_residuals(this_p, fit_data, primary_model_name, sec_models, known)
+dynamic_residuals(
+  this_p,
+  fit_data,
+  primary_model_name,
+  sec_models,
+  known,
+  env_conditions
+)
 }
 \description{
 Residuals for dynamic fitting
