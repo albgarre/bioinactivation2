@@ -200,60 +200,11 @@ plot(aa)
 
 ```
 
-
-
 ## One-step fit
 
 ```{r}
 
-primary_model <- list(model = "Mafart", 
-                      logN0 = 7
-                      )
-
-secondary_models <- list(
-  list(par = "logdelta",
-       model = "genBigelow",
-       temp = c("xref" = 55, logz = .69, n=1),
-       pH = c("xref" = 7, z = 2, n=1),
-       ref = 1
-  ),
-  list(par = "logp",
-       model = "Bigelow",
-       ref = 0
-  )
-)
-
-cond <- tibble(
-  time = runif(25, 0, 10),
-  temp = runif(25, 57, 62),
-  pH = runif(25, 5, 7)
-)
-
-pred <- lapply(1:nrow(cond), function(i) {
-  
-  env <- bind_rows(cond[i,], cond[i,])
-  env$time[1] <- 0
-  
-  predict_inactivation(environment = "dynamic",
-                       seq(0, env$time[2], length = 10), 
-                       primary_model, 
-                       secondary_models, 
-                       env)$simulation %>%
-    tail(1) %>% 
-    pull(logN)
-  
-}) %>%
-  unlist()
-
-d <- cond %>%
-  mutate(logN = pred + rnorm(nrow(.), mean = 0, sd = .1))
-
-
-####
-
-primary_model <- list(model = "Mafart", 
-                      logN0 = 7
-)
+data("inactivation_onestep")
 
 sec_models <- list(
   list(par = "delta",
@@ -278,14 +229,8 @@ known <- c(delta_temp_xref = 55,
            )
 
 
-# bioinactivation2:::onestep_residuals(guess,
-#                                      d,
-#                                      primary_model_name = "Mafart",
-#                                      sec_models,
-#                                      known)
-
 aa <- fit_inactivation("one-step", 
-                 d, 
+                 inactivation_onestep, 
                  "Mafart",
                  guess, 
                  known, 
