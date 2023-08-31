@@ -110,13 +110,21 @@ onestep_residuals <- function(this_p,
                  stop(paste("Unknown model:", model_name))
   )
 
-  ## Calculate residuals
-
-  res <- fit_data$logN - logN
-
-  ## Return
-
-  res
+  # ## Calculate residuals
+  # 
+  # res <- fit_data$logN - logN
+  # 
+  # ## Return
+  # 
+  # res
+  
+  ## Calculate the cost
+  
+  modCost(
+    model = data.frame(time = fit_data$time,
+                       logN = logN),
+    obs = select(fit_data, time, logN) %>% as.data.frame()
+  )
 
 }
 
@@ -218,9 +226,101 @@ fit_onestep <- function(fit_data,
                      # approach_logN0 = approach_logN0
                      ...
                      )
+    
+    ## Extract the secondary and primary models
+    
+    p <- c(coef(my_fit), unlist(known))
+    
+    primary_model <- list(model = model_name)
+    
+    initial <- p[str_detect(names(p), "N0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+    
+    if (str_detect(model_name, "Geeraerd")) {
+      initial <- p[str_detect(names(p), "C0")]
+      aa <- initial
+      names(aa) <- NULL
+      primary_model[[names(initial)]] <- aa
+    }
+    
+    sec <- convert_dynamic_guess(secondary_models, p, c())
+    
+    ## Prepare the output
+    
+    out <- list(
+      approach = "one-step",
+      algorithm = "regression",
+      data = fit_data,
+      guess = start,
+      known = known,
+      primary_model = model_name,
+      fit_results = my_fit,
+      best_prediction = NA,
+      sec_models = sec,
+      env_conditions = NULL,
+      niter = NULL
+      # approach_logN0 = NULL
+    )
+    
+    class(out) <- c("InactivationFit", class(out))
 
 
   } else if (algorithm == "MCMC") {
+    
+    my_fit <- modMCMC(onestep_residuals,
+                     unlist(start),
+                     fit_data = fit_data,
+                     primary_model_name = model_name,
+                     sec_models = secondary_models,
+                     known = unlist(known),
+                     upper = upper,
+                     lower = lower,
+                     niter = niter,
+                     # approach_logN0 = approach_logN0
+                     ...
+    )
+    
+    ## Extract the secondary and primary models
+    
+    p <- c(my_fit$bestpar, unlist(known))
+    
+    primary_model <- list(model = model_name)
+    
+    initial <- p[str_detect(names(p), "N0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+    
+    if (str_detect(model_name, "Geeraerd")) {
+      initial <- p[str_detect(names(p), "C0")]
+      aa <- initial
+      names(aa) <- NULL
+      primary_model[[names(initial)]] <- aa
+    }
+    
+    sec <- convert_dynamic_guess(secondary_models, p, c())
+    
+    ## Prepare the output
+    
+    out <- list(
+      approach = "one-step",
+      algorithm = "MCMC",
+      data = fit_data,
+      guess = start,
+      known = known,
+      primary_model = model_name,
+      fit_results = my_fit,
+      best_prediction = NA,
+      sec_models = sec,
+      env_conditions = NULL,
+      niter = niter
+      # approach_logN0 = NULL
+    )
+    
+    class(out) <- c("InactivationFit", class(out))
+    
 
   } else {
     stop("Algorithm must be 'regression' or 'MCMC', got: ", algorithm)
@@ -228,6 +328,6 @@ fit_onestep <- function(fit_data,
 
   ## Output
 
-  my_fit
+  out
 
 }

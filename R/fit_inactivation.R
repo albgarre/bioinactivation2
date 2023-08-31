@@ -227,7 +227,7 @@ fit_inactivation <- function(approach,
 
     ## Fit the model
 
-    my_fit <- fit_onestep(
+    out <- fit_onestep(
       fit_data = fit_data,
       model_name = primary_model_name,
       start = guess,
@@ -240,46 +240,46 @@ fit_inactivation <- function(approach,
       # approach_logN0 = approach_logN0
     )
 
-    ## Extract the secondary and primary models
-
-    p <- c(coef(my_fit), unlist(known))
-
-    primary_model <- list(model = primary_model_name)
-
-    initial <- p[str_detect(names(p), "N0")]
-    aa <- initial
-    names(aa) <- NULL
-    primary_model[[names(initial)]] <- aa
-
-    if (str_detect(primary_model_name, "Geeraerd")) {
-      initial <- p[str_detect(names(p), "C0")]
-      aa <- initial
-      names(aa) <- NULL
-      primary_model[[names(initial)]] <- aa
-    }
-
-    sec <- convert_dynamic_guess(sec_models, guess, known)
-
-    ## Prepare the output
-
-    out <- list(
-      approach = approach,
-      algorithm = "regression",
-      data = fit_data,
-      guess = guess,
-      known = known,
-      primary_model = primary_model_name,
-      fit_results = my_fit,
-      best_prediction = NA,
-      sec_models = sec,
-      env_conditions = NA,
-      niter = niter
-      # logbase_logN = NULL
-      # approach_logN0 = NULL
-    )
-
-    class(out) <- c("InactivationFit", class(out))
-
+    # ## Extract the secondary and primary models
+    # 
+    # p <- c(coef(my_fit), unlist(known))
+    # 
+    # primary_model <- list(model = primary_model_name)
+    # 
+    # initial <- p[str_detect(names(p), "N0")]
+    # aa <- initial
+    # names(aa) <- NULL
+    # primary_model[[names(initial)]] <- aa
+    # 
+    # if (str_detect(primary_model_name, "Geeraerd")) {
+    #   initial <- p[str_detect(names(p), "C0")]
+    #   aa <- initial
+    #   names(aa) <- NULL
+    #   primary_model[[names(initial)]] <- aa
+    # }
+    # 
+    # sec <- convert_dynamic_guess(sec_models, guess, known)
+    # 
+    # ## Prepare the output
+    # 
+    # out <- list(
+    #   approach = approach,
+    #   algorithm = "regression",
+    #   data = fit_data,
+    #   guess = guess,
+    #   known = known,
+    #   primary_model = primary_model_name,
+    #   fit_results = my_fit,
+    #   best_prediction = NA,
+    #   sec_models = sec,
+    #   env_conditions = NA,
+    #   niter = niter
+    #   # logbase_logN = NULL
+    #   # approach_logN0 = NULL
+    # )
+    # 
+    # class(out) <- c("InactivationFit", class(out))
+    # 
     ## Return
 
     out

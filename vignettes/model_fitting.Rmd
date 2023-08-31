@@ -262,6 +262,21 @@ fit_inactivation("one-step",
   summary()
 ```
 
+```{r}
+aa <- fit_inactivation("one-step", 
+                 inactivation_onestep, 
+                 "Mafart",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env_conditions,
+                 algorithm = "MCMC",
+                 niter = 10)
+
+summary(aa)
+plot(aa)
+```
+
 
 ## Two-steps fitting
 
