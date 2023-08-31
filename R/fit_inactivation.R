@@ -156,7 +156,6 @@ fit_inactivation <- function(method,
                              niter = NULL,
                              # ...,
                              check = TRUE,
-                             # logbase_mu = logbase_logN,
                              # logbase_logN = 10,  # TODO
                              formula = logN ~ time
                              ) {
@@ -182,7 +181,9 @@ fit_inactivation <- function(method,
     my_fit <-  fit_primary(fit_data, 
                            primary_model_name, 
                            guess, known,
-                           check = check
+                           check = check,
+                           upper = upper,
+                           lower = lower
                            )
     
 

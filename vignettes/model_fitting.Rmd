@@ -60,6 +60,23 @@ summary(aa)
 plot(aa)
 ```
 
+```{r}
+## with bounds
+
+fit_inactivation("primary", 
+                       inactivation_experiment, 
+                       "Bigelow",
+                       guess = c(logN0 = 8, logD = 0.3), 
+                       known = c(),
+                 lower = c(logN0 = 7, logD = .1),
+                 upper = c(logN0 = 9, logD = .4),
+                       formula = logN ~ t) %>% 
+  summary()
+coef(aa)
+summary(aa)
+plot(aa)
+```
+
 
 ```{r}
 guess <- list(logN0 = 8, logD = 2)

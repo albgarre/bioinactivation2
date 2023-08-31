@@ -78,12 +78,26 @@ fit_primary <- function(fit_data,
   }
 
   ## Fit the model
+  
+  if ( !is.null(upper) ) {
+    upper <- upper
+  } else {
+    upper <- Inf
+  }
+  
+  if ( !is.null(lower) ) {
+    lower <- lower
+  } else {
+    lower <- -Inf
+  }
 
   my_fit <- modFit(primary_residuals,
                    unlist(start),
                    fit_data = fit_data,
                    model_name = model_name,
-                   known = unlist(known)
+                   known = unlist(known),
+                   upper = upper,
+                   lower = lower
                    # logbase_logN = logbase_logN,
                    # ...
                    )
