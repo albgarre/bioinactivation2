@@ -5,7 +5,7 @@
 \title{Fitting inactivation models}
 \usage{
 fit_inactivation(
-  method,
+  approach,
   fit_data,
   primary_model_name,
   guess,
@@ -22,13 +22,13 @@ fit_inactivation(
 )
 }
 \arguments{
-\item{method}{method for model fitting. One of 'primary', 'two-steps', 'one-step',
+\item{approach}{approach for model fitting. One of 'primary', 'two-steps', 'one-step',
 'dynamic' or 'global'.}
 
 \item{fit_data}{a tibble with the data to use for model fitting. See sections below for further information.}
 
 \item{primary_model_name}{a model identifier compatible with \code{\link[=primary_model_data]{primary_model_data()}} or
-\code{\link[=dynamic_model_data]{dynamic_model_data()}} depending on the fitting method.}
+\code{\link[=dynamic_model_data]{dynamic_model_data()}} depending on the fitting approach.}
 
 \item{guess}{a named numeric vector of initial guesses for the model parameters. See details
 for conventions on how to define them}
@@ -57,7 +57,7 @@ those in the \code{secondary_models} argument).}
 an instance of \link{InactivationFit} with the fitted model
 }
 \description{
-This is a top-level function to fit inactivation models using different methods
+This is a top-level function to fit inactivation models using different approachs
 from predictive microbiology. The function can fit primary models to a set of data
 gathered (in principle) under constant environmental conditions, a unique model
 (primary + secondary model) to a set of independent experiments at different
@@ -69,7 +69,7 @@ on how each fitting must be defined.
 }
 \section{Fitting primary models}{
 
-Setting \code{method = "primary"} fits a primary inactivation model to a dataset describing
+Setting \code{approach = "primary"} fits a primary inactivation model to a dataset describing
 the inactivation of a population. In principles, this approach is valid to data
 gathered under constant environmental conditions.
 
@@ -93,7 +93,7 @@ definition of initial guesses for the parameters.
 
 \section{Defining secondary models for fitting}{
 
-Every fitting approach but \code{method = "primary"} requires the definition of secondary
+Every fitting approach but \code{approach = "primary"} requires the definition of secondary
 models. This is done in two steps: defining the model structure using \code{secondary_models}
 and defining initial guesses for the parameter values using \code{guess} (or known values
 using \code{known}).
@@ -123,9 +123,9 @@ e.g., \code{delta_temperature_logz}.
 }
 }
 
-\section{Fitting models to several experiments using the one-step method}{
+\section{Fitting models to several experiments using the one-step approach}{
 
-Setting \code{method = "one-step"} fits a unique model (defined as a primary + secondary model)
+Setting \code{approach = "one-step"} fits a unique model (defined as a primary + secondary model)
 to a dataset containing the inactivation of a population obtained under independent
 experiments at (different) constant environmental conditions. In this approach,
 the complete model (i.e., the combination of primary and secondary model) is
@@ -143,9 +143,9 @@ so there is no requirement regarding the number of data points per experiment (
 unlike for the two-steps fitting).
 }
 
-\section{Fitting models to several experiments using the two-steps method}{
+\section{Fitting models to several experiments using the two-steps approach}{
 
-Setting \code{method = "two-steps"} fits a unique model (defined as a primary + secondary model)
+Setting \code{approach = "two-steps"} fits a unique model (defined as a primary + secondary model)
 to a dataset containing the inactivation of a population obtained under independent
 experiments at (different) constant environmental conditions. In this approach,
 a primary model is fitted to each experiment. Then, on a second step, a secondary
@@ -164,7 +164,7 @@ unlikely to converge.
 
 \section{Fitting models to a dynamic experiment}{
 
-Setting \code{method = "dynamic"} fits a unique model (a primary + secondary models)
+Setting \code{approach = "dynamic"} fits a unique model (a primary + secondary models)
 to a dataset containing the inactivation of a population under an experiment with
 varying environmental conditions. This is done by estimating the parameters of the model
 defined directly as a differential equation (which is solved numerically).

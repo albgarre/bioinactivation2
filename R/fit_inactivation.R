@@ -1,7 +1,7 @@
 
 #' Fitting inactivation models
 #' 
-#' This is a top-level function to fit inactivation models using different methods 
+#' This is a top-level function to fit inactivation models using different approachs 
 #' from predictive microbiology. The function can fit primary models to a set of data
 #' gathered (in principle) under constant environmental conditions, a unique model
 #' (primary + secondary model) to a set of independent experiments at different 
@@ -12,7 +12,7 @@
 #' on how each fitting must be defined.
 #' 
 #' @section Fitting primary models:
-#' Setting `method = "primary"` fits a primary inactivation model to a dataset describing
+#' Setting `approach = "primary"` fits a primary inactivation model to a dataset describing
 #' the inactivation of a population. In principles, this approach is valid to data
 #' gathered under constant environmental conditions.
 #' 
@@ -34,7 +34,7 @@
 #' definition of initial guesses for the parameters.
 #' 
 #' @section Defining secondary models for fitting:
-#' Every fitting approach but `method = "primary"` requires the definition of secondary
+#' Every fitting approach but `approach = "primary"` requires the definition of secondary
 #' models. This is done in two steps: defining the model structure using `secondary_models`
 #' and defining initial guesses for the parameter values using `guess` (or known values
 #' using `known`).
@@ -60,8 +60,8 @@
 #' e.g., `delta_temperature_logz`.
 #' 
 #' 
-#' @section Fitting models to several experiments using the one-step method: 
-#' Setting `method = "one-step"` fits a unique model (defined as a primary + secondary model)
+#' @section Fitting models to several experiments using the one-step approach: 
+#' Setting `approach = "one-step"` fits a unique model (defined as a primary + secondary model)
 #' to a dataset containing the inactivation of a population obtained under independent
 #' experiments at (different) constant environmental conditions. In this approach,
 #' the complete model (i.e., the combination of primary and secondary model) is
@@ -80,8 +80,8 @@
 #' 
 #' 
 #' 
-#' @section Fitting models to several experiments using the two-steps method: 
-#' Setting `method = "two-steps"` fits a unique model (defined as a primary + secondary model)
+#' @section Fitting models to several experiments using the two-steps approach: 
+#' Setting `approach = "two-steps"` fits a unique model (defined as a primary + secondary model)
 #' to a dataset containing the inactivation of a population obtained under independent
 #' experiments at (different) constant environmental conditions. In this approach,
 #' a primary model is fitted to each experiment. Then, on a second step, a secondary
@@ -98,7 +98,7 @@
 #' unlikely to converge.
 #' 
 #' @section Fitting models to a dynamic experiment:
-#' Setting `method = "dynamic"` fits a unique model (a primary + secondary models)
+#' Setting `approach = "dynamic"` fits a unique model (a primary + secondary models)
 #' to a dataset containing the inactivation of a population under an experiment with
 #' varying environmental conditions. This is done by estimating the parameters of the model
 #' defined directly as a differential equation (which is solved numerically).
@@ -117,11 +117,11 @@
 #'  
 #' 
 #' 
-#' @param method method for model fitting. One of 'primary', 'two-steps', 'one-step',
+#' @param approach approach for model fitting. One of 'primary', 'two-steps', 'one-step',
 #' 'dynamic' or 'global'.
 #' @param fit_data a tibble with the data to use for model fitting. See sections below for further information.
 #' @param primary_model_name a model identifier compatible with [primary_model_data()] or
-#' [dynamic_model_data()] depending on the fitting method.
+#' [dynamic_model_data()] depending on the fitting approach.
 #' @param guess a named numeric vector of initial guesses for the model parameters. See details
 #' for conventions on how to define them
 #' @param known a named numeric vector of parameter values that are considered known.
@@ -142,7 +142,7 @@
 #' 
 #' @export
 #'
-fit_inactivation <- function(method,
+fit_inactivation <- function(approach,
                              fit_data,
                              primary_model_name,
                              guess,
@@ -160,7 +160,7 @@ fit_inactivation <- function(method,
                              formula = logN ~ time
                              ) {
 
-  if (method == "primary") {
+  if (approach == "primary") {
     
     ## Apply the formula
     
@@ -193,7 +193,7 @@ fit_inactivation <- function(method,
 
     out
 
-  } else if (method == "two-steps") {
+  } else if (approach == "two-steps") {
 
     out <- fit_two_step(
       fit_data = fit_data,
@@ -208,7 +208,7 @@ fit_inactivation <- function(method,
 
     ## Prepare the output
 
-    out$method <- method
+    out$approach <- approach
     # out$best_prediction <- NA
     # env_conditions <- NULL
     # niter <- NULL
@@ -223,7 +223,7 @@ fit_inactivation <- function(method,
 
 
 
-  } else if (method == "one-step") {
+  } else if (approach == "one-step") {
 
     ## Fit the model
 
@@ -263,7 +263,7 @@ fit_inactivation <- function(method,
     ## Prepare the output
 
     out <- list(
-      method = method,
+      approach = approach,
       algorithm = "regression",
       data = fit_data,
       guess = guess,
@@ -285,7 +285,7 @@ fit_inactivation <- function(method,
     out
 
 
-  } else if (method == "dynamic") {
+  } else if (approach == "dynamic") {
 
     ## Fit the model
 
@@ -334,7 +334,7 @@ fit_inactivation <- function(method,
     ## Prepare the output
 
     out <- list(
-      method = method,
+      approach = approach,
       algorithm = "regression",
       data = fit_data,
       guess = guess,
@@ -355,7 +355,7 @@ fit_inactivation <- function(method,
 
     out
 
-  } else if (method == "global") {
+  } else if (approach == "global") {
 
     my_fit <- fit_multiple_inactivation(fit_data,
                                         primary_model_name,
@@ -371,7 +371,7 @@ fit_inactivation <- function(method,
     ## Prepare the output
     
     out <- list(
-      method = method,
+      approach = approach,
       algorithm = "regression",
       data = fit_data,
       guess = guess,
@@ -393,7 +393,7 @@ fit_inactivation <- function(method,
     out
 
   } else {
-    stop("Unknown fitting method: ", method)
+    stop("Unknown fitting approach: ", approach)
   }
 
 }

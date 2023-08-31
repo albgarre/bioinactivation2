@@ -114,7 +114,7 @@ fit_primary <- function(fit_data,
     ## Prepare the output
     
     out <- list(
-      method = "primary",
+      approach = "primary",
       algorithm = "regression",
       data = fit_data,
       guess = start,
@@ -155,7 +155,7 @@ fit_primary <- function(fit_data,
     ## Prepare the output
     
     out <- list(
-      method = "primary",
+      approach = "primary",
       algorithm = "MCMC",
       data = fit_data,
       guess = start,
