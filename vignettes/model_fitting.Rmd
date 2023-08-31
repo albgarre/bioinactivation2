@@ -121,84 +121,54 @@ fit_inactivation("primary", d, "Peleg",
 ## Dynamic fitting
 
 ```{r}
-times <- seq(0, 10, length = 20)
-primary_model <- list(model = "Mafart", 
-                      logN0 = 7
-                      )
-
-env_conditions <- tibble(time = c(0, 3, 5),
-                         temp = c(55, 60, 55),
-                         pH = c(7, 7, 4))
-
-secondary_models <- list(
-  list(par = "logdelta",
-       model = "genBigelow",
-       temp = c("xref" = 55, logz = .69, n=1),
-       pH = c("xref" = 7, z = 2, n=1),
-       ref = 1
-  ),
-  list(par = "logp",
-       model = "Bigelow",
-       ref = 0
-  )
-)
-
-aa <- predict_inactivation(times, primary_model, environment = "dynamic",
-                           secondary_models, env_conditions) 
-
-
-d <- aa$simulation %>%
-  mutate(logN = logN + rnorm(nrow(.), mean = 0, sd = .1)) %>%
-  select(time, logN)
-
-####
-
-primary_model <- list(model = "Mafart", 
-                      logN0 = 7
-)
+data("dynamic_conditions")
+data("dynamic_experiment")
 
 sec_models <- list(
-  list(par = "delta",
+  list(par = "D",
        model = "Bigelow",
        depends_on = c("temp", "pH")
-  ),
-  list(par = "p",
-       model = "Bigelow",
-       depends_on = c()
   )
 )
 
 guess <- c(logN0 = 7,
-           delta_temp_logz = .69,
-           delta_pH_z = 2,
-           delta_logref = 1,
-           p_logref = 0
+           D_temp_logz = .69,
+           D_pH_z = 2,
+           D_logref = 1
 )
 
-known <- c(delta_temp_xref = 55,
-           delta_pH_xref = 7
+known <- c(D_temp_xref = 55,
+           D_pH_xref = 7
            )
 
 
 check_inactivation_guess("dynamic", 
-                         d,
-                         primary_model_name = "Mafart",
+                         dynamic_experiment,
+                         primary_model_name = "Bigelow",
                          c(guess, known),
                          secondary_models = sec_models,
-                         env_conditions = env_conditions
+                         env_conditions = dynamic_conditions
                          )
 
 aa <- fit_inactivation("dynamic", 
-                 d, 
-                 "Mafart",
+                 dynamic_experiment, 
+                 "Bigelow",
                  guess, 
                  known, 
                  secondary_models = sec_models,
-                 env_conditions = env_conditions,
+                 env_conditions = dynamic_conditions,
                  algorithm = "regression")
 
 plot(aa)
+summary(aa)
 ```
+
+```{r}
+
+```
+
+
+
 
 ## One-step fit
 
