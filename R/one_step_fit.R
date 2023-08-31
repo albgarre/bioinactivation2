@@ -134,11 +134,10 @@ fit_onestep <- function(fit_data,
                         lower,
                         secondary_models,
                         algorithm,
-                        niter
+                        niter,
                         # approach_logN0
-                        # ...,
+                        ...
                         # check = TRUE,
-                        # logbase_logN = 10,  # TODO
                         # formula = logN ~ time
                         ) {
 
@@ -189,10 +188,22 @@ fit_onestep <- function(fit_data,
   # } else {
   #   stop(paste0("approach_logN0 must be 'unique', 'logS' or 'different', got: ", approach_logN0))
   # }
+  
+  ## Set up the bounds
+  
+  if ( !is.null(upper) ) {
+    upper <- upper
+  } else {
+    upper <- Inf
+  }
+  
+  if ( !is.null(lower) ) {
+    lower <- lower
+  } else {
+    lower <- -Inf
+  }
 
   ## Fit the model
-
-  # browser()
 
   if (algorithm == "regression") {
 
@@ -201,11 +212,12 @@ fit_onestep <- function(fit_data,
                      fit_data = fit_data,
                      primary_model_name = model_name,
                      sec_models = secondary_models,
-                     known = unlist(known)
+                     known = unlist(known),
+                     upper = upper,
+                     lower = lower,
                      # approach_logN0 = approach_logN0
-                     # logbase_logN = logbase_logN,
-                     # ...
-    )
+                     ...
+                     )
 
 
   } else if (algorithm == "MCMC") {

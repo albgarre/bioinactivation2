@@ -242,6 +242,26 @@ summary(aa)
 plot(aa)
 ```
 
+```{r}
+
+## bounds
+
+fit_inactivation("one-step", 
+                 inactivation_onestep, 
+                 "Mafart",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env_conditions,
+                 algorithm = "regression",
+                 upper = c(logN0 = 8, delta_temp_logz = 1, delta_pH_z = 3,
+                           delta_logref = 2, p_logref = 1),
+                 lower = c(logN0 = 6, delta_temp_logz = -1, delta_pH_z = .5,
+                           delta_logref = 0, p_logref = -1)
+                 ) %>%
+  summary()
+```
+
 
 ## Two-steps fitting
 

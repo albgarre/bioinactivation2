@@ -13,7 +13,8 @@ fit_onestep(
   lower,
   secondary_models,
   algorithm,
-  niter
+  niter,
+  ...
 )
 }
 \description{
