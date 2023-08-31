@@ -165,6 +165,20 @@ summary(aa)
 
 ```{r}
 
+## Bounds
+
+fit_inactivation("dynamic", 
+                 dynamic_experiment, 
+                 "Bigelow",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = dynamic_conditions,
+                 algorithm = "regression",
+                 upper = c(logN0 = 8, D_temp_logz = 1, D_pH_z = 3, D_logref = 2),
+                 lower = c(logN0 = 4, D_temp_logz = 0, D_pH_z = 1, D_logref = 0)
+                 ) %>%
+  summary()
 ```
 
 

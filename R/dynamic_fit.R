@@ -76,8 +76,8 @@ fit_dynamic_inactivation <- function(fit_data,
                                      secondary_models,
                                      algorithm,
                                      env_conditions,
-                                     niter = NULL
-                                     # ...,
+                                     niter = NULL,
+                                     ...
                                      # check = TRUE,
                                      # formula = logN ~ time
 ) {
@@ -103,10 +103,22 @@ fit_dynamic_inactivation <- function(fit_data,
   #                    time = x_col,
   #                    logN = y_col
   # )
+  
+  ## Set up the bounds
+  
+  if ( !is.null(upper) ) {
+    upper <- upper
+  } else {
+    upper <- Inf
+  }
+  
+  if ( !is.null(lower) ) {
+    lower <- lower
+  } else {
+    lower <- -Inf
+  }
 
   ## Fit the model
-
-  # browser()
 
   if (algorithm == "regression") {
 
@@ -116,10 +128,11 @@ fit_dynamic_inactivation <- function(fit_data,
                      primary_model_name = model_name,
                      sec_models = secondary_models,
                      known = unlist(known),
-                     env_conditions = env_conditions
-                     # logbase_logN = logbase_logN,
-                     # ...
-    )
+                     env_conditions = env_conditions,
+                     upper = upper,
+                     lower = lower,
+                     ...
+                     )
 
 
   } else if (algorithm == "MCMC") {

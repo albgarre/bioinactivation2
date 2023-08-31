@@ -14,7 +14,8 @@ fit_dynamic_inactivation(
   secondary_models,
   algorithm,
   env_conditions,
-  niter = NULL
+  niter = NULL,
+  ...
 )
 }
 \description{
