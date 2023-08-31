@@ -9,7 +9,7 @@
 #'
 #' It is a subclass of list with the items:
 #'
-#' - method: fitting method as in [fit_inactivation()]
+#' - approach: fitting approach as in [fit_inactivation()]
 #' - algorithm: type of algorithm as in [fit_inactivation()]
 #' - data: data used for model fitting
 #' - guess: initial guess of the model parameters
@@ -41,7 +41,7 @@ NULL
 #'
 coef.InactivationFit <- function(object, ..., step = 2) {
 
-  if (object$method == "two-steps") {
+  if (object$approach == "two-steps") {
 
     if (step == 2) {
 
@@ -89,7 +89,7 @@ coef.InactivationFit <- function(object, ..., step = 2) {
 #'
 summary.InactivationFit <- function(object, ..., step = 2) {
 
-  if (object$method == "two-steps") {
+  if (object$approach == "two-steps") {
 
     if (step == 2) {
 
@@ -107,11 +107,6 @@ summary.InactivationFit <- function(object, ..., step = 2) {
   } else {
 
     out <- summary(object$fit_results)
-
-    # if (object$algorithm != "MCMC") {  # The summary of MCMC is a data.frame, so this would add a column
-    #   out$logbase_mu <- object$logbase_mu
-    #   out$logbase_logN <- object$logbase_logN
-    # }
 
   }
 
@@ -138,7 +133,7 @@ predict.InactivationFit <- function(object, times = NULL, env_conditions = NULL,
 
   }
 
-  if (object$method %in% c("primary")) {  # Prediction under constant environment
+  if (object$approach %in% c("primary")) {  # Prediction under constant environment
 
     pars <- c(coef(object), unlist(object$known))
     my_model <- as.list(pars)
@@ -150,7 +145,7 @@ predict.InactivationFit <- function(object, times = NULL, env_conditions = NULL,
                                  )
     pred$simulation$logN
 
-  } else if (object$method == "dynamic") {  ## Prediction under dynamic conditions
+  } else if (object$approach == "dynamic") {  ## Prediction under dynamic conditions
 
     if (is.null(env_conditions)) {  # Used the environment of the data if NULL
 
@@ -168,7 +163,7 @@ predict.InactivationFit <- function(object, times = NULL, env_conditions = NULL,
 
     pred$simulation$logN
 
-  } else if (object$method == "one-step") {  # Predictions using a one-step model
+  } else if (object$approach == "one-step") {  # Predictions using a one-step model
 
     ## Make the primary model
 
@@ -240,11 +235,11 @@ residuals.InactivationFit <- function(object, ...) {
 #'
 vcov.InactivationFit <- function(object, ...) {
 
-  # if (object$algorithm == "MCMC") {
-  #
-  #   cov(object$fit_results$pars)
-  #
-  # } else {
+  if (object$algorithm == "MCMC") {
+
+    cov(object$fit_results$pars)
+
+  } else {
 
     # The code has been adapted from the one of summary.modFit
 
@@ -261,7 +256,7 @@ vcov.InactivationFit <- function(object, ...) {
 
     covar
 
-  # }
+  }
 }
 
 #' @describeIn InactivationFit deviance of the model.
@@ -275,13 +270,13 @@ vcov.InactivationFit <- function(object, ...) {
 #'
 deviance.InactivationFit <- function(object, ...) {
 
-  # if (object$algorithm == "MCMC") {
-  #
-  #   sum(residuals(object)^2)
-  #
-  # } else {
+  if (object$algorithm == "MCMC") {
+
+    sum(residuals(object)^2)
+
+  } else {
     deviance(object$fit_results)
-  # }
+  }
 
 }
 
@@ -294,7 +289,7 @@ deviance.InactivationFit <- function(object, ...) {
 #'
 fitted.InactivationFit <- function(object, ...) {
 
-  if (object$method == "one-step") {
+  if (object$approach == "one-step") {
 
     ## Make the primary model
 
@@ -363,16 +358,16 @@ logLik.InactivationFit <- function(object, ...) {
 
   } else {
 
-    # n <- nrow(object$data)
-    # SS <- min(object$fit_results$SS, na.rm = TRUE)
-    #
-    # df <- n - length(coef(object))
-    #
-    # sigma <- sqrt(SS/df)
-    #
-    # lL <- - n/2*log(2*pi) -n/2 * log(sigma^2) - 1/2/sigma^2*SS
-    #
-    # lL
+    n <- nrow(object$data)
+    SS <- min(object$fit_results$SS, na.rm = TRUE)
+
+    df <- n - length(coef(object))
+
+    sigma <- sqrt(SS/df)
+
+    lL <- - n/2*log(2*pi) -n/2 * log(sigma^2) - 1/2/sigma^2*SS
+
+    lL
 
   }
 }
@@ -472,7 +467,7 @@ plot.InactivationFit <- function(x, y=NULL, ...,
     label_y1 <- label_y1
   }
 
-  if (x$method %in% c("primary")) {
+  if (x$approach %in% c("primary")) {
 
     p <- plot(x$best_prediction,
               line_col = line_col,
@@ -486,7 +481,7 @@ plot.InactivationFit <- function(x, y=NULL, ...,
                    col = point_col,  size = point_size, shape = point_shape) +
       theme_cowplot()
 
-  } else if (x$method == "dynamic") {
+  } else if (x$approach == "dynamic") {
 
     p <- plot(x$best_prediction
               # add_factor = add_factor,
@@ -506,7 +501,7 @@ plot.InactivationFit <- function(x, y=NULL, ...,
                    col = point_col,  size = point_size, shape = point_shape) +
       theme_cowplot()
 
-  } else if(x$method == "one-step") {
+  } else if(x$approach == "one-step") {
 
     if (type == 1) {  # predicted versus observed
 
@@ -514,7 +509,7 @@ plot.InactivationFit <- function(x, y=NULL, ...,
         mutate(pred = fitted(x)) %>%
         ggplot(aes(x = logN, y = pred)) +
         geom_point() +
-        geom_smooth(method = "lm", se = FALSE) +
+        geom_smooth(approach = "lm", se = FALSE) +
         geom_abline(slope = 1, intercept = 0, linetype = 2, colour = "gray")
 
     } else if (type == 2) {  # facet-based
@@ -523,7 +518,7 @@ plot.InactivationFit <- function(x, y=NULL, ...,
 
     } else {
 
-      stop(paste0("type must be 1 or 2 for method = 'one-step'. Got: ", type))
+      stop(paste0("type must be 1 or 2 for approach = 'one-step'. Got: ", type))
 
     }
   }

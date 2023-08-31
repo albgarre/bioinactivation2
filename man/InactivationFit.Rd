@@ -110,7 +110,7 @@ static or dynamic conditions. Its constructor is \code{\link[=fit_inactivation]{
 
 It is a subclass of list with the items:
 \itemize{
-\item method: fitting method as in \code{\link[=fit_inactivation]{fit_inactivation()}}
+\item approach: fitting approach as in \code{\link[=fit_inactivation]{fit_inactivation()}}
 \item algorithm: type of algorithm as in \code{\link[=fit_inactivation]{fit_inactivation()}}
 \item data: data used for model fitting
 \item guess: initial guess of the model parameters
