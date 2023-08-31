@@ -289,7 +289,7 @@ fit_inactivation <- function(approach,
 
     ## Fit the model
 
-    my_fit <- fit_dynamic_inactivation(
+    out <- fit_dynamic_inactivation(
       fit_data = fit_data,
       model_name = primary_model_name,
       start = guess,
@@ -301,55 +301,6 @@ fit_inactivation <- function(approach,
       env_conditions = env_conditions,
       niter = niter
     )
-
-    ## Calculate the best prediction
-
-    p <- c(coef(my_fit), unlist(known))
-
-    primary_model <- list(model = primary_model_name)
-
-    initial <- p[str_detect(names(p), "N0")]
-    aa <- initial
-    names(aa) <- NULL
-    primary_model[[names(initial)]] <- aa
-
-    if (str_detect(primary_model_name, "Geeraerd")) {
-      initial <- p[str_detect(names(p), "C0")]
-      aa <- initial
-      names(aa) <- NULL
-      primary_model[[names(initial)]] <- aa
-    }
-
-    t <- seq(0, max(fit_data$time), length = 1000)
-
-
-    sec <- convert_dynamic_guess(sec_models, guess, known)
-
-    best_prediction <- predict_inactivation(t,
-                         primary_model,
-                         environment = "dynamic",
-                         sec,
-                         env_conditions)
-
-    ## Prepare the output
-
-    out <- list(
-      approach = approach,
-      algorithm = "regression",
-      data = fit_data,
-      guess = guess,
-      known = known,
-      primary_model = primary_model_name,
-      fit_results = my_fit,
-      best_prediction = best_prediction,
-      sec_models = sec,
-      env_conditions = env_conditions,
-      niter = niter
-      # logbase_logN = NULL,
-      # approach_logN0 = NULL
-    )
-
-    class(out) <- c("InactivationFit", class(out))
 
     ## Return
 

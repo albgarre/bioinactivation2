@@ -118,9 +118,9 @@ fit_dynamic_inactivation <- function(fit_data,
     lower <- -Inf
   }
 
-  ## Fit the model
-
   if (algorithm == "regression") {
+    
+    ## Fit the model
 
     my_fit <- modFit(dynamic_residuals,
                      unlist(start),
@@ -133,9 +133,117 @@ fit_dynamic_inactivation <- function(fit_data,
                      lower = lower,
                      ...
                      )
+    
+    ## Calculate the best prediction
+    
+    p <- c(coef(my_fit), unlist(known))
+    
+    primary_model <- list(model = model_name)
+    
+    initial <- p[str_detect(names(p), "N0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+    
+    if (str_detect(model_name, "Geeraerd")) {
+      initial <- p[str_detect(names(p), "C0")]
+      aa <- initial
+      names(aa) <- NULL
+      primary_model[[names(initial)]] <- aa
+    }
+    
+    t <- seq(0, max(fit_data$time), length = 1000)
+    
+    sec <- convert_dynamic_guess(sec_models, p, c())
+    
+    best_prediction <- predict_inactivation(t,
+                                            primary_model,
+                                            environment = "dynamic",
+                                            sec,
+                                            env_conditions)
+    
+    ## Prepare the output
+    
+    out <- list(
+      approach = "dynamic",
+      algorithm = "regression",
+      data = fit_data,
+      guess = unlist(start),
+      known = unlist(known),
+      primary_model = model_name,
+      fit_results = my_fit,
+      best_prediction = best_prediction,
+      sec_models = sec,
+      env_conditions = env_conditions,
+      niter = NULL
+    )
+    
+    class(out) <- c("InactivationFit", class(out))
 
 
   } else if (algorithm == "MCMC") {
+    
+    ## Fit the model
+    
+    my_fit <- modMCMC(dynamic_residuals,
+                     unlist(start),
+                     fit_data = fit_data,
+                     primary_model_name = model_name,
+                     sec_models = secondary_models,
+                     known = unlist(known),
+                     env_conditions = env_conditions,
+                     upper = upper,
+                     lower = lower,
+                     niter = niter,
+                     ...
+    )
+    
+    ## Calculate the best prediction
+    
+    p <- c(my_fit$bestpar, unlist(known))
+    
+    primary_model <- list(model = model_name)
+    
+    initial <- p[str_detect(names(p), "N0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+    
+    if (str_detect(model_name, "Geeraerd")) {
+      initial <- p[str_detect(names(p), "C0")]
+      aa <- initial
+      names(aa) <- NULL
+      primary_model[[names(initial)]] <- aa
+    }
+    
+    t <- seq(0, max(fit_data$time), length = 1000)
+    
+    sec <- convert_dynamic_guess(sec_models, p, c())
+    
+    best_prediction <- predict_inactivation(t,
+                                            primary_model,
+                                            environment = "dynamic",
+                                            sec,
+                                            env_conditions)
+    
+    ## Prepare the output
+    
+    out <- list(
+      approach = "dynamic",
+      algorithm = "MCMC",
+      data = fit_data,
+      guess = unlist(start),
+      known = unlist(known),
+      primary_model = model_name,
+      fit_results = my_fit,
+      best_prediction = best_prediction,
+      sec_models = sec,
+      env_conditions = env_conditions,
+      niter = niter
+    )
+    
+    class(out) <- c("InactivationFit", class(out))
+    
 
   } else {
     stop("Algorithm must be 'regression' or 'MCMC', got: ", algorithm)
@@ -143,7 +251,7 @@ fit_dynamic_inactivation <- function(fit_data,
 
   ## Output
 
-  my_fit
+  out
 
 }
 

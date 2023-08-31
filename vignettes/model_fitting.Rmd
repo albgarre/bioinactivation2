@@ -181,6 +181,24 @@ fit_inactivation("dynamic",
   summary()
 ```
 
+```{r}
+## Algorithm
+
+aa <- fit_inactivation("dynamic", 
+                 dynamic_experiment, 
+                 "Bigelow",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = dynamic_conditions,
+                 algorithm = "MCMC",
+                 niter = 100,
+                 burninlength = 50)
+
+summary(aa)
+plot(aa)
+
+```
 
 
 
