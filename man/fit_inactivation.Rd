@@ -106,7 +106,8 @@ model for one parameter of the primary model. These lists must have three elemen
 \item \code{depends_on}: a character vector with the names of the environmental factors that
 affect this parameter. Note that these names must match those in \code{fit_data}. If the
 parameter does not depend on any environmental condition, an empty vector (\code{c()})
-should be passed here.
+should be passed here. Please see the examples below for further information on
+how to define secondary models.
 }
 
 Each model parameter must be assigned either an initial guess (\code{guess}) or a fixed

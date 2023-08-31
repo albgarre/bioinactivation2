@@ -26,16 +26,21 @@ AA
 ## Fitting primary models
 
 ```{r}
-d <- tibble(t = 0:7,
-            logN = c(8, 7.3, 6.9, 6.2, 5.4, 5.2, 4.8, 4.2))
+# d <- tibble(t = 0:7,
+#             logN = c(8, 7.3, 6.9, 6.2, 5.4, 5.2, 4.8, 4.2))
 
-make_guess_primary(d, "Geeraerd", formula = logN ~ t)
+data("inactivation_experiment")
+
+make_guess_primary(inactivation_experiment, 
+                   "Geeraerd", formula = logN ~ t)
 
 
 check_inactivation_guess("primary", 
-                         d, 
+                         inactivation_experiment, 
                          "Geeraerd",
-                         make_guess_primary(d, "Geeraerd", formula = logN ~ t),
+                         make_guess_primary(inactivation_experiment,
+                                            "Geeraerd", 
+                                            formula = logN ~ t),
                          formula = logN ~ t
                          )
 
@@ -44,9 +49,10 @@ check_inactivation_guess("primary",
 known <- list()
 
 aa <- fit_inactivation("primary", 
-                       d, 
+                       inactivation_experiment, 
                        "Bigelow",
-                       make_guess_primary(d, "Bigelow", formula = logN ~ t), 
+                       make_guess_primary(inactivation_experiment, 
+                                          "Bigelow", formula = logN ~ t), 
                        known,
                        formula = logN ~ t)
 coef(aa)

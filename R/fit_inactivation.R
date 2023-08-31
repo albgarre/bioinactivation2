@@ -47,7 +47,8 @@
 #' * `depends_on`: a character vector with the names of the environmental factors that 
 #' affect this parameter. Note that these names must match those in `fit_data`. If the
 #' parameter does not depend on any environmental condition, an empty vector (`c()`) 
-#' should be passed here.
+#' should be passed here. Please see the examples below for further information on
+#' how to define secondary models.
 #' 
 #' Each model parameter must be assigned either an initial guess (`guess`) or a fixed
 #' value (`known`) as a named numeric vector. The conventions for the names are `primary-parameter`
