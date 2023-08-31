@@ -71,12 +71,12 @@ fit_dynamic_inactivation <- function(fit_data,
                                      model_name,
                                      start,
                                      known,
-                                     upper,
-                                     lower,
+                                     upper = NULL,
+                                     lower = NULL,
                                      secondary_models,
                                      algorithm,
                                      env_conditions,
-                                     niter
+                                     niter = NULL
                                      # ...,
                                      # check = TRUE,
                                      # formula = logN ~ time

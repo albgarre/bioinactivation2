@@ -67,15 +67,30 @@ fit_inactivation("primary",
                        inactivation_experiment, 
                        "Bigelow",
                        guess = c(logN0 = 8, logD = 0.3), 
-                       known = c(),
+                       # known = c(),
                  lower = c(logN0 = 7, logD = .1),
                  upper = c(logN0 = 9, logD = .4),
                        formula = logN ~ t) %>% 
   summary()
+```
+## Other algorithm 
+
+```{r}
+
+aa <- fit_inactivation("primary", 
+                       inactivation_experiment, 
+                       "Bigelow",
+                       make_guess_primary(inactivation_experiment, 
+                                          "Bigelow", formula = logN ~ t), 
+                       algorithm = "MCMC",
+                       formula = logN ~ t,
+                       niter = 100,
+                       burninlength = 20)
 coef(aa)
 summary(aa)
 plot(aa)
 ```
+
 
 
 ```{r}
@@ -106,8 +121,6 @@ fit_inactivation("primary", d, "Peleg",
 ## Dynamic fitting
 
 ```{r}
-
-
 times <- seq(0, 10, length = 20)
 primary_model <- list(model = "Mafart", 
                       logN0 = 7

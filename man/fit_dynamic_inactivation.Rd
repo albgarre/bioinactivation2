@@ -9,12 +9,12 @@ fit_dynamic_inactivation(
   model_name,
   start,
   known,
-  upper,
-  lower,
+  upper = NULL,
+  lower = NULL,
   secondary_models,
   algorithm,
   env_conditions,
-  niter
+  niter = NULL
 )
 }
 \description{

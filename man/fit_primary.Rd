@@ -11,6 +11,9 @@ fit_primary(
   known,
   upper = NULL,
   lower = NULL,
+  algorithm = "regression",
+  niter = NULL,
+  ...,
   check = TRUE
 )
 }

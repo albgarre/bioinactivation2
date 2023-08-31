@@ -60,12 +60,9 @@ fit_primary <- function(fit_data,
                         known,
                         upper = NULL,
                         lower = NULL,
-                        # approach_logN0 = "unique",  # or "logS" or "different",
-                        # secondary_models = NULL
-                        # algorithm = "regression",
-                        # env_conditions = NULL,
-                        # niter = NULL,
-                        # ...,
+                        algorithm = "regression",
+                        niter = NULL,
+                        ...,
                         check = TRUE
 ) {
 
@@ -77,7 +74,7 @@ fit_primary <- function(fit_data,
 
   }
 
-  ## Fit the model
+  ## Set up the bounds
   
   if ( !is.null(upper) ) {
     upper <- upper
@@ -90,21 +87,97 @@ fit_primary <- function(fit_data,
   } else {
     lower <- -Inf
   }
-
-  my_fit <- modFit(primary_residuals,
-                   unlist(start),
-                   fit_data = fit_data,
-                   model_name = model_name,
-                   known = unlist(known),
-                   upper = upper,
-                   lower = lower
-                   # logbase_logN = logbase_logN,
-                   # ...
-                   )
+  
+  ## Fit the model
+  
+  if (algorithm == "regression") {
+    
+    my_fit <- modFit(primary_residuals,
+                     unlist(start),
+                     fit_data = fit_data,
+                     model_name = model_name,
+                     known = unlist(known),
+                     upper = upper,
+                     lower = lower,
+                     ...
+                     )
+    
+    ## Calculate the best prediction
+    
+    p <- c(coef(my_fit), unlist(known))
+    primary_model <- as.list(p)
+    primary_model$model <- model_name
+    t <- seq(0, max(fit_data$time), length = 1000)
+    
+    best_prediction <- predict_inactivation(t, primary_model)
+    
+    ## Prepare the output
+    
+    out <- list(
+      method = "primary",
+      algorithm = "regression",
+      data = fit_data,
+      guess = start,
+      known = known,
+      primary_model = model_name,
+      fit_results = my_fit,
+      best_prediction = best_prediction,
+      sec_models = NULL,
+      env_conditions = NULL,
+      niter = NULL
+    )
+    
+    class(out) <- c("InactivationFit", class(out))
+    
+    
+  } else if (algorithm == "MCMC") {
+    
+    my_fit <- modMCMC(primary_residuals,
+                     unlist(start),
+                     fit_data = fit_data,
+                     model_name = model_name,
+                     known = unlist(known),
+                     upper = upper,
+                     lower = lower,
+                     niter = niter,
+                     ...
+    )
+    
+    ## Calculate the best prediction
+    
+    p <- c(my_fit$bestpar, unlist(known))
+    primary_model <- as.list(p)
+    primary_model$model <- model_name
+    t <- seq(0, max(fit_data$time), length = 1000)
+    
+    best_prediction <- predict_inactivation(t, primary_model)
+    
+    ## Prepare the output
+    
+    out <- list(
+      method = "primary",
+      algorithm = "MCMC",
+      data = fit_data,
+      guess = start,
+      known = known,
+      primary_model = model_name,
+      fit_results = my_fit,
+      best_prediction = best_prediction,
+      sec_models = NULL,
+      env_conditions = NULL,
+      niter = NULL
+    )
+    
+    class(out) <- c("InactivationFit", class(out))
+    
+    
+  } else {
+    stop(paste("algorithm must be either 'regression' or 'MCMC', got:", algorithm))
+  }
 
   ## Output
 
-  my_fit
+  out
 
 }
 

@@ -9,13 +9,14 @@ fit_inactivation(
   fit_data,
   primary_model_name,
   guess,
-  known,
+  known = c(),
   upper = NULL,
   lower = NULL,
   secondary_models = NULL,
   algorithm = "regression",
   env_conditions = NULL,
   niter = NULL,
+  ...,
   check = TRUE,
   formula = logN ~ time
 )

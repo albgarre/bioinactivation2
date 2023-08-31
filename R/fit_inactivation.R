@@ -146,7 +146,7 @@ fit_inactivation <- function(method,
                              fit_data,
                              primary_model_name,
                              guess,
-                             known,
+                             known = c(),
                              upper = NULL,
                              lower = NULL,
                              # approach_logN0 = "unique",  # or "logS" or "different",
@@ -154,7 +154,7 @@ fit_inactivation <- function(method,
                              algorithm = "regression",
                              env_conditions = NULL,
                              niter = NULL,
-                             # ...,
+                             ...,
                              check = TRUE,
                              # logbase_logN = 10,  # TODO
                              formula = logN ~ time
@@ -178,43 +178,16 @@ fit_inactivation <- function(method,
 
     ## Fit the model
 
-    my_fit <-  fit_primary(fit_data, 
+    out <-  fit_primary(fit_data, 
                            primary_model_name, 
                            guess, known,
                            check = check,
                            upper = upper,
-                           lower = lower
+                           lower = lower,
+                           algorithm = algorithm,
+                           niter = niter,
+                           ...
                            )
-    
-
-    ## Calculate the best prediction
-
-    p <- c(coef(my_fit), unlist(known))
-    primary_model <- as.list(p)
-    primary_model$model <- primary_model_name
-    t <- seq(0, max(fit_data$time), length = 1000)
-
-    best_prediction <- predict_inactivation(t, primary_model)
-
-    ## Prepare the output
-
-    out <- list(
-      method = method,
-      algorithm = "regression",
-      data = fit_data,
-      guess = guess,
-      known = known,
-      primary_model = primary_model_name,
-      fit_results = my_fit,
-      best_prediction = best_prediction,
-      sec_models = NULL,
-      env_conditions = NULL,
-      niter = NULL,
-      logbase_logN = NULL
-      # approach_logN0 = NULL
-    )
-
-    class(out) <- c("InactivationFit", class(out))
 
     ## Return
 
