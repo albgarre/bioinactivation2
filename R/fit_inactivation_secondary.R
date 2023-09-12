@@ -7,13 +7,15 @@
 #' @param model_name identifier of the secondary model as per [secondary_model_data()]
 #' @param fit_data a tibble (or data.frame) defining the data as in [fit_inactivation_secondary()]
 #' @param known a named numeric vector of known model parameters
+#' @param output output format. Either 'vector' (default) or 'loglik'
 #' 
 #' @returns a numeric vector of model residuals
 #'
 secondary_residuals <- function(this_p,
                                 model_name,
                                 fit_data,
-                                known
+                                known,
+                                output = "vector"
                                 ) {
 
   ## Put the parameters together
@@ -79,14 +81,30 @@ secondary_residuals <- function(this_p,
   }
 
   ## Output the residuals
+  
+  res <- fit_data$my_par - pred
+  
+  if (output == "loglik") {
+    
+    sum(res^2)
+    
+  } else {
+    
+    res
+    
+  }
 
-  fit_data$my_par - pred
+  # # fit_data$my_par - pred
+  # 
+  # res <- fit_data$my_par - pred
+  # sum(res^2)
 
 }
 
 #' Fits a secondary inactivation model using different methods from predictive microbiology
 #'
 #' @importFrom formula.tools lhs rhs get.vars
+#' @importFrom FME modFit modMCMC
 #'
 #' @export
 #'
@@ -146,8 +164,6 @@ fit_inactivation_secondary <- function(fit_data,
                      ...
     )
 
-    my_fit
-
     ## Prepare the output
 
     out <- list(
@@ -158,9 +174,7 @@ fit_inactivation_secondary <- function(fit_data,
       model_name = model_name,
       fit_results = my_fit,
       # best_prediction = best_prediction,  # TODO: implement this
-      # sec_models = secondary_models,
       niter = NULL,
-      logbase_logN = NULL,
       par_name = y_col
     )
 
@@ -172,6 +186,38 @@ fit_inactivation_secondary <- function(fit_data,
 
 
   } else if (algorithm == "MCMC") {
+    
+    my_fit <- modMCMC(secondary_residuals,
+                      unlist(start),
+                      fit_data = fit_data,
+                      model_name = model_name,
+                      known = unlist(known),
+                      upper = upper,
+                      lower = lower,
+                      niter = niter,
+                      output = "loglik",
+                      ...
+                      )
+    
+    ## Prepare the output
+    
+    out <- list(
+      algorithm = "MCMC",
+      data = fit_data,
+      guess = guess,
+      known = known,
+      model_name = model_name,
+      fit_results = my_fit,
+      # best_prediction = best_prediction,  # TODO: implement this
+      niter = niter,
+      par_name = y_col
+    )
+    
+    class(out) <- c("SecondaryFit", class(out))
+    
+    ## Return
+    
+    out
 
   } else {
     stop("Algorithm must be 'regression' or 'MCMC', got: ", algorithm)

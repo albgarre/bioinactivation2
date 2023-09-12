@@ -4,7 +4,7 @@
 \alias{secondary_residuals}
 \title{Residuals for fitting secondary models}
 \usage{
-secondary_residuals(this_p, model_name, fit_data, known)
+secondary_residuals(this_p, model_name, fit_data, known, output = "vector")
 }
 \arguments{
 \item{this_p}{named numeric vector of parameter values}
@@ -14,6 +14,8 @@ secondary_residuals(this_p, model_name, fit_data, known)
 \item{fit_data}{a tibble (or data.frame) defining the data as in \code{\link[=fit_inactivation_secondary]{fit_inactivation_secondary()}}}
 
 \item{known}{a named numeric vector of known model parameters}
+
+\item{output}{output format. Either 'vector' (default) or 'loglik'}
 }
 \value{
 a numeric vector of model residuals

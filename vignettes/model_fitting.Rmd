@@ -385,6 +385,21 @@ aa <- fit_inactivation_secondary(inactivation_secondary,
 summary(aa)
 ```
 
+```{r}
+## MCMC
+
+aa <- fit_inactivation_secondary(inactivation_secondary,
+                           "Bigelow",
+                           start = guess,
+                           known = known,
+                           formula = delta ~ temp + pH,
+                           algorithm = "MCMC",
+                           niter = 10
+                           )
+
+summary(aa)
+```
+
 
 ## Global fitting
 
