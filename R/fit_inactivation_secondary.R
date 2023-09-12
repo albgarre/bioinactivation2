@@ -98,7 +98,8 @@ fit_inactivation_secondary <- function(fit_data,
                                        lower = NULL,
                                        algorithm = "regression",
                                        niter = NULL,
-                                       formula = my_par ~ temp
+                                       formula = my_par ~ temp,
+                                       ...
                                        ) {
 
   ## Apply the formula
@@ -117,6 +118,20 @@ fit_inactivation_secondary <- function(fit_data,
   
   check_secondary_pars(model_name, c(start, known), vars)
   
+  ## Set up the bounds
+  
+  if ( !is.null(upper) ) {
+    upper <- upper
+  } else {
+    upper <- Inf
+  }
+  
+  if ( !is.null(lower) ) {
+    lower <- lower
+  } else {
+    lower <- -Inf
+  }
+  
   ## Fit the model
 
   if (algorithm == "regression") {
@@ -125,11 +140,10 @@ fit_inactivation_secondary <- function(fit_data,
                      unlist(start),
                      fit_data = fit_data,
                      model_name = model_name,
-                     # sec_models = secondary_models,
-                     known = unlist(known)
-                     # approach_logN0 = approach_logN0
-                     # logbase_logN = logbase_logN,
-                     # ...
+                     known = unlist(known),
+                     upper = upper,
+                     lower = lower,
+                     ...
     )
 
     my_fit

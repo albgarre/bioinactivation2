@@ -353,6 +353,39 @@ check_secondary_guess(d, "Bigelow",
                       )
 ```
 
+```{r}
+# bounds
+
+guess <- c(temp_logz = .69,
+           pH_z = 2,
+           logref = 1
+           )
+
+upper <- c(temp_logz = .75,
+           pH_z = 2.5,
+           logref = 2
+           )
+
+
+lower <- c(temp_logz = .2,
+           pH_z = 0,
+           logref = 0
+           )
+
+
+aa <- fit_inactivation_secondary(inactivation_secondary,
+                           "Bigelow",
+                           start = guess,
+                           known = known,
+                           formula = delta ~ temp + pH,
+                           upper = upper,
+                           lower = lower
+)
+
+summary(aa)
+```
+
+
 ## Global fitting
 
 ```{r}

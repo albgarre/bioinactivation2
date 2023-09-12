@@ -13,7 +13,8 @@ fit_inactivation_secondary(
   lower = NULL,
   algorithm = "regression",
   niter = NULL,
-  formula = my_par ~ temp
+  formula = my_par ~ temp,
+  ...
 )
 }
 \description{
