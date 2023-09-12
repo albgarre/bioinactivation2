@@ -101,7 +101,43 @@ secondary_residuals <- function(this_p,
 
 }
 
-#' Fits a secondary inactivation model using different methods from predictive microbiology
+#' Fitting secondary inactivation models
+#' 
+#' The function can fit secondary models with an arbitrary number of environmental factors
+#' to a datset containing the values of some parameter observed in independent experiments
+#' at constant environmental conditions. 
+#' 
+#' @details
+#' 
+#' The model variables are defined using the `formula` attribute. It must be a two-sided formula
+#' with the left hand side defining a unique output variable (i.e., the parameter of the primary model) 
+#' and the right hand side an arbitrary number of environmental factors (separated by `+`). 
+#' For instance, `D ~ temp` would define a model for `D` as a function of `temp`, whereas
+#' `D ~ temp + pH` would define a model for `D` as a function of both `temp` and `pH`. The name 
+#' of these variables must match the column names in `fit_data`.
+#' 
+#' Each model parameter must be assigned either an initial guess (`guess`) or a fixed
+#' value (`known`) as a named numeric vector. The conventions for the names are 
+#' `factor-name` + `secondary-parameter`. For instance, the name `temperature_z` would provide
+#' the guess for the z-value with respect to the factor
+#' named "temperature". The names of the parameters must match those returned by
+#' [secondary_model_data()] and the factor name must be included in `formula`. Note that the fitting can 
+#' also be done in log-scale be including "log" before the parameter name: 
+#' e.g., `temperature_logz`.
+#' 
+#' 
+#' @param fit_data tibble (or data.frame) with the data for the fitting. Must have one column
+#' with the parameter values of the primary model and as many columns as needed describing
+#' environmental factors.
+#' @param model_name A model identifier according to [secondary_model_data()]
+#' @param formula A two-sided formula describing the output and input variables of the model. See details.
+#' @param guess a named numeric vector with initial guesses for the model parameters. See details.
+#' @param known a named numeric vector of parameter values that are considered known.
+#' @param upper a named numeric vector with upper limits for the parameter estimates
+#' @param lower a named numeric vector with lower limits for the parameter estimates
+#' @param algorithm the fitting algorithm to use. Either 'regression' or 'MCMC'.
+#' @param niter number of iterations of the MCMC algorithm. Ignored when algorithm = 'regression'
+#' @param ... additional arguments for [modFit()] or [modMCMC()]
 #'
 #' @importFrom formula.tools lhs rhs get.vars
 #' @importFrom FME modFit modMCMC
@@ -110,14 +146,15 @@ secondary_residuals <- function(this_p,
 #'
 fit_inactivation_secondary <- function(fit_data,
                                        model_name,
-                                       start,
+                                       formula = my_par ~ temp,
+                                       guess,
                                        known,
                                        upper = NULL,
                                        lower = NULL,
                                        algorithm = "regression",
                                        niter = NULL,
-                                       formula = my_par ~ temp,
                                        ...
+                                       # check = NULL  # TODO 
                                        ) {
 
   ## Apply the formula
@@ -134,7 +171,7 @@ fit_inactivation_secondary <- function(fit_data,
   
   ## Check the model parameters
   
-  check_secondary_pars(model_name, c(start, known), vars)
+  check_secondary_pars(model_name, c(guess, known), vars)
   
   ## Set up the bounds
   
@@ -155,7 +192,7 @@ fit_inactivation_secondary <- function(fit_data,
   if (algorithm == "regression") {
 
     my_fit <- modFit(secondary_residuals,
-                     unlist(start),
+                     unlist(guess),
                      fit_data = fit_data,
                      model_name = model_name,
                      known = unlist(known),
@@ -188,7 +225,7 @@ fit_inactivation_secondary <- function(fit_data,
   } else if (algorithm == "MCMC") {
     
     my_fit <- modMCMC(secondary_residuals,
-                      unlist(start),
+                      unlist(guess),
                       fit_data = fit_data,
                       model_name = model_name,
                       known = unlist(known),

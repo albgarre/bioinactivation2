@@ -2,21 +2,63 @@
 % Please edit documentation in R/fit_inactivation_secondary.R
 \name{fit_inactivation_secondary}
 \alias{fit_inactivation_secondary}
-\title{Fits a secondary inactivation model using different methods from predictive microbiology}
+\title{Fitting secondary inactivation models}
 \usage{
 fit_inactivation_secondary(
   fit_data,
   model_name,
-  start,
+  formula = my_par ~ temp,
+  guess,
   known,
   upper = NULL,
   lower = NULL,
   algorithm = "regression",
   niter = NULL,
-  formula = my_par ~ temp,
   ...
 )
 }
+\arguments{
+\item{fit_data}{tibble (or data.frame) with the data for the fitting. Must have one column
+with the parameter values of the primary model and as many columns as needed describing
+environmental factors.}
+
+\item{model_name}{A model identifier according to \code{\link[=secondary_model_data]{secondary_model_data()}}}
+
+\item{formula}{A two-sided formula describing the output and input variables of the model. See details.}
+
+\item{guess}{a named numeric vector with initial guesses for the model parameters. See details.}
+
+\item{known}{a named numeric vector of parameter values that are considered known.}
+
+\item{upper}{a named numeric vector with upper limits for the parameter estimates}
+
+\item{lower}{a named numeric vector with lower limits for the parameter estimates}
+
+\item{algorithm}{the fitting algorithm to use. Either 'regression' or 'MCMC'.}
+
+\item{niter}{number of iterations of the MCMC algorithm. Ignored when algorithm = 'regression'}
+
+\item{...}{additional arguments for \code{\link[=modFit]{modFit()}} or \code{\link[=modMCMC]{modMCMC()}}}
+}
 \description{
-Fits a secondary inactivation model using different methods from predictive microbiology
+The function can fit secondary models with an arbitrary number of environmental factors
+to a datset containing the values of some parameter observed in independent experiments
+at constant environmental conditions.
+}
+\details{
+The model variables are defined using the \code{formula} attribute. It must be a two-sided formula
+with the left hand side defining a unique output variable (i.e., the parameter of the primary model)
+and the right hand side an arbitrary number of environmental factors (separated by \code{+}).
+For instance, \code{D ~ temp} would define a model for \code{D} as a function of \code{temp}, whereas
+\code{D ~ temp + pH} would define a model for \code{D} as a function of both \code{temp} and \code{pH}. The name
+of these variables must match the column names in \code{fit_data}.
+
+Each model parameter must be assigned either an initial guess (\code{guess}) or a fixed
+value (\code{known}) as a named numeric vector. The conventions for the names are
+\code{factor-name} + \code{secondary-parameter}. For instance, the name \code{temperature_z} would provide
+the guess for the z-value with respect to the factor
+named "temperature". The names of the parameters must match those returned by
+\code{\link[=secondary_model_data]{secondary_model_data()}} and the factor name must be included in \code{formula}. Note that the fitting can
+also be done in log-scale be including "log" before the parameter name:
+e.g., \code{temperature_logz}.
 }

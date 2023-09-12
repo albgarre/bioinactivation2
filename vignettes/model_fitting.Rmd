@@ -340,7 +340,7 @@ known <- c(temp_xref = 55,
 
 aa <- fit_inactivation_secondary(inactivation_secondary,
                            "Bigelow",
-                           start = guess,
+                           guess = guess,
                            known = known,
                            formula = delta ~ temp + pH
 )
@@ -375,7 +375,7 @@ lower <- c(temp_logz = .2,
 
 aa <- fit_inactivation_secondary(inactivation_secondary,
                            "Bigelow",
-                           start = guess,
+                           guess = guess,
                            known = known,
                            formula = delta ~ temp + pH,
                            upper = upper,
@@ -390,7 +390,7 @@ summary(aa)
 
 aa <- fit_inactivation_secondary(inactivation_secondary,
                            "Bigelow",
-                           start = guess,
+                           guess = guess,
                            known = known,
                            formula = delta ~ temp + pH,
                            algorithm = "MCMC",
