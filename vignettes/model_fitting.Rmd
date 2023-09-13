@@ -479,12 +479,12 @@ aa <- fit_inactivation("global",
                  )
 
 summary(aa)
-
+plot(aa)
 ```
 ### MCMC
 
 ```{r}
- fit_inactivation("global", 
+ bb <- fit_inactivation("global", 
                  d, 
                  "Bigelow",
                  guess, 
@@ -492,8 +492,9 @@ summary(aa)
                  secondary_models = sec_models,
                  env_conditions = env,
                  algorithm = "MCMC",
-                 niter = 10) %>% 
-  summary()
+                 niter = 10)
+summary(bb)
+plot(bb)
 ```
 
 

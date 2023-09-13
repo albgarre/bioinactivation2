@@ -433,7 +433,7 @@ AIC.InactivationFit <- function(object, ..., k=2) {
 #' @importFrom ggplot2 ggplot geom_point
 #' @importFrom rlang .data
 #' @importFrom graphics plot
-#' @importFrom cowplot theme_cowplot
+#' @importFrom cowplot theme_cowplot plot_grid
 #'
 plot.InactivationFit <- function(x, y=NULL, ...,
                            add_factor = NULL,
@@ -521,6 +521,19 @@ plot.InactivationFit <- function(x, y=NULL, ...,
       stop(paste0("type must be 1 or 2 for approach = 'one-step'. Got: ", type))
 
     }
+  } else if (x$approach == "global") {
+    
+    p <- x$best_prediction %>% map(plot)
+    
+    p <- map2(p, x$data,
+         ~ .x + geom_point(aes(x = time, y = logN), data = .y)
+         )
+    
+    plot_grid(plotlist = p, labels = names(p))
+      
+    
+  } else {
+    stop("plot() method not implemented for this approach")
   }
 
 

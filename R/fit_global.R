@@ -115,19 +115,50 @@ fit_multiple_inactivation <- function(fit_data,
       ...
       )
     
+    ## Calculate the best predictions
+    
+    
+    p <- c(coef(my_fit), unlist(known))
+    
+    primary_model <- list(model = primary_model_name)
+    
+    initial <- p[str_detect(names(p), "N0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+    
+    if (str_detect(primary_model_name, "Geeraerd")) {
+      initial <- p[str_detect(names(p), "C0")]
+      aa <- initial
+      names(aa) <- NULL
+      primary_model[[names(initial)]] <- aa
+    }
+
+    sec <- convert_dynamic_guess(sec_models, p, c())
+    
+    best_prediction <- my_data %>% 
+      map(~.$conditions) %>%
+      map(
+        ~ predict_inactivation(seq(0, max(.$time), length = 100),
+                               primary_model,
+                               environment = "dynamic",
+                               sec,
+                               .)
+        )
+    
     ## Prepare the output
     
     out <- list(
       approach = "global",
       algorithm = "regression",
-      data = my_data,
+      data = my_data %>% map(~.$data),
       guess = guess,
       known = known,
       primary_model = primary_model_name,
       fit_results = my_fit,
-      # best_prediction = best_prediction,
+      best_prediction = best_prediction,
       sec_models = sec_models,
-      # env_conditions = env_conditions,
+      env_conditions = my_data %>% map(~.$conditions),
       niter = NULL
     )
     
@@ -149,19 +180,50 @@ fit_multiple_inactivation <- function(fit_data,
       ...
     )
     
+    ## Calculate the best predictions
+    
+    
+    p <- c(my_fit$bestpar, unlist(known))
+    
+    primary_model <- list(model = primary_model_name)
+    
+    initial <- p[str_detect(names(p), "N0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+    
+    if (str_detect(primary_model_name, "Geeraerd")) {
+      initial <- p[str_detect(names(p), "C0")]
+      aa <- initial
+      names(aa) <- NULL
+      primary_model[[names(initial)]] <- aa
+    }
+    
+    sec <- convert_dynamic_guess(sec_models, p, c())
+    
+    best_prediction <- my_data %>% 
+      map(~.$conditions) %>%
+      map(
+        ~ predict_inactivation(seq(0, max(.$time), length = 100),
+                               primary_model,
+                               environment = "dynamic",
+                               sec,
+                               .)
+      )
+    
     ## Prepare the output
     
     out <- list(
       approach = "global",
       algorithm = "MCMC",
-      data = my_data,
+      data = my_data %>% map(~.$data),
       guess = guess,
       known = known,
       primary_model = primary_model_name,
       fit_results = my_fit,
-      # best_prediction = best_prediction,
+      best_prediction = best_prediction,
       sec_models = sec_models,
-      # env_conditions = env_conditions,
+      env_conditions = my_data %>% map(~.$conditions),
       niter = niter
     )
     
