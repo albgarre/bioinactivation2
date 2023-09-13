@@ -498,6 +498,50 @@ summary(aa, step = 1)
 
 ```
 
+```{r}
+## fixing pars of the primary model
+
+primary_model <- list(model = "Mafart", 
+                      logN0 = 7
+)
+
+sec_models <- list(
+  list(par = "delta",
+       model = "Bigelow",
+       depends_on = c("temp", "pH")
+  )
+  # list(par = "p",
+  #      model = "Bigelow",
+  #      depends_on = c()
+  # )
+)
+
+guess <- c(logN0 = 7,
+           delta_temp_logz = .69,
+           delta_pH_z = 2,
+           delta_logref = 1
+           # p_logref = 0
+)
+
+known <- c(delta_temp_xref = 55,
+           delta_pH_xref = 7,
+           # logN0 = 7,
+           p = .8
+)
+
+aa <- fit_inactivation("two-steps", 
+                       inactivation_twosteps, 
+                       "Mafart",
+                       guess, 
+                       known, 
+                       secondary_models = sec_models,
+                       env_conditions = env_conditions,
+                       algorithm = "regression")
+
+aa$primary_pars
+
+aa$fit_results$primary %>% map(coef)
+```
 
 
 
