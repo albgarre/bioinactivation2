@@ -1,13 +1,15 @@
 
-#' AA
-#'
+#' Two-steps fitting of inactivation models by 
+#' 
+#' @param fit_data aa
+#' @param model_name aa
+#' @param known aa
+#' @param upper aa
+#' 
 #'
 fit_two_step <- function(fit_data,
                          model_name,
-                         # start,
                          known,
-                         upper,
-                         lower,
                          secondary_models
                          # algorithm,
                          # niter

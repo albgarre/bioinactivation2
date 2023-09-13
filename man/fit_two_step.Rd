@@ -2,10 +2,19 @@
 % Please edit documentation in R/two_step_fit.R
 \name{fit_two_step}
 \alias{fit_two_step}
-\title{AA}
+\title{Two-steps fitting of inactivation models by}
 \usage{
-fit_two_step(fit_data, model_name, known, upper, lower, secondary_models)
+fit_two_step(fit_data, model_name, known, secondary_models)
+}
+\arguments{
+\item{fit_data}{aa}
+
+\item{model_name}{aa}
+
+\item{known}{aa}
+
+\item{upper}{aa}
 }
 \description{
-AA
+Two-steps fitting of inactivation models by
 }

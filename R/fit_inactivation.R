@@ -201,10 +201,7 @@ fit_inactivation <- function(approach,
     out <- fit_two_step(
       fit_data = fit_data,
       model_name = primary_model_name,
-      # start = guess,
       known = known,
-      upper = upper,
-      lower = lower,
       secondary_models = secondary_models
       # approach_logN0 = approach_logN0
     )
