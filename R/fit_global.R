@@ -111,7 +111,8 @@ fit_multiple_inactivation <- function(fit_data,
       primary_model_name = primary_model_name,
       sec_models = sec_models,
       upper = upper,
-      lower = lower
+      lower = lower,
+      ...
       )
     
     ## Prepare the output
@@ -134,6 +135,37 @@ fit_multiple_inactivation <- function(fit_data,
     
     
   } else if (algorithm == "MCMC") {
+    
+    my_fit <- modMCMC(
+      get_multi_dyna_residuals,
+      guess, 
+      experiment_data = my_data,
+      known = known, 
+      primary_model_name = primary_model_name,
+      sec_models = sec_models,
+      upper = upper,
+      lower = lower,
+      niter = niter,
+      ...
+    )
+    
+    ## Prepare the output
+    
+    out <- list(
+      approach = "global",
+      algorithm = "MCMC",
+      data = my_data,
+      guess = guess,
+      known = known,
+      primary_model = primary_model_name,
+      fit_results = my_fit,
+      # best_prediction = best_prediction,
+      sec_models = sec_models,
+      # env_conditions = env_conditions,
+      niter = niter
+    )
+    
+    class(out) <- c("InactivationFit", class(out))
     
   } else {
     stop("Algorithm must be 'regression' or 'MCMC', got: ", algorithm)

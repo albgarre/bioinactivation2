@@ -481,6 +481,20 @@ aa <- fit_inactivation("global",
 summary(aa)
 
 ```
+### MCMC
+
+```{r}
+ fit_inactivation("global", 
+                 d, 
+                 "Bigelow",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env,
+                 algorithm = "MCMC",
+                 niter = 10) %>% 
+  summary()
+```
 
 
 ## Two-steps fitting
