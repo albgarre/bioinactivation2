@@ -175,17 +175,8 @@ fit_inactivation_secondary <- function(fit_data,
   
   ## Set up the bounds
   
-  if ( !is.null(upper) ) {
-    upper <- upper
-  } else {
-    upper <- Inf
-  }
-  
-  if ( !is.null(lower) ) {
-    lower <- lower
-  } else {
-    lower <- -Inf
-  }
+  if (is.null(upper)) upper <- Inf
+  if (is.null(lower)) lower <- -Inf
   
   ## Fit the model
 
