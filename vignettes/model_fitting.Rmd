@@ -318,6 +318,8 @@ check_secondary_guess(inactivation_secondary, "Bigelow",
 
 predict(aa)
 predict(aa, newdata = tibble(temp = c(55, 56), pH = c(7, 5)))
+plot(aa)
+plot(aa, type = 2)
 ```
 
 ```{r}
@@ -366,7 +368,6 @@ aa <- fit_inactivation_secondary(inactivation_secondary,
 
 summary(aa)
 ```
-
 
 ## Global fitting
 
@@ -453,7 +454,32 @@ aa <- fit_inactivation("global",
                  env_conditions = env,
                  algorithm = "regression")
 
-plot(aa)
+summary(aa)
+```
+
+```{r}
+## bounds
+
+guess <- c(logN0 = 7,
+           D_temp_logz = .69,
+           D_pH_z = 2,
+           D_logref = 1
+)
+
+aa <- fit_inactivation("global", 
+                 d, 
+                 "Bigelow",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env,
+                 algorithm = "regression",
+                 upper = c(logN0 = 8, D_temp_logz = .8, D_pH_z = 4, D_logref = 2),
+                 lower = c(logN0 = 6, D_temp_logz = .3, D_pH_z = 2, D_logref = 0)
+                 )
+
+summary(aa)
+
 ```
 
 

@@ -2,21 +2,22 @@
 % Please edit documentation in R/fit_global.R
 \name{fit_multiple_inactivation}
 \alias{fit_multiple_inactivation}
-\title{Fitting a single model to several dynamic experiments}
+\title{Fitting a single model to several (dynamic) experiments}
 \usage{
 fit_multiple_inactivation(
   fit_data,
   primary_model_name,
   guess,
   known,
-  upper,
-  lower,
+  upper = NULL,
+  lower = NULL,
   secondary_models,
-  algorithm,
+  algorithm = "regression",
   env_conditions,
-  niter
+  niter = NULL,
+  ...
 )
 }
 \description{
-Fitting a single model to several dynamic experiments
+Fitting a single model to several (dynamic) experiments
 }

@@ -38,19 +38,19 @@ get_multi_dyna_residuals <- function(this_p,
 }
 
 
-#' Fitting a single model to several dynamic experiments
+#' Fitting a single model to several (dynamic) experiments
 #' 
 fit_multiple_inactivation <- function(fit_data,
                                       primary_model_name,
                                       guess,
                                       known,
-                                      upper,
-                                      lower,
+                                      upper = NULL,
+                                      lower = NULL,
                                       secondary_models,
-                                      algorithm,
+                                      algorithm = "regression",
                                       env_conditions,
-                                      niter
-                                      # ...,
+                                      niter = NULL,
+                                      ...
                                       # check = TRUE,
                                       # formula = logN ~ time
                                       ) {
@@ -94,6 +94,20 @@ fit_multiple_inactivation <- function(fit_data,
   
   names(my_data) <- names(fit_data)
   
+  ## Set up the bounds
+  
+  if ( !is.null(upper) ) {
+    upper <- upper
+  } else {
+    upper <- Inf
+  }
+  
+  if ( !is.null(lower) ) {
+    lower <- lower
+  } else {
+    lower <- -Inf
+  }
+  
   ## Fit the model
   
   if (algorithm == "regression") {
@@ -104,8 +118,28 @@ fit_multiple_inactivation <- function(fit_data,
       experiment_data = my_data,
       known = known, 
       primary_model_name = primary_model_name,
-      sec_models = sec_models
+      sec_models = sec_models,
+      upper = upper,
+      lower = lower
+      )
+    
+    ## Prepare the output
+    
+    out <- list(
+      approach = "global",
+      algorithm = "regression",
+      data = my_data,
+      guess = guess,
+      known = known,
+      primary_model = primary_model_name,
+      fit_results = my_fit,
+      # best_prediction = best_prediction,
+      sec_models = sec_models,
+      # env_conditions = env_conditions,
+      niter = NULL
     )
+    
+    class(out) <- c("InactivationFit", class(out))
     
     
   } else if (algorithm == "MCMC") {
@@ -116,7 +150,7 @@ fit_multiple_inactivation <- function(fit_data,
   
   ## Output
   
-  my_fit
+  out
   
 }
 

@@ -263,7 +263,7 @@ fit_inactivation <- function(approach,
 
   } else if (approach == "global") {
 
-    my_fit <- fit_multiple_inactivation(fit_data,
+    out <- fit_multiple_inactivation(fit_data,
                                         primary_model_name,
                                         guess,
                                         known,
@@ -273,26 +273,6 @@ fit_inactivation <- function(approach,
                                         algorithm,
                                         env_conditions,
                                         niter)
-    
-    ## Prepare the output
-    
-    out <- list(
-      approach = approach,
-      algorithm = "regression",
-      data = fit_data,
-      guess = guess,
-      known = known,
-      primary_model = primary_model_name,
-      fit_results = my_fit,
-      # best_prediction = best_prediction,
-      # sec_models = sec,
-      env_conditions = env_conditions,
-      niter = niter
-      # logbase_logN = NULL,
-      # approach_logN0 = NULL
-    )
-    
-    class(out) <- c("InactivationFit", class(out))
     
     ## Return
     

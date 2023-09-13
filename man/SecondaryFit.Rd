@@ -44,6 +44,12 @@
 \item{newdata}{tibble describing the environmental conditions as in \code{\link[=fit_inactivation_secondary]{fit_inactivation_secondary()}}.
 If \code{NULL} (default), uses the environmental condition of the fitting.}
 
+\item{x}{an instance of SecondaryFit}
+
+\item{y}{ignored}
+
+\item{type}{type of plot to make. Either 1 (observed vs predicted) or 2 (predictived vs residuals).}
+
 \item{times}{numeric vector describing the time points for the prediction.
 If \code{NULL} (default), uses the same points as those used for fitting.}
 }

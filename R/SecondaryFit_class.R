@@ -250,7 +250,11 @@ predict.SecondaryFit <- function(object, newdata = NULL, ...) {
 }
 
 #' @describeIn SecondaryFit compares the fitted model against the data.
-#'
+#' 
+#' @param x an instance of SecondaryFit
+#' @param y ignored
+#' @param ... ignored
+#' @param type type of plot to make. Either 1 (observed vs predicted) or 2 (predictived vs residuals).
 #'
 #' @export
 #'
