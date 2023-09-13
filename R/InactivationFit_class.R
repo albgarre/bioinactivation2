@@ -120,7 +120,7 @@ summary.InactivationFit <- function(object, ..., step = 2) {
 #' @param ... ignored
 #' @param times numeric vector describing the time points for the prediction.
 #' If `NULL` (default), uses the same points as those used for fitting.
-#' @param env_conditions tibble describing the environmental conditions as in [fit_growth()].
+#' @param env_conditions tibble describing the environmental conditions as in [fit_inactivation()].
 #' If `NULL` (default), uses the environmental condition of the fitting.
 #'
 #' @export

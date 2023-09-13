@@ -4,16 +4,48 @@
 \alias{SecondaryFit}
 \alias{coef.SecondaryFit}
 \alias{summary.SecondaryFit}
+\alias{residuals.SecondaryFit}
+\alias{vcov.SecondaryFit}
+\alias{deviance.SecondaryFit}
+\alias{logLik.SecondaryFit}
+\alias{AIC.SecondaryFit}
+\alias{fitted.SecondaryFit}
+\alias{predict.SecondaryFit}
+\alias{plot.SecondaryFit}
 \title{SecondaryFit class}
 \usage{
 \method{coef}{SecondaryFit}(object, ...)
 
 \method{summary}{SecondaryFit}(object, ...)
+
+\method{residuals}{SecondaryFit}(object, ...)
+
+\method{vcov}{SecondaryFit}(object, ...)
+
+\method{deviance}{SecondaryFit}(object, ...)
+
+\method{logLik}{SecondaryFit}(object, ...)
+
+\method{AIC}{SecondaryFit}(object, ..., k = 2)
+
+\method{fitted}{SecondaryFit}(object, ...)
+
+\method{predict}{SecondaryFit}(object, newdata = NULL, ...)
+
+\method{plot}{SecondaryFit}(x, y = NULL, ..., type = 1)
 }
 \arguments{
-\item{object}{Instance of \link{SecondaryFit}}
+\item{object}{an instance of \link{SecondaryFit}}
 
 \item{...}{ignored}
+
+\item{k}{penalty for the parameters (k=2 by default)}
+
+\item{newdata}{tibble describing the environmental conditions as in \code{\link[=fit_inactivation_secondary]{fit_inactivation_secondary()}}.
+If \code{NULL} (default), uses the environmental condition of the fitting.}
+
+\item{times}{numeric vector describing the time points for the prediction.
+If \code{NULL} (default), uses the same points as those used for fitting.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -32,5 +64,23 @@ It is a subclass of list with the items:
 \item \code{coef(SecondaryFit)}: vector of fitted model parameters.
 
 \item \code{summary(SecondaryFit)}: statistical summary of the fit.
+
+\item \code{residuals(SecondaryFit)}: vector of model residuals.
+
+\item \code{vcov(SecondaryFit)}: variance-covariance matrix of the model, estimated
+as 1/(0.5*Hessian) for regression and as the variance-covariance of the draws
+for MCMC
+
+\item \code{deviance(SecondaryFit)}: deviance of the model.
+
+\item \code{logLik(SecondaryFit)}: loglikelihood of the model
+
+\item \code{AIC(SecondaryFit)}: Akaike Information Criterion
+
+\item \code{fitted(SecondaryFit)}: vector of fitted values.
+
+\item \code{predict(SecondaryFit)}: vector of model predictions.
+
+\item \code{plot(SecondaryFit)}: compares the fitted model against the data.
 
 }}

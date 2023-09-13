@@ -42,17 +42,22 @@ primary_residuals <- function(this_p,
 
 #' Fitting of primary inactivation models
 #' 
-#' @param fit_data aa
-#' @param model_name description
-#' @param start description
-#' @param known description
-#' @param upper description
-#' @param lower description
-#' @param check description
+#' @param fit_data tibble (or data.frame) with the data used for fitting. It must have 
+#' a column named `time` and one named `logN`
+#' @param model_name a model identifier according to [primary_model_data()]
+#' @param start a named numeric vector of initial guesses for the model parameters. They
+#' must be named according to [primary_model_data()]
+#' @param known named numeric vector of known parmeters
+#' @param upper named numeric vector of upper limits for the parameters
+#' @param lower named numeric vector of lower limits for the parameters
+#' @param check whether to do some basic checks of the model parameters
+#' @param ... additional arguments passed to [modFME()] or [modFit()]
+#' @param algorithm fitting algorithm: "regression" (default) or "MCMC"
+#' @param niter number of MCMC iterations. Ignored if `algorithm == "regression"`
 #'
 #' @importFrom FME modFit modCost
 #' 
-#' @returns An instance of modFit with the fitted model.
+#' @returns An instance of [InactivationFit] with the fitted model.
 #'
 fit_primary <- function(fit_data,
                         model_name,

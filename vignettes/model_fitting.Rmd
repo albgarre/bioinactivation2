@@ -26,9 +26,6 @@ AA
 ## Fitting primary models
 
 ```{r}
-# d <- tibble(t = 0:7,
-#             logN = c(8, 7.3, 6.9, 6.2, 5.4, 5.2, 4.8, 4.2))
-
 data("inactivation_experiment")
 
 make_guess_primary(inactivation_experiment, 
@@ -161,6 +158,8 @@ aa <- fit_inactivation("dynamic",
 
 plot(aa)
 summary(aa)
+
+
 ```
 
 ```{r}
@@ -281,42 +280,6 @@ plot(aa)
 ## Fitting secondary models - the `fit_inactivation_secondary()` function
 
 ```{r}
-# secondary_models <- list(
-#   list(par = "logdelta",
-#        model = "genBigelow",
-#        temp = c("xref" = 55, logz = .69, n=1),
-#        pH = c("xref" = 7, z = 2, n=1),
-#        ref = 1
-#   ),
-#   list(par = "logp",
-#        model = "Bigelow",
-#        ref = 0
-#   )
-# )
-# 
-# d <- tibble(
-#   temp = list(seq(55, 60, length = 5)),
-#   pH = list(seq(5, 7, length = 5))
-# ) %>%
-#   unnest(temp) %>%
-#   unnest(pH) %>%
-#   mutate(
-#     eff_temp = bioinactivation2:::sec_Bigelow(temp, 
-#                                               secondary_models[[1]]$temp[["xref"]], 
-#                                               10^secondary_models[[1]]$temp[["logz"]]),
-#     eff_pH = bioinactivation2:::sec_Bigelow(pH, 
-#                                               secondary_models[[1]]$pH[["xref"]], 
-#                                               secondary_models[[1]]$pH[["z"]])
-#   ) %>%
-#   mutate(
-#     logdelta = secondary_models[[1]]$ref + eff_temp + eff_pH + rnorm(nrow(.), mean = 0, sd = .1),
-#     delta = 10^logdelta
-#   ) %>%
-#   select(-eff_temp, -eff_pH, -logdelta)
-#   # rename(par = delta)
-# 
-# d
-
 ##
 
 data("inactivation_secondary")
@@ -344,13 +307,17 @@ aa <- fit_inactivation_secondary(inactivation_secondary,
                            known = known,
                            formula = delta ~ temp + pH
 )
+
 coef(aa)
 summary(aa)
 
-check_secondary_guess(d, "Bigelow", 
+check_secondary_guess(inactivation_secondary, "Bigelow", 
                       c(coef(aa), known),
                       formula = delta ~ temp + pH
                       )
+
+predict(aa)
+predict(aa, newdata = tibble(temp = c(55, 56), pH = c(7, 5)))
 ```
 
 ```{r}

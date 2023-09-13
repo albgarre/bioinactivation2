@@ -131,18 +131,32 @@ onestep_residuals <- function(this_p,
 
 
 #' One-step fitting of isothermal inactivation data
-#'
-#' @export
+#' 
+#' @param fit_data a tibble (or data.frame) with the data for the fitting.
+#' @param model_name a model identifier according to [primary_model_data()]
+#' @param start a named numeric vector of initial guesses for the parameters as
+#' defined in [fit_inactivation()]
+#' @param known a named numeric vector of known parameters
+#' @param upper a named numeric vectors of upper bounds for the parameters
+#' @param lower a named numeric vector of lower bounds for the parameters
+#' @param secondary_models a nested list defining the secondary models for each
+#' parameter as defined in [fit_inactivation()]
+#' @param algorithm one of `"regression"` (default) or `"MCMC"`
+#' @param niter number of MC iterations. Ignored if `algorithm == "regression`
+#' @param ... additional arguments for [modFit()] or [modMCMC()]
+#' 
+#' @returns An instance of [InactivationFit]
+#' 
 #'
 fit_onestep <- function(fit_data,
                         model_name,
                         start,
                         known,
-                        upper,
-                        lower,
+                        upper = NULL,
+                        lower = NULL,
                         secondary_models,
                         algorithm,
-                        niter,
+                        niter = NULL,
                         # approach_logN0
                         ...
                         # check = TRUE,

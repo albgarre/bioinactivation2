@@ -61,7 +61,7 @@
 \item{times}{numeric vector describing the time points for the prediction.
 If \code{NULL} (default), uses the same points as those used for fitting.}
 
-\item{env_conditions}{tibble describing the environmental conditions as in \code{\link[=fit_growth]{fit_growth()}}.
+\item{env_conditions}{tibble describing the environmental conditions as in \code{\link[=fit_inactivation]{fit_inactivation()}}.
 If \code{NULL} (default), uses the environmental condition of the fitting.}
 
 \item{k}{penalty for the parameters (k=2 by default)}

@@ -18,22 +18,30 @@ fit_primary(
 )
 }
 \arguments{
-\item{fit_data}{aa}
+\item{fit_data}{tibble (or data.frame) with the data used for fitting. It must have
+a column named \code{time} and one named \code{logN}}
 
-\item{model_name}{description}
+\item{model_name}{a model identifier according to \code{\link[=primary_model_data]{primary_model_data()}}}
 
-\item{start}{description}
+\item{start}{a named numeric vector of initial guesses for the model parameters. They
+must be named according to \code{\link[=primary_model_data]{primary_model_data()}}}
 
-\item{known}{description}
+\item{known}{named numeric vector of known parmeters}
 
-\item{upper}{description}
+\item{upper}{named numeric vector of upper limits for the parameters}
 
-\item{lower}{description}
+\item{lower}{named numeric vector of lower limits for the parameters}
 
-\item{check}{description}
+\item{algorithm}{fitting algorithm: "regression" (default) or "MCMC"}
+
+\item{niter}{number of MCMC iterations. Ignored if \code{algorithm == "regression"}}
+
+\item{...}{additional arguments passed to \code{\link[=modFME]{modFME()}} or \code{\link[=modFit]{modFit()}}}
+
+\item{check}{whether to do some basic checks of the model parameters}
 }
 \value{
-An instance of modFit with the fitted model.
+An instance of \link{InactivationFit} with the fitted model.
 }
 \description{
 Fitting of primary inactivation models
