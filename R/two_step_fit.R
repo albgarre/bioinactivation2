@@ -48,25 +48,21 @@ fit_two_step <- function(fit_data,
     map(
       ~ make_guess_primary(., model_name)
     )
+  
+  ## Remove the known parameters from the guesses
+  
+  if ( length(known) > 0 ) {
+    
+    known_names <- names(known)
+    guess_names <- names(initial_guesses[[1]])
+    
+    pars_out <- guess_names %in% known_names
+    
+    initial_guesses <- initial_guesses %>% 
+      map(~.[!pars_out])
 
-  # ## Remove the known parameters from the guesses
-  #
-  # if (length(known) > 0) {
-  #
-  #   initial_guesses <- as.list(initial_guesses)
-  #
-  #   known_pars <- names(known)
-  #
-  #   for (each_par in known_pars) {
-  #
-  #     initial_guesses <- initial_guesses %>%
-  #       map(~ remove_stuff(., each_par))
-  #   }
-  #
-  #   unlist(initial_guesses)
-  #
-  # }
-
+  }
+  
   ## Fit the primary models
 
   primary_fits <- map2(initial_guesses, split_data,
@@ -156,6 +152,7 @@ fit_two_step <- function(fit_data,
                                  guess = my_guess,
                                  known = this_known,
                                  formula = my_formula
+                                 # check = FALSE  # TODO: do not forget
                                  )
 
     }
@@ -189,13 +186,6 @@ fit_two_step <- function(fit_data,
 
 }
 
-#'
-#'
-remove_stuff <- function(x, stuff) {
-
-  x[[stuff]] <- NULL
-
-}
 
 
 
