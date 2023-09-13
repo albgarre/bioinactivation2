@@ -206,12 +206,6 @@ fit_inactivation <- function(approach,
       # approach_logN0 = approach_logN0
     )
 
-    ## Prepare the output
-
-    out$approach <- approach
-
-    class(out) <- c("InactivationFit", class(out))
-
     ## Return
 
     out

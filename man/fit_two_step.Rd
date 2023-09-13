@@ -7,13 +7,18 @@
 fit_two_step(fit_data, model_name, known, secondary_models)
 }
 \arguments{
-\item{fit_data}{aa}
+\item{fit_data}{a tibble (or data.frame) with the data for the fitting as defined in
+\code{\link[=fit_inactivation]{fit_inactivation()}}.}
 
-\item{model_name}{aa}
+\item{model_name}{identifier of the primary model as in \code{\link[=primary_model_data]{primary_model_data()}}}
 
-\item{known}{aa}
+\item{known}{named vector of known model parameters of either the primary or
+secondary models}
 
-\item{upper}{aa}
+\item{secondary_models}{nested list of secondary models as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+}
+\value{
+An instance of \link{InactivationFit}.
 }
 \description{
 Two-steps fitting of inactivation models by

@@ -1,18 +1,20 @@
 
 #' Two-steps fitting of inactivation models by 
 #' 
-#' @param fit_data aa
-#' @param model_name aa
-#' @param known aa
-#' @param upper aa
+#' @param fit_data a tibble (or data.frame) with the data for the fitting as defined in
+#' [fit_inactivation()].
+#' @param model_name identifier of the primary model as in [primary_model_data()]
+#' @param known named vector of known model parameters of either the primary or
+#' secondary models
+#' @param secondary_models nested list of secondary models as in [fit_inactivation()]
+#' 
+#' @returns An instance of [InactivationFit].
 #' 
 #'
 fit_two_step <- function(fit_data,
                          model_name,
                          known,
                          secondary_models
-                         # algorithm,
-                         # niter
                          # approach_logN0 = approach_logN0
 ) {
 
@@ -178,11 +180,13 @@ fit_two_step <- function(fit_data,
       secondary = secondary_fits
     ),
     primary_pars = fitted_pars,
-    algorithm = "regression"
-
+    algorithm = "regression",
+    approach = "two-steps"
   )
 
   ## Return
+  
+  class(out) <- c("InactivationFit", class(out))
 
   out
 
