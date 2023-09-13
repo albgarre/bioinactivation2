@@ -73,7 +73,10 @@ fit_two_step <- function(fit_data,
                        ~ fit_inactivation("primary",
                                           select(.y, time, logN),
                                           model_name,
-                                          .x, known)
+                                          .x, 
+                                          known,
+                                          check = FALSE
+                                          )
                        )
 
   ## Extract the parameters
@@ -83,8 +86,8 @@ fit_two_step <- function(fit_data,
   ## Join them with the data
 
   fitted_pars <- split_data %>%
-    map(~select(., -time, -logN)) %>%
-    map(~head(., 1)) %>%
+    map( ~ select(., -time, -logN)) %>%
+    map( ~ head(., 1)) %>%
     map2_dfr(my_pars, bind_cols) %>%
     select(-condition)
 
@@ -150,7 +153,7 @@ fit_two_step <- function(fit_data,
 
       fit_inactivation_secondary(this_d,
                                  each_par$model,
-                                 start = my_guess,
+                                 guess = my_guess,
                                  known = this_known,
                                  formula = my_formula
                                  )

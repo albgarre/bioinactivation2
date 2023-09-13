@@ -453,57 +453,7 @@ plot(bb)
 
 ```{r}
 
-
-do_shit <- function(pH, temp) {
-  
-  times <- seq(0, 15, length = 15)
-  primary_model <- list(model = "Mafart", logN0 = 7)
-  
-  env_conditions <- tibble(time = c(0, 10),
-                           temp = c(temp),
-                           pH = c(pH))
-  
-  secondary_models <- list(
-    list(par = "logdelta",
-         model = "genBigelow",
-         temp = c("xref" = 55, logz = .69, n=1),
-         pH = c("xref" = 7, z = 2, n=1),
-         ref = 1
-    ),
-    list(par = "logp",
-         model = "Bigelow",
-         ref = .2
-    )
-  )
-  
-  predict_inactivation(times, primary_model, environment = "dynamic",
-                       secondary_models, env_conditions)$simulation %>%
-    mutate(logN = logN + rnorm(nrow(.), mean = 0, sd = .2))
-  
-}
-
-conds <- expand.grid(pH = c(5, 6, 7),
-            temp = c(55, 56, 57)) 
-
-sims <- conds %>%
-  mutate(i = row_number()) %>%
-  split(.$i) %>%
-  map(., ~ do_shit(.$pH, .$temp))
-
-d <- conds %>%
-  mutate(i = row_number()) %>%
-  split(.$i) %>%
-  map2_dfr(., sims,
-           ~ bind_cols(.x, .y)
-  ) %>%
-  select(pH, temp, time, logN)
-
-d %>%
-  ggplot() + geom_point(aes(time, logN, colour = factor(temp))) + facet_wrap("pH")
-
-d
-
-##
+data("inactivation_twosteps")
 
 
 primary_model <- list(model = "Mafart", 
@@ -533,7 +483,7 @@ known <- c(delta_temp_xref = 55,
            )
 
 aa <- fit_inactivation("two-steps", 
-                 d, 
+                 inactivation_twosteps, 
                  "Mafart",
                  guess, 
                  known, 
