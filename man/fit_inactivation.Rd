@@ -8,7 +8,7 @@ fit_inactivation(
   approach,
   fit_data,
   primary_model_name,
-  guess,
+  guess = NULL,
   known = c(),
   upper = NULL,
   lower = NULL,

@@ -94,7 +94,8 @@ plot(aa)
 guess <- list(logN0 = 8, logD = 2)
 known <- list()
 
-aa <- fit_inactivation("primary", d, "Bigelow", guess, known)
+aa <- fit_inactivation("primary", inactivation_experiment, "Bigelow", guess, known,
+                       formula = logN ~ t)
 summary(aa)
 plot(aa)
 ```
@@ -103,14 +104,18 @@ plot(aa)
 guess <- list(logN0 = 8, delta = 1, p = 1)
 known <- list()
 
-aa <- fit_inactivation("primary", d, "Mafart", guess, known)
+aa <- fit_inactivation("primary", inactivation_experiment, "Mafart", guess, known,
+                       formula = logN ~ t)
 summary(aa)
 plot(aa)
 ```
 
 ```{r}
-fit_inactivation("primary", d, "Peleg",
-                       make_guess_primary(d, "Peleg"), known = c()) %>%
+fit_inactivation("primary", inactivation_experiment, "Peleg",
+                       make_guess_primary(inactivation_experiment, "Peleg",
+                                          formula = logN ~ t), 
+                 known = c(),
+                 formula = logN ~ t) %>%
   plot()
 ```
 
@@ -471,13 +476,6 @@ sec_models <- list(
   )
 )
 
-guess <- c(logN0 = 7,
-           delta_temp_logz = .69,
-           delta_pH_z = 2,
-           delta_logref = 1,
-           p_logref = 0
-)
-
 known <- c(delta_temp_xref = 55,
            delta_pH_xref = 7
            )
@@ -485,8 +483,7 @@ known <- c(delta_temp_xref = 55,
 aa <- fit_inactivation("two-steps", 
                  inactivation_twosteps, 
                  "Mafart",
-                 guess, 
-                 known, 
+                 known = known, 
                  secondary_models = sec_models,
                  env_conditions = env_conditions,
                  algorithm = "regression")
@@ -516,13 +513,6 @@ sec_models <- list(
   # )
 )
 
-guess <- c(logN0 = 7,
-           delta_temp_logz = .69,
-           delta_pH_z = 2,
-           delta_logref = 1
-           # p_logref = 0
-)
-
 known <- c(delta_temp_xref = 55,
            delta_pH_xref = 7,
            # logN0 = 7,
@@ -532,15 +522,12 @@ known <- c(delta_temp_xref = 55,
 aa <- fit_inactivation("two-steps", 
                        inactivation_twosteps, 
                        "Mafart",
-                       guess, 
-                       known, 
+                       known = known, 
                        secondary_models = sec_models,
                        env_conditions = env_conditions,
                        algorithm = "regression")
 
-aa$primary_pars
-
-aa$fit_results$primary %>% map(coef)
+summary(aa)
 ```
 
 

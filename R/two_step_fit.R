@@ -4,7 +4,7 @@
 #'
 fit_two_step <- function(fit_data,
                          model_name,
-                         start,
+                         # start,
                          known,
                          upper,
                          lower,
@@ -166,7 +166,7 @@ fit_two_step <- function(fit_data,
   out <- list(
     fit_data = fit_data,
     model_name = model_name,
-    start = start,
+    start = NULL,
     known = known,
     # upper = upper,
     # lower = lower,

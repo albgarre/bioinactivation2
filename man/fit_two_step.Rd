@@ -4,15 +4,7 @@
 \alias{fit_two_step}
 \title{AA}
 \usage{
-fit_two_step(
-  fit_data,
-  model_name,
-  start,
-  known,
-  upper,
-  lower,
-  secondary_models
-)
+fit_two_step(fit_data, model_name, known, upper, lower, secondary_models)
 }
 \description{
 AA

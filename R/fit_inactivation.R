@@ -145,7 +145,7 @@
 fit_inactivation <- function(approach,
                              fit_data,
                              primary_model_name,
-                             guess,
+                             guess = NULL,
                              known = c(),
                              upper = NULL,
                              lower = NULL,
@@ -156,11 +156,14 @@ fit_inactivation <- function(approach,
                              niter = NULL,
                              ...,
                              check = TRUE,
-                             # logbase_logN = 10,  # TODO
                              formula = logN ~ time
                              ) {
 
   if (approach == "primary") {
+    
+    ## Return an error if the initial guess is missing
+    
+    if ( is.null(guess) ) stop("Please provide an initial guess for the model parameters")
     
     ## Apply the formula
     
@@ -198,7 +201,7 @@ fit_inactivation <- function(approach,
     out <- fit_two_step(
       fit_data = fit_data,
       model_name = primary_model_name,
-      start = guess,
+      # start = guess,
       known = known,
       upper = upper,
       lower = lower,
@@ -219,6 +222,10 @@ fit_inactivation <- function(approach,
 
 
   } else if (approach == "one-step") {
+    
+    ## Return an error if the initial guess is missing
+    
+    if ( is.null(guess) ) stop("Please provide an initial guess for the model parameters")
 
     ## Fit the model
 
@@ -241,6 +248,10 @@ fit_inactivation <- function(approach,
 
 
   } else if (approach == "dynamic") {
+    
+    ## Return an error if the initial guess is missing
+    
+    if ( is.null(guess) ) stop("Please provide an initial guess for the model parameters")
 
     ## Fit the model
 
@@ -262,6 +273,10 @@ fit_inactivation <- function(approach,
     out
 
   } else if (approach == "global") {
+    
+    ## Return an error if the initial guess is missing
+    
+    if ( is.null(guess) ) stop("Please provide an initial guess for the model parameters")
 
     out <- fit_multiple_inactivation(fit_data,
                                         primary_model_name,
