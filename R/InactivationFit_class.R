@@ -530,13 +530,24 @@ plot.InactivationFit <- function(x, y=NULL, ...,
          )
     
     plot_grid(plotlist = p, labels = names(p))
+    
+  } else if (x$approach == "two-steps") {
+    
+    if (type == 1) {
       
+      p <- x$fit_results$primary %>%
+        map( ~ plot(.) )
+      
+      plot_grid(plotlist = p, labels = names(p))
+
+    } else {
+      stop(paste("type must be 1 for this approach, got:", type))
+    }
+    
     
   } else {
     stop("plot() method not implemented for this approach")
   }
-
-
 
 }
 
