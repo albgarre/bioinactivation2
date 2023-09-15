@@ -163,6 +163,13 @@ predict.InactivationFit <- function(object, times = NULL, env_conditions = NULL,
     pred$simulation$logN
 
   } else if (object$approach == "one-step") {  # Predictions using a one-step model
+    
+    if ( is.null(times) & is.null(env_conditions) ) {
+      fitted(object)
+    } else {
+      stop("predict method not implemented for this approach")
+      
+    }
 
     ## Make the primary model
 
@@ -192,7 +199,6 @@ predict.InactivationFit <- function(object, times = NULL, env_conditions = NULL,
     # )
     #
     # pred$simulation$logN
-    stop("predict method not implemented for this approach")
 
   } else if (object$approach == "global") {
     

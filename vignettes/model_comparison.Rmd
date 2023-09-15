@@ -1,0 +1,279 @@
+---
+title: "model_comparison"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{model_comparison}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bioinactivation2)
+library(tidyverse)
+```
+
+## Primary fit
+
+```{r}
+
+data("inactivation_experiment")
+
+known <- list()
+
+m1 <- fit_inactivation("primary", 
+                       inactivation_experiment, 
+                       "Bigelow",
+                       make_guess_primary(inactivation_experiment, 
+                                          "Bigelow", formula = logN ~ t), 
+                       known,
+                       formula = logN ~ t)
+
+m2 <- fit_inactivation("primary", 
+                       inactivation_experiment, 
+                       "Mafart",
+                       make_guess_primary(inactivation_experiment, 
+                                          "Mafart", formula = logN ~ t), 
+                       known,
+                       formula = logN ~ t)
+
+plot(m1)
+plot(m2)
+summary(m2)
+
+aa <- compare_inactivation_fits(list(Bigelow = m1, Mafart = m2))
+
+coef(aa)
+summary(aa)
+plot(aa)
+plot(aa, type = 2)
+plot(aa, type = 3)
+
+```
+
+## Dynamic fit
+
+```{r}
+data("dynamic_conditions")
+data("dynamic_experiment")
+
+sec_models <- list(
+  list(par = "D",
+       model = "Bigelow",
+       depends_on = c("temp", "pH")
+  )
+)
+
+guess <- c(logN0 = 7,
+           D_temp_logz = .69,
+           D_pH_z = 2,
+           D_logref = 1
+)
+
+known <- c(D_temp_xref = 55,
+           D_pH_xref = 7
+           )
+
+
+m1 <- fit_inactivation("dynamic", 
+                 dynamic_experiment, 
+                 "Bigelow",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = dynamic_conditions,
+                 algorithm = "regression")
+
+sec_models <- list(
+  list(par = "D",
+       model = "Bigelow",
+       depends_on = c("temp")
+  )
+)
+
+guess <- c(logN0 = 7,
+           D_temp_logz = .69,
+           D_logref = 1
+)
+
+known <- c(D_temp_xref = 55)
+
+
+m2 <- fit_inactivation("dynamic", 
+                 dynamic_experiment, 
+                 "Bigelow",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = dynamic_conditions,
+                 algorithm = "regression")
+
+aa <- compare_inactivation_fits(list(full = m1, `no pH` = m2))
+
+coef(aa)
+summary(aa)
+plot(aa)
+plot(aa, type = 2)
+plot(aa, type = 3)
+
+```
+
+## One step
+
+```{r}
+data("inactivation_onestep")
+
+sec_models <- list(
+  list(par = "delta",
+       model = "Bigelow",
+       depends_on = c("temp", "pH")
+  ),
+  list(par = "p",
+       model = "Bigelow",
+       depends_on = c()
+  )
+)
+
+guess <- c(logN0 = 7,
+           delta_temp_logz = .69,
+           delta_pH_z = 2,
+           delta_logref = 1,
+           p_logref = 0
+)
+
+known <- c(delta_temp_xref = 55,
+           delta_pH_xref = 7
+           )
+
+
+m1 <- fit_inactivation("one-step", 
+                 inactivation_onestep, 
+                 "Mafart",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env_conditions,
+                 algorithm = "regression")
+
+guess <- c(logN0 = 7,
+           delta_temp_logz = .69,
+           delta_logref = 1,
+           p_logref = 0
+)
+
+known <- c(delta_temp_xref = 55,
+           delta_pH_z = 2,
+           delta_pH_xref = 7
+           )
+
+
+m2 <- fit_inactivation("one-step", 
+                 inactivation_onestep, 
+                 "Mafart",
+                 guess, 
+                 known, 
+                 secondary_models = sec_models,
+                 env_conditions = env_conditions,
+                 algorithm = "regression")
+
+aa <- compare_inactivation_fits(list(full = m1, reduced = m2))
+
+coef(aa)
+summary(aa)
+plot(aa)
+plot(aa, type = 2)
+```
+
+## Global fitting
+
+```{r}
+
+
+data("multiple_counts")
+data("multiple_environments")
+
+sec_models <- list(
+  list(par = "D",
+       model = "Bigelow",
+       depends_on = c("temp", "pH")
+  )
+)
+
+guess <- c(logN0 = 7,
+           D_temp_logz = .69,
+           D_pH_z = 2,
+           D_logref = 1
+)
+
+known <- c(D_temp_xref = 55,
+           D_pH_xref = 7
+)
+
+m1 <- fit_inactivation("global", 
+                       multiple_counts, 
+                       "Bigelow",
+                       guess, 
+                       known, 
+                       secondary_models = sec_models,
+                       env_conditions = multiple_environments,
+                       algorithm = "regression")
+
+sec_models <- list(
+  list(par = "delta",
+       model = "Bigelow",
+       depends_on = c("temp")
+  ),
+  list(par = "p",
+       model = "Bigelow",
+       depends_on = c())
+)
+
+guess <- c(logN0 = 7,
+           delta_temp_logz = .69,
+           delta_logref = 1,
+           p_logref = 0
+           )
+
+known <- c(delta_temp_xref = 55)
+
+m2 <- fit_inactivation("global", 
+                       multiple_counts, 
+                       "Mafart",
+                       guess, 
+                       known, 
+                       secondary_models = sec_models,
+                       env_conditions = multiple_environments,
+                       algorithm = "regression")
+
+
+
+aa <- compare_inactivation_fits(list(Bigelow = m1, Mafart = m2))
+
+coef(aa)
+summary(aa)
+plot(aa)
+plot(aa, type = 2)
+plot(aa, type = 3)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
