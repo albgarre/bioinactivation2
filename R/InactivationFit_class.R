@@ -346,10 +346,18 @@ fitted.InactivationFit <- function(object, ...) {
 #' @export
 #'
 logLik.InactivationFit <- function(object, ...) {
+  
+  ## Get the number of data points
+  
+  if (object$approach == "global") {
+    n <- object$data %>% map_dbl(nrow) %>% sum()
+  } else {
+    n <- nrow(object$data)
+  }
 
   if (object$algorithm == "regression") {
 
-    n <- nrow(object$data)
+    # n <- nrow(object$data)
     sigma <- sqrt(object$fit_results$ssr/object$fit_results$df.residual)
 
     lL <- - n/2*log(2*pi) -n/2 * log(sigma^2) - 1/2/sigma^2*object$fit_results$ssr
@@ -358,7 +366,7 @@ logLik.InactivationFit <- function(object, ...) {
 
   } else {
 
-    n <- nrow(object$data)
+    # n <- nrow(object$data)
     SS <- min(object$fit_results$SS, na.rm = TRUE)
 
     df <- n - length(coef(object))
@@ -383,6 +391,14 @@ logLik.InactivationFit <- function(object, ...) {
 #' @export
 #'
 AIC.InactivationFit <- function(object, ..., k=2) {
+  
+  ## Get the number of data points
+  
+  if (object$approach == "global") {
+    n <- object$data %>% map_dbl(nrow) %>% sum()
+  } else {
+    n <- nrow(object$data)
+  }
 
   ## Normal AIC
 
@@ -394,7 +410,7 @@ AIC.InactivationFit <- function(object, ..., k=2) {
 
   ## Calculate the penalty
 
-  n <- nrow(object$data)
+  # n <- nrow(object$data)
 
   penalty <- (k*p^2 + k*p)/(n - p - 1)
 

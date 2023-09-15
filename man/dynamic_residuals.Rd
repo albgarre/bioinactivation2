@@ -10,7 +10,8 @@ dynamic_residuals(
   primary_model_name,
   sec_models,
   known,
-  env_conditions
+  env_conditions,
+  cost = NULL
 )
 }
 \description{

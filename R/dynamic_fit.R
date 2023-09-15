@@ -10,7 +10,8 @@ dynamic_residuals <- function(this_p,
                               primary_model_name,
                               sec_models,
                               known,
-                              env_conditions
+                              env_conditions,
+                              cost = NULL
                               ) {
 
   # browser()
@@ -59,7 +60,8 @@ dynamic_residuals <- function(this_p,
     as.data.frame() %>%
     modCost(
       model = .,
-      obs = as.data.frame(fit_data)
+      obs = as.data.frame(fit_data),
+      cost = cost
     )
 }
 

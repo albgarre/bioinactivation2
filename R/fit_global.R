@@ -26,7 +26,8 @@ get_multi_dyna_residuals <- function(this_p,
                                  primary_model_name = primary_model_name,
                                  sec_models = sec_models,
                                  known = known,
-                                 env_conditions = each_experiment$conditions)
+                                 env_conditions = each_experiment$conditions,
+                                 cost = old_cost)
     
     
     old_cost <- my_cost
@@ -34,6 +35,8 @@ get_multi_dyna_residuals <- function(this_p,
   }
   
   my_cost
+  
+  
   
 }
 
