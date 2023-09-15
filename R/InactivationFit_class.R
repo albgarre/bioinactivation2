@@ -126,14 +126,14 @@ summary.InactivationFit <- function(object, ..., step = 2) {
 #' @export
 #'
 predict.InactivationFit <- function(object, times = NULL, env_conditions = NULL, ...) {
-
+  
   if (is.null(times)) {  ## Used the times of the data if NULL
 
     times <- object$data$time
 
   }
 
-  if (object$approach %in% c("primary")) {  # Prediction under constant environment
+  if (object$approach == "primary") {  # Prediction under constant environment
 
     pars <- c(coef(object), unlist(object$known))
     my_model <- as.list(pars)
@@ -158,9 +158,8 @@ predict.InactivationFit <- function(object, times = NULL, env_conditions = NULL,
                                  object$best_prediction$primary_model,
                                  object$best_prediction$secondary_models,
                                  env_conditions
-                                 # logbase_logN = object$logbase_logN
-    )
-
+                                 )
+    
     pred$simulation$logN
 
   } else if (object$approach == "one-step") {  # Predictions using a one-step model
@@ -193,7 +192,27 @@ predict.InactivationFit <- function(object, times = NULL, env_conditions = NULL,
     # )
     #
     # pred$simulation$logN
+    stop("predict method not implemented for this approach")
 
+  } else if (object$approach == "global") {
+    
+    if ( is.null(times) & is.null(env_conditions) ) {
+      fitted(object)
+    } else {
+      
+      pred <- predict_inactivation(environment = "dynamic",
+                                   times,
+                                   object$best_prediction[[1]]$primary_model,
+                                   object$best_prediction[[1]]$secondary_models,
+                                   env_conditions
+                                   )
+      
+      pred$simulation$logN
+      
+    }
+    
+  } else {
+    stop("predict method not implemented for this approach")
   }
 
 
@@ -284,12 +303,25 @@ deviance.InactivationFit <- function(object, ...) {
 #'
 #' @param object an instance of [InactivationFit]
 #' @param ... ignored
+#' 
+#' @importFrom purrr imap_dfr
+#' @importFrom tidyselect everything
+#' 
 #'
 #' @export
 #'
 fitted.InactivationFit <- function(object, ...) {
+  
+  if (object$approach == "global") {
+    
+    object$data %>%
+      imap_dfr(~ mutate(.x, exp = .y)) %>%
+      select(exp, everything()) %>%
+      mutate(res = residuals(object),
+             fitted = res + logN) %>%
+      pull(fitted)
 
-  if (object$approach == "one-step") {
+  } else if (object$approach == "one-step") {
 
     ## Make the primary model
 
