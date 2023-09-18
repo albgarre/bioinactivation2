@@ -72,6 +72,63 @@ show_guess_dynamic <- function(fit_data, primary_model_name, guess,
   
 }
 
+#' Showing initial guesses for global fitting
+#' 
+#' @inheritParams show_guess_dynamic
+#' @param env_conditions a list of tibble (or data.frame) describing the environmental conditions as
+#' in [fit_inactivation()]
+#' @param fit_data a list of tibble (or data.frame) describing the observations as
+#' in [fit_inactivation()]
+#' 
+#' @importFrom stringr str_detect
+#' 
+#' @returns an instance of ggplot comparing the prediction against the data
+#' 
+show_guess_global <- function(fit_data, 
+                              primary_model_name, 
+                              guess,
+                              sec_models, 
+                              env_conditions) {
+  
+  ## Get the primary model
+  
+  primary_model <- list(model = primary_model_name)
+  
+  initial <- guess[str_detect(names(guess), "N0")]
+  aa <- initial
+  names(aa) <- NULL
+  primary_model[[names(initial)]] <- aa
+  
+  if (str_detect(primary_model_name, "Geeraerd")) {
+    initial <- guess[str_detect(names(guess), "C0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+  }
+  
+  ## Calculate the predictions
+  
+  sec <- convert_dynamic_guess(sec_models, guess, c())
+
+  p <- map2(fit_data, env_conditions,
+       ~ predict_inactivation(times = seq(0, max(.x$time, na.rm = TRUE), length = 1000),
+                              primary_model,
+                              environment = "dynamic",
+                              secondary_models = sec,
+                              env_conditions = .y,
+                              check = TRUE)
+       ) %>%
+    map2(fit_data,
+         ~ plot(.x) + geom_point(aes(x = time, y = logN), data = .y)
+         )
+  
+  plot_grid(plotlist = p, labels = names(p))
+  
+}
+
+
+
+
 #' Checking guesses for inactivation models
 #' 
 #' Makes a plot comparing the prediction corresponding to some parameter values
@@ -111,10 +168,21 @@ check_inactivation_guess <- function(method,
   y_col <- lhs(formula)
   x_col <- rhs(formula)
   
-  fit_data <- select(fit_data,
-                     time = x_col,
-                     logN = y_col
-  )
+  if (method == "global") {
+    
+    fit_data <- fit_data %>%
+      map(~ select(., time = x_col, logN = y_col))
+    
+  } else {
+    
+    fit_data <- select(fit_data,
+                       time = x_col,
+                       logN = y_col
+    )
+    
+  }
+  
+
   
   if (method == "primary") {
     
@@ -122,12 +190,12 @@ check_inactivation_guess <- function(method,
     
   } else if (method == "two-steps") {
     
-    ## AA
+    stop("check guess not implemented for two-steps fitting")
     
     
   } else if (method == "one-step") {
     
-    ## AA
+    stop("check guess not implemented for one-step fitting")
     
     
   } else if (method == "dynamic") {
@@ -137,7 +205,8 @@ check_inactivation_guess <- function(method,
     
   } else if (method == "global") {
     
-    ## TODO
+    show_guess_global(fit_data, primary_model_name, guess,
+                      sec_models, env_conditions)
     
   } else {
     stop("Unknown fitting method: ", method)

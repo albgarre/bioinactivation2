@@ -399,13 +399,13 @@ known <- c(D_temp_xref = 55,
            )
 
 
-# check_inactivation_guess("dynamic",
-#                          multiple_counts,
-#                          primary_model_name = "Bigelow",
-#                          c(guess, known),
-#                          secondary_models = sec_models,
-#                          env_conditions = multiple_environments
-#                          )
+check_inactivation_guess("global",
+                         fit_data = multiple_counts,
+                         "Bigelow",
+                         c(guess, known),
+                         secondary_models = sec_models,
+                         env_conditions = multiple_environments
+                         )
 
 aa <- fit_inactivation("global", 
                  multiple_counts, 
