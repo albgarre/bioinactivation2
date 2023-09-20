@@ -147,7 +147,7 @@ fit_dynamic_inactivation <- function(fit_data,
     
     t <- seq(0, max(fit_data$time), length = 1000)
     
-    sec <- convert_dynamic_guess(sec_models, p, c())
+    sec <- convert_dynamic_guess(secondary_models, p, c())
     
     best_prediction <- predict_inactivation(t,
                                             primary_model,
