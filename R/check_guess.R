@@ -145,6 +145,8 @@ show_guess_global <- function(fit_data,
 #' during the treatment as in [fit_inactivation()]
 #' @param formula a formula defining the variables of the primary model. By default, logN ~ time 
 #' 
+#' @importFrom purrr %>% map
+#' 
 #' @returns an instance of ggplot comparing the prediction against the data.
 #' 
 #' @export
@@ -201,12 +203,12 @@ check_inactivation_guess <- function(method,
   } else if (method == "dynamic") {
     
     show_guess_dynamic(fit_data, primary_model_name, guess,
-                       sec_models, env_conditions)
+                       secondary_models, env_conditions)
     
   } else if (method == "global") {
     
     show_guess_global(fit_data, primary_model_name, guess,
-                      sec_models, env_conditions)
+                      secondary_models, env_conditions)
     
   } else {
     stop("Unknown fitting method: ", method)
