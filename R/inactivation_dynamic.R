@@ -15,6 +15,8 @@
 #' @param check whether to do some basic model checks. `TRUE` by default
 #' 
 #' @importFrom deSolve ode
+#' @importFrom rlang set_names
+#' @importFrom tibble as_tibble
 #' 
 #' 
 #' 

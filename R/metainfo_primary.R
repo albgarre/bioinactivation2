@@ -26,7 +26,7 @@ primary_model_data <- function(model_name=NULL) {
                    model = iso_Bigelow,
                    ref = paste(
                      "Bigelow, W. D. (1921). The Logarithmic Nature of Thermal Death Time Curves.",
-                     "The Journal of Infectious Diseases, 29(5), 528–536."
+                     "The Journal of Infectious Diseases, 29(5), 528-536."
                    )
     ),
     Peleg = list(
@@ -36,7 +36,7 @@ primary_model_data <- function(model_name=NULL) {
       model = iso_Peleg,
       ref = paste(
         "Peleg, M., & Cole, M. B. (1998). Reinterpretation of Microbial Survival Curves.",
-        "Critical Reviews in Food Science and Nutrition, 38(5), 353–380. https://doi.org/10.1080/10408699891274246"
+        "Critical Reviews in Food Science and Nutrition, 38(5), 353-380. https://doi.org/10.1080/10408699891274246"
       )
     ),
     Mafart = list(
@@ -48,7 +48,7 @@ primary_model_data <- function(model_name=NULL) {
         "Mafart, P., Couvert, O., Gaillard, S., & Leguerinel, I. (2002).",
         "On calculating sterility in thermal preservation methods: Application of the Weibull",
         "frequency distribution model. International Journal of Food Microbiology,",
-        "72(1–2), 107–113. https://doi.org/10.1016/S0168-1605(01)00624-9"
+        "72(1-2), 107-113. https://doi.org/10.1016/S0168-1605(01)00624-9"
       )
     ),
     Geeraerd = list(
@@ -59,7 +59,7 @@ primary_model_data <- function(model_name=NULL) {
       ref = paste(
         "Geeraerd, A. H., Herremans, C. H., & Van Impe, J. F. (2000).",
         "Structural model requirements to describe microbial inactivation during a mild heat treatment.",
-        "International Journal of Food Microbiology, 59(3), 185–209. https://doi.org/10.1016/S0168-1605(00)00362-7"
+        "International Journal of Food Microbiology, 59(3), 185-209. https://doi.org/10.1016/S0168-1605(00)00362-7"
       )
     ),
     Geeraerd_k = list(
@@ -70,7 +70,7 @@ primary_model_data <- function(model_name=NULL) {
       ref = paste(
         "Geeraerd, A. H., Herremans, C. H., & Van Impe, J. F. (2000).",
         "Structural model requirements to describe microbial inactivation during a mild heat treatment.",
-        "International Journal of Food Microbiology, 59(3), 185–209. https://doi.org/10.1016/S0168-1605(00)00362-7"
+        "International Journal of Food Microbiology, 59(3), 185-209. https://doi.org/10.1016/S0168-1605(00)00362-7"
       )
     ),
     Geeraerd_k_noTail = list(
@@ -81,7 +81,7 @@ primary_model_data <- function(model_name=NULL) {
       ref = paste(
         "Geeraerd, A. H., Herremans, C. H., & Van Impe, J. F. (2000).",
         "Structural model requirements to describe microbial inactivation during a mild heat treatment.",
-        "International Journal of Food Microbiology, 59(3), 185–209. https://doi.org/10.1016/S0168-1605(00)00362-7"
+        "International Journal of Food Microbiology, 59(3), 185-209. https://doi.org/10.1016/S0168-1605(00)00362-7"
       )
     ),
     Geeraerd_noTail = list(
@@ -92,7 +92,7 @@ primary_model_data <- function(model_name=NULL) {
       ref = paste(
         "Geeraerd, A. H., Herremans, C. H., & Van Impe, J. F. (2000).",
         "Structural model requirements to describe microbial inactivation during a mild heat treatment.",
-        "International Journal of Food Microbiology, 59(3), 185–209. https://doi.org/10.1016/S0168-1605(00)00362-7"
+        "International Journal of Food Microbiology, 59(3), 185-209. https://doi.org/10.1016/S0168-1605(00)00362-7"
       )
     ),
     Geeraerd_k_noShoulder = list(
@@ -103,7 +103,7 @@ primary_model_data <- function(model_name=NULL) {
       ref = paste(
         "Geeraerd, A. H., Herremans, C. H., & Van Impe, J. F. (2000).",
         "Structural model requirements to describe microbial inactivation during a mild heat treatment.",
-        "International Journal of Food Microbiology, 59(3), 185–209. https://doi.org/10.1016/S0168-1605(00)00362-7"
+        "International Journal of Food Microbiology, 59(3), 185-209. https://doi.org/10.1016/S0168-1605(00)00362-7"
       )
     ),
     Geeraerd_noShoulder = list(
@@ -114,7 +114,7 @@ primary_model_data <- function(model_name=NULL) {
       ref = paste(
         "Geeraerd, A. H., Herremans, C. H., & Van Impe, J. F. (2000).",
         "Structural model requirements to describe microbial inactivation during a mild heat treatment.",
-        "International Journal of Food Microbiology, 59(3), 185–209. https://doi.org/10.1016/S0168-1605(00)00362-7"
+        "International Journal of Food Microbiology, 59(3), 185-209. https://doi.org/10.1016/S0168-1605(00)00362-7"
       )
     ),
     Metselaar = list(
@@ -125,7 +125,7 @@ primary_model_data <- function(model_name=NULL) {
       ref = paste(
         "Metselaar, K. I., den Besten, H. M. W., Abee, T., Moezelaar, R., & Zwietering, M. H. (2013).",
         "Isolation and quantification of highly acid resistant variants of Listeria monocytogenes.",
-        "International Journal of Food Microbiology, 166(3), 508–514. https://doi.org/10.1016/j.ijfoodmicro.2013.08.011"
+        "International Journal of Food Microbiology, 166(3), 508-514. https://doi.org/10.1016/j.ijfoodmicro.2013.08.011"
       )
     ),
     Weibull_2phase = list(

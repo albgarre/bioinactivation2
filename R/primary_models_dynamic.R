@@ -87,7 +87,7 @@ dyna_Mafart <- function(time, state, primary_pars, env_interpolator, secondary_m
 #' @param primary_pars ignored. Just a dumpster for the param argument from ode
 #' @param env_interpolator  an interpolator for the environmental conditions as returned by [approx_env()]
 #' @param secondary_models a nested list defining the secondary models as per [apply_secondary_models()]
-#' @param tol_time a tolerance for the time (to avoid singularities for t=0). See Details
+#' @param tol_logS a tolerance for the log-reduction (to avoid singularities for t=0). See Details
 #' 
 #' @returns a list with dN/dt as per [ode()]
 #'
@@ -134,7 +134,6 @@ dyna_Peleg <- function(time, state, primary_pars, env_interpolator, secondary_mo
 #' @param primary_pars ignored. Just a dumpster for the param argument from ode
 #' @param env_interpolator  an interpolator for the environmental conditions as returned by [approx_env()]
 #' @param secondary_models a nested list defining the secondary models as per [apply_secondary_models()]
-#' @param tol_time a tolerance for the time (to avoid singularities for t=0). See Details
 #' 
 #' @returns a list with two elements: dN/dt and dC/dt, as per [ode()]
 #'
@@ -176,7 +175,6 @@ dyna_Geeraerd <- function(time, state, primary_pars, env_interpolator, secondary
 #' @param primary_pars ignored. Just a dumpster for the param argument from ode
 #' @param env_interpolator  an interpolator for the environmental conditions as returned by [approx_env()]
 #' @param secondary_models a nested list defining the secondary models as per [apply_secondary_models()]
-#' @param tol_time a tolerance for the time (to avoid singularities for t=0). See Details
 #' 
 #' @returns a list with two elements: dN/dt and dC/dt, as per [ode()]
 #'
@@ -215,7 +213,6 @@ dyna_Geeraerd_k <- function(time, state, primary_pars, env_interpolator, seconda
 #' @param primary_pars ignored. Just a dumpster for the param argument from ode
 #' @param env_interpolator  an interpolator for the environmental conditions as returned by [approx_env()]
 #' @param secondary_models a nested list defining the secondary models as per [apply_secondary_models()]
-#' @param tol_time a tolerance for the time (to avoid singularities for t=0). See Details
 #' 
 #' @returns a list with two elements: dN/dt and dC/dt, as per [ode()]
 #'
@@ -257,7 +254,6 @@ dyna_Geeraerd_noTail <- function(time, state, primary_pars, env_interpolator, se
 #' @param primary_pars ignored. Just a dumpster for the param argument from ode
 #' @param env_interpolator  an interpolator for the environmental conditions as returned by [approx_env()]
 #' @param secondary_models a nested list defining the secondary models as per [apply_secondary_models()]
-#' @param tol_time a tolerance for the time (to avoid singularities for t=0). See Details
 #' 
 #' @returns a list with two elements: dN/dt and dC/dt, as per [ode()]
 #'
@@ -296,7 +292,6 @@ dyna_Geeraerd_noTail_k <- function(time, state, primary_pars, env_interpolator, 
 #' @param primary_pars ignored. Just a dumpster for the param argument from ode
 #' @param env_interpolator  an interpolator for the environmental conditions as returned by [approx_env()]
 #' @param secondary_models a nested list defining the secondary models as per [apply_secondary_models()]
-#' @param tol_time a tolerance for the time (to avoid singularities for t=0). See Details
 #' 
 #' @returns a list with two elements: dN/dt and dC/dt, as per [ode()]
 #'
@@ -335,7 +330,6 @@ dyna_Geeraerd_noSL <- function(time, state, primary_pars, env_interpolator, seco
 #' @param primary_pars ignored. Just a dumpster for the param argument from ode
 #' @param env_interpolator  an interpolator for the environmental conditions as returned by [approx_env()]
 #' @param secondary_models a nested list defining the secondary models as per [apply_secondary_models()]
-#' @param tol_time a tolerance for the time (to avoid singularities for t=0). See Details
 #' 
 #' @returns a list with two elements: dN/dt and dC/dt, as per [ode()]
 #'

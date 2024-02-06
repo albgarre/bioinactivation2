@@ -6,6 +6,13 @@
 \usage{
 make_guess_secondary(fit_data, model_name, formula = my_par ~ temp)
 }
+\arguments{
+\item{fit_data}{a tibble (or data.frame) with the data as in \code{\link[=fit_inactivation_secondary]{fit_inactivation_secondary()}}}
+
+\item{model_name}{a character with the secondary model according to \code{\link[=secondary_model_data]{secondary_model_data()}}}
+
+\item{formula}{a two-sided formula describing the model structure as in \code{\link[=fit_inactivation_secondary]{fit_inactivation_secondary()}}}
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

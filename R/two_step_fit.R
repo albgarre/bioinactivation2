@@ -8,6 +8,13 @@
 #' secondary models
 #' @param secondary_models nested list of secondary models as in [fit_inactivation()]
 #' 
+#' @importFrom tidyr unite
+#' @importFrom rlang .data
+#' @importFrom tidyselect matches
+#' @importFrom purrr map2_dfr
+#' @importFrom dplyr bind_cols
+#' @importFrom stats as.formula
+#' 
 #' @returns An instance of [InactivationFit].
 #' 
 #'
@@ -16,7 +23,7 @@ fit_two_step <- function(fit_data,
                          known,
                          secondary_models
                          # approach_logN0 = approach_logN0
-) {
+                         ) {
 
   # ## Check the model parameters
   #
@@ -43,8 +50,9 @@ fit_two_step <- function(fit_data,
   ## Split the data
 
   split_data <- fit_data %>%
-    unite(condition, -c(time, logN), sep = "_", remove = FALSE) %>%
-    split(.$condition)
+    unite("condition", -c("time", "logN"), sep = "_", remove = FALSE)
+  
+  split_data <- split(split_data, split_data$condition)
 
   ## Initial guesses for the primary fit
 
@@ -89,7 +97,7 @@ fit_two_step <- function(fit_data,
     map( ~ select(., -time, -logN)) %>%
     map( ~ head(., 1)) %>%
     map2_dfr(my_pars, bind_cols) %>%
-    select(-condition)
+    select(-"condition")
 
   ## Undo the logtransformations
 

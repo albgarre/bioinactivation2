@@ -3,6 +3,16 @@
 #'
 #' @importFrom stringr str_detect
 #' @importFrom FME modCost
+#' 
+#' @param this_p a named numeric vector of candidate parameter values as in [fit_inactivation()]
+#' @param fit_data a tibble (or data.frame) with the data used for fitting. It must have two
+#' columns: `time` and `logN`
+#' @param primary_model_name a character describing the primary model as in [primary_model_data()]
+#' @param sec_models a nested list describing the structure of the secondary models as in [fit_inactivation()]
+#' @param known a named numeric vector of known parameter values as in [fit_inactivation()]
+#' @param env_conditions a tibble describing the environmental conditions as per
+#' [predict_inactivation()]
+#' @param cost an instance of [modCost()] (for multiple fitting)
 #'
 #'
 dynamic_residuals <- function(this_p,
@@ -55,17 +65,32 @@ dynamic_residuals <- function(this_p,
 
   ## Calculate residuals
 
-  pred$simulation %>%
-    select(time, logN) %>%
-    as.data.frame() %>%
-    modCost(
-      model = .,
+  mod <- pred$simulation %>%
+    select("time", "logN") %>%
+    as.data.frame()
+    
+  modCost(
+      model = mod,
       obs = as.data.frame(fit_data),
       cost = cost
     )
 }
 
-#' AA
+#' Fitting models to dynamic inactivation experiments
+#' 
+#' @param start a named numeric vector with an initial guess of parameter values as in [fit_inactivation()]
+#' @param fit_data a tibble (or data.frame) with the data used for fitting. It must have two
+#' columns: `time` and `logN`
+#' @param model_name a character describing the primary model as in [primary_model_data()]
+#' @param secondary_models a nested list describing the structure of the secondary models as in [fit_inactivation()]
+#' @param upper a named character vector of upper bounds for the model parameters. By default, `NULL` (no bounds)
+#' @param lower a named character vector of lower bounds for the model parameters. By default, `NULL` (no bounds)
+#' @param known a named numeric vector of known parameter values as in [fit_inactivation()]
+#' @param algorithm either `"regression"` or `"MCMC"`
+#' @param env_conditions a tibble describing the environmental conditions as per
+#' [predict_inactivation()]
+#' @param niter number of iterations of the MCMC algorithm. Ignored for `algorithm = "regression"`
+#' @param ... additional arguments passed to [modMCMC()] or [modFit()]
 #'
 #' @importFrom FME modFit modCost
 #'
@@ -211,7 +236,7 @@ fit_dynamic_inactivation <- function(fit_data,
     
     t <- seq(0, max(fit_data$time), length = 1000)
     
-    sec <- convert_dynamic_guess(sec_models, p, c())
+    sec <- convert_dynamic_guess(secondary_models, p, c())
     
     best_prediction <- predict_inactivation(t,
                                             primary_model,

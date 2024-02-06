@@ -145,6 +145,7 @@ coef.InactivationPrediction <- function(object, ...) {
 #' @param line_size2 Same as line_size, but for the environmental factor.
 #' @param line_type2 Same as lin_type, but for the environmental factor.
 #' @param label_x Label of the x-axis.
+#' @param type type of plot. See details.
 #'
 #' @export
 #'
@@ -206,7 +207,10 @@ plot.InactivationPrediction <- function(x, y=NULL, ...,
 
 }
 
-#'
+#' Plotting of inactivation under constant conditions
+#' 
+#' @importFrom ggplot2 scale_y_continuous xlab 
+#' @importFrom rlang .data
 #'
 plot_constant_inactivation <- function(x, y=NULL, ...,
                                  line_col = "black",
@@ -231,6 +235,8 @@ plot_constant_inactivation <- function(x, y=NULL, ...,
 #' Plots for fynamic inactivation experiments
 #' 
 #' @importFrom cowplot plot_grid
+#' @importFrom rlang .data
+#' @importFrom tidyr pivot_longer
 #'
 plot_dynamic_inactivation <- function(x,
                                       add_factor = add_factor,
@@ -250,14 +256,14 @@ plot_dynamic_inactivation <- function(x,
   if (type == 1) {  # Plot of the survivor curve
 
     x$simulation %>%
-      ggplot() + geom_line(aes(time, logN))
+      ggplot() + geom_line(aes(.data$time, .data$logN))
 
   } else if (type == 2) {  # Plot of the variation of the parameters
 
     x$primary_pars %>%
-      pivot_longer(-time) %>%
+      pivot_longer(-"time") %>%
       ggplot() +
-      geom_line(aes(x = time, y = value, colour = name)) +
+      geom_line(aes(x = .data$time, y = .data$value, colour = .data$name)) +
       facet_wrap("name", scales = "free")
 
   } else if (type == 3) {  # Plot of the effects of each factor
@@ -271,9 +277,9 @@ plot_dynamic_inactivation <- function(x,
       } else {
         
         this_par %>%
-          pivot_longer(-time) %>%
+          pivot_longer(-"time") %>%
           ggplot() +
-          geom_line(aes(x = time, y = value, colour = name))
+          geom_line(aes(x = .data$time, y = .data$value, colour = .data$name))
         
       }
       

@@ -18,6 +18,31 @@ fit_multiple_inactivation(
   ...
 )
 }
+\arguments{
+\item{fit_data}{a list of tibbles (or data.frame's) with the data used for fitting. It must have two
+columns: \code{time} and \code{logN}}
+
+\item{primary_model_name}{a character describing the primary model as in \code{\link[=primary_model_data]{primary_model_data()}}}
+
+\item{guess}{a named numeric vector with an initial guess of parameter values as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{known}{a named numeric vector of known parameter values as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{upper}{a named character vector of upper bounds for the model parameters. By default, \code{NULL} (no bounds)}
+
+\item{lower}{a named character vector of lower bounds for the model parameters. By default, \code{NULL} (no bounds)}
+
+\item{secondary_models}{a nested list describing the structure of the secondary models as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{algorithm}{either \code{"regression"} or \code{"MCMC"}}
+
+\item{env_conditions}{a list of tibbles (or data.frame's) describing the environmental conditions as per
+\code{\link[=predict_inactivation]{predict_inactivation()}}}
+
+\item{niter}{number of iterations of the MCMC algorithm. Ignored for \code{algorithm = "regression"}}
+
+\item{...}{additional arguments passed to \code{\link[=modMCMC]{modMCMC()}} or \code{\link[=modFit]{modFit()}}}
+}
 \description{
 Fitting a single model to several (dynamic) experiments
 }

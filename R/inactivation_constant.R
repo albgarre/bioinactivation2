@@ -21,7 +21,7 @@ predict_constant_inactivation <- function(times,
                                           ) {
   
   ## Check the model parameters
-
+  
   model_pars <- as.list(model_pars)
 
   if (isTRUE(check)) {

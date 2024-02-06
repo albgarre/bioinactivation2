@@ -6,6 +6,17 @@
 \usage{
 onestep_residuals(this_p, fit_data, primary_model_name, sec_models, known)
 }
+\arguments{
+\item{this_p}{a named numeric vector of candidate parameter values as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{fit_data}{a tibble (or data.frame) describing the data as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{primary_model_name}{a character describing the primary model as in \code{\link[=primary_model_data]{primary_model_data()}}}
+
+\item{sec_models}{a nested list describing the structure of the secondary models as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{known}{a named numeric vector of known parameter values as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+}
 \description{
 Residuals for one-step fitting
 }

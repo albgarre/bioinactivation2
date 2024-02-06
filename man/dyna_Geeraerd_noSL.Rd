@@ -23,8 +23,6 @@ the value of the ideal substance 'C'}
 \item{env_interpolator}{an interpolator for the environmental conditions as returned by \code{\link[=approx_env]{approx_env()}}}
 
 \item{secondary_models}{a nested list defining the secondary models as per \code{\link[=apply_secondary_models]{apply_secondary_models()}}}
-
-\item{tol_time}{a tolerance for the time (to avoid singularities for t=0). See Details}
 }
 \value{
 a list with two elements: dN/dt and dC/dt, as per \code{\link[=ode]{ode()}}

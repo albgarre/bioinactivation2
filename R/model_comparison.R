@@ -4,10 +4,10 @@
 #' @description 
 #' `r lifecycle::badge("experimental")`
 #' 
-#' This function is a constructor for [InactivationComparison] or [GlobalInactivationComparison],
+#' This function is a constructor for [InactivationComparison] or [GlobalComparison],
 #' a class that provides several functions for model comparison and model selection
 #' for inactivation models fitted using [fit_inactivation()]. Please see the help pages for 
-#' [InactivationComparison] or [GlobalInactivationComparison] for further details.
+#' [InactivationComparison] or [GlobalComparison] for further details.
 #' 
 #' Although it is not necessary, we recommend passing the models as a named list,
 #' as these names will later be kept in plots and tables.

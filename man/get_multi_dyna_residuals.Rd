@@ -13,13 +13,21 @@ get_multi_dyna_residuals(
 )
 }
 \arguments{
+\item{this_p}{a named numeric vector of candidate parameter values as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
 \item{experiment_data}{a nested list with the experimental data. Each entry describes
 one experiment as a list with two elements: data and conditions. \code{data} is a tibble
 with two columns: time and logN. \code{conditions} is a tibble with one column named time
 and as many additional columns as environmental factors.}
+
+\item{known}{a named numeric vector of known parameter values as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{primary_model_name}{a character describing the primary model as in \code{\link[=primary_model_data]{primary_model_data()}}}
+
+\item{sec_models}{a nested list describing the structure of the secondary models as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
 }
 \value{
-an instance of `modCost.
+an instance of \link{modCost}
 }
 \description{
 Residuals of multiple dynamic predictions

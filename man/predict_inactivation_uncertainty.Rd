@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict_inactivation_uncertainty.R
 \name{predict_inactivation_uncertainty}
 \alias{predict_inactivation_uncertainty}
-\title{AA}
+\title{Prediction of microbial inactivation with uncertainty}
 \usage{
 predict_inactivation_uncertainty(
   model_name,
@@ -12,6 +12,23 @@ predict_inactivation_uncertainty(
   corr_matrix = diag(nrow(pars))
 )
 }
+\arguments{
+\item{model_name}{a character defining the primary model according to \code{\link[=primary_model_data]{primary_model_data()}}}
+
+\item{times}{a numeric vector of time points where the simulation should be calculated}
+
+\item{n_sims}{number of Monte Carlo simulations}
+
+\item{pars}{a tibble (or data.frame) describing the distribution of the model parameters. It must have a column
+named \code{par} defining the parameter (according to \code{\link[=primary_model_data]{primary_model_data()}}), one
+named \code{mean} (expected value) and one named \code{sd} (standard deviation).}
+
+\item{corr_matrix}{a correlation matrix. An identity matrix my default.}
+}
 \description{
-AA
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Simulation of microbial inactivation considering uncertainty in the model parameters.
+Calculations are based on Monte Carlo simulations, considering the parameters follow
+a multivariate normal distribution.
 }

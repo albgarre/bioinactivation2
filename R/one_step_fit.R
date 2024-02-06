@@ -1,9 +1,16 @@
 
 #' Residuals for one-step fitting
+#' 
+#' @param this_p a named numeric vector of candidate parameter values as in [fit_inactivation()]
+#' @param primary_model_name a character describing the primary model as in [primary_model_data()]
+#' @param sec_models a nested list describing the structure of the secondary models as in [fit_inactivation()]
+#' @param known a named numeric vector of known parameter values as in [fit_inactivation()]
+#' @param fit_data a tibble (or data.frame) describing the data as in [fit_inactivation()]
 #'
 #' @importFrom stringr str_detect
 #' @importFrom FME modCost
-#' @importFrom dplyr pick
+#' @importFrom dplyr bind_rows
+#' @importFrom tibble as_tibble
 #'
 #'
 onestep_residuals <- function(this_p,
@@ -38,7 +45,7 @@ onestep_residuals <- function(this_p,
 
   sec <- convert_dynamic_guess(sec_models, p, c())
 
-  cond <- select(fit_data, -time, -logN)
+  cond <- select(fit_data, -"time", -"logN")
 
   primary_pars <- lapply(1:nrow(cond), function(i) {
     apply_secondary_models(cond[i,], sec) %>% as_tibble()
@@ -107,7 +114,7 @@ onestep_residuals <- function(this_p,
                                                                p[["N0"]],
                                                                primary_pars$D,
                                                                primary_pars$Nres),
-                 stop(paste("Unknown model:", model_name))
+                 stop(paste("Unknown model:", primary_model_name))
   )
 
   # ## Calculate residuals
@@ -123,7 +130,7 @@ onestep_residuals <- function(this_p,
   modCost(
     model = data.frame(time = fit_data$time,
                        logN = logN),
-    obs = select(fit_data, time, logN) %>% as.data.frame()
+    obs = select(fit_data, "time", "logN") %>% as.data.frame()
   )
 
 }

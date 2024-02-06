@@ -24,7 +24,7 @@ dyna_Peleg(
 
 \item{secondary_models}{a nested list defining the secondary models as per \code{\link[=apply_secondary_models]{apply_secondary_models()}}}
 
-\item{tol_time}{a tolerance for the time (to avoid singularities for t=0). See Details}
+\item{tol_logS}{a tolerance for the log-reduction (to avoid singularities for t=0). See Details}
 }
 \value{
 a list with dN/dt as per \code{\link[=ode]{ode()}}

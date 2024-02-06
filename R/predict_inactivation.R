@@ -71,8 +71,9 @@
 #' and as many additional columns as environmental factors. Ignored for "constant" environments.
 #' @param ... Additional arguments for [ode()].
 #' @param check Whether to check the validity of the models. `TRUE` by default.
-#' @param formula An object of class "formula" describing the x variable for predictions 
-#' under dynamic conditions. `. ~ time` as a default.
+#' 
+#' @importFrom tibble as_tibble
+#' @importFrom purrr map_dfc map_dfr
 #' 
 #' @return An instance of [InactivationPrediction].
 #' 
@@ -145,9 +146,7 @@ predict_inactivation <- function(times,
     ## Calculate the variation of the primary model (constant for isothermal)
 
     out$primary_pars <- tibble(time = times) %>%
-      bind_cols(.,
-                as_tibble(my_pars)
-      )
+      bind_cols(as_tibble(my_pars))
 
     ## Calculate the effects of the secondary models (constant for isothermal)
 
@@ -275,7 +274,7 @@ predict_inactivation <- function(times,
     ## Calculate the variation of the primary model
 
     env_interpolator <- approx_env(env_conditions)
-    aa <-  map_dfc(env_interpolator, ~.(my_sim$time))
+    aa <-  map_dfc(env_interpolator, ~ .(my_sim$time))
 
     out$primary_pars <- c(1:nrow(aa)) %>%
       map(
@@ -283,23 +282,21 @@ predict_inactivation <- function(times,
       ) %>%
       map(
         ~ set_names(.,
-                    secondary_models %>% map(~.$par) %>% unlist()
+                    secondary_models %>% map(~ .$par) %>% unlist()
                     )
       ) %>%
       map_dfr(as_tibble) %>%
       mutate(time = my_sim$time) %>%
-      select(time, everything())
+      select("time", everything())
 
     ## Calculate the effects on each parameter
 
     sec_effects <- lapply(secondary_models, function(this_par) {
 
       c(1:nrow(aa)) %>%
-        map_dfr(.,
-            ~ get_effects(this_par, aa[.,])
-            ) %>%
+        map_dfr( ~ get_effects(this_par, aa[.,])) %>%
         mutate(time = my_sim$time) %>%
-        select(time, everything())
+        select("time", everything())
 
     })
 

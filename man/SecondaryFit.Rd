@@ -49,9 +49,6 @@ If \code{NULL} (default), uses the environmental condition of the fitting.}
 \item{y}{ignored}
 
 \item{type}{type of plot to make. Either 1 (observed vs predicted) or 2 (predictived vs residuals).}
-
-\item{times}{numeric vector describing the time points for the prediction.
-If \code{NULL} (default), uses the same points as those used for fitting.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

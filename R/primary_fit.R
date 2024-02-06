@@ -51,7 +51,7 @@ primary_residuals <- function(this_p,
 #' @param upper named numeric vector of upper limits for the parameters
 #' @param lower named numeric vector of lower limits for the parameters
 #' @param check whether to do some basic checks of the model parameters
-#' @param ... additional arguments passed to [modFME()] or [modFit()]
+#' @param ... additional arguments passed to [modMCMC()] or [modFit()]
 #' @param algorithm fitting algorithm: "regression" (default) or "MCMC"
 #' @param niter number of MCMC iterations. Ignored if `algorithm == "regression"`
 #'

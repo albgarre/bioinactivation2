@@ -9,6 +9,8 @@
 #' @param known a named numeric vector of known model parameters
 #' @param output output format. Either 'vector' (default) or 'loglik'
 #' 
+#' @importFrom purrr imap_dfc
+#' 
 #' @returns a numeric vector of model residuals
 #'
 secondary_residuals <- function(this_p,
@@ -41,7 +43,7 @@ secondary_residuals <- function(this_p,
   ## Calculate the effect of the environmental factors
 
   effects <- fit_data %>%
-    select(-my_par) %>%
+    select(-"my_par") %>%
     imap_dfc(
       ~ switch(model_name,  # TODO: I should consider putting this into a function (code repeated twice)
                Bigelow = sec_Bigelow(

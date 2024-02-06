@@ -84,6 +84,8 @@ residuals.SecondaryFit <- function(object, ...) {
 #'
 #' @param object an instance of [SecondaryFit]
 #' @param ... ignored
+#' 
+#' @importFrom stats cov
 #'
 #' @export
 #'
@@ -220,11 +222,11 @@ fitted.SecondaryFit <- function(object, ...) {
 
 
 #' @describeIn SecondaryFit vector of model predictions.
+#' 
+#' @importFrom stats fitted
 #'
 #' @param object an instance of [SecondaryFit]
 #' @param ... ignored
-#' @param times numeric vector describing the time points for the prediction.
-#' If `NULL` (default), uses the same points as those used for fitting.
 #' @param newdata tibble describing the environmental conditions as in [fit_inactivation_secondary()].
 #' If `NULL` (default), uses the environmental condition of the fitting.
 #'
@@ -256,6 +258,7 @@ predict.SecondaryFit <- function(object, newdata = NULL, ...) {
 #' @param ... ignored
 #' @param type type of plot to make. Either 1 (observed vs predicted) or 2 (predictived vs residuals).
 #'
+#' @importFrom stats fitted
 #' @export
 #'
 plot.SecondaryFit <- function(x, y=NULL, ..., type = 1) {
@@ -267,14 +270,14 @@ plot.SecondaryFit <- function(x, y=NULL, ..., type = 1) {
   
   if (type == 1) {
     
-    ggplot(d, aes(x = my_par, y = pred)) +
+    ggplot(d, aes(x = .data$my_par, y = .data$pred)) +
       geom_point() +
       geom_smooth(method = "lm", se = FALSE) +
       geom_abline(slope = 1, intercept = 0, linetype = 2)
     
   } else if (type == 2) {
     
-    ggplot(d, aes(x = pred, y = res)) +
+    ggplot(d, aes(x = .data$pred, y = .data$res)) +
       geom_point() +
       geom_smooth(se = FALSE) +
       geom_hline(yintercept = 0, linetype = 2) 

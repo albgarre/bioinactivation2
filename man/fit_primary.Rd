@@ -36,7 +36,7 @@ must be named according to \code{\link[=primary_model_data]{primary_model_data()
 
 \item{niter}{number of MCMC iterations. Ignored if \code{algorithm == "regression"}}
 
-\item{...}{additional arguments passed to \code{\link[=modFME]{modFME()}} or \code{\link[=modFit]{modFit()}}}
+\item{...}{additional arguments passed to \code{\link[=modMCMC]{modMCMC()}} or \code{\link[=modFit]{modFit()}}}
 
 \item{check}{whether to do some basic checks of the model parameters}
 }

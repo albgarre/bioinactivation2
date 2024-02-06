@@ -34,6 +34,8 @@ NULL
 #'
 #' @param object an instance of [InactivationFit].
 #' @param ... ignored
+#' @param step for `approach == "two-steps"`, whether to show the results of the
+#' first or second step. By default, `2`. Ignored for other approaches.
 #'
 #' @importFrom stats coef
 #'
@@ -84,6 +86,8 @@ coef.InactivationFit <- function(object, ..., step = 2) {
 #'
 #' @param object Instance of [InactivationFit]
 #' @param ... ignored
+#' @param step for `approach == "two-steps"`, whether to show the results of the
+#' first or second step. By default, `2`. Ignored for other approaches.
 #'
 #' @export
 #'
@@ -115,6 +119,8 @@ summary.InactivationFit <- function(object, ..., step = 2) {
 }
 
 #' @describeIn InactivationFit vector of model predictions.
+#' 
+#' @importFrom stats fitted
 #'
 #' @param object an instance of [InactivationFit]
 #' @param ... ignored
@@ -255,6 +261,8 @@ residuals.InactivationFit <- function(object, ...) {
 #'
 #' @param object an instance of [InactivationFit]
 #' @param ... ignored
+#' 
+#' @importFrom stats cov
 #'
 #' @export
 #'
@@ -312,6 +320,10 @@ deviance.InactivationFit <- function(object, ...) {
 #' 
 #' @importFrom purrr imap_dfr
 #' @importFrom tidyselect everything
+#' @importFrom rlang .data
+#' @importFrom utils tail
+#' @importFrom dplyr pull bind_rows
+#' @importFrom stats predict
 #' 
 #'
 #' @export
@@ -322,10 +334,10 @@ fitted.InactivationFit <- function(object, ...) {
     
     object$data %>%
       imap_dfr(~ mutate(.x, exp = .y)) %>%
-      select(exp, everything()) %>%
+      select("exp", everything()) %>%
       mutate(res = residuals(object),
-             fitted = res + logN) %>%
-      pull(fitted)
+             fitted = .data$res + .data$logN) %>%
+      pull("fitted")
 
   } else if (object$approach == "one-step") {
 
@@ -349,7 +361,7 @@ fitted.InactivationFit <- function(object, ...) {
 
     ## Make the predictions
 
-    cond <- select(object$data, -logN)
+    cond <- select(object$data, -"logN")
 
     pred <- lapply(1:nrow(cond), function(i) {
 
@@ -362,7 +374,7 @@ fitted.InactivationFit <- function(object, ...) {
                            object$sec_models,
                            env)$simulation %>%
         tail(1) %>%
-        pull(logN)
+        pull("logN")
 
     }) %>%
       unlist()
@@ -425,6 +437,7 @@ logLik.InactivationFit <- function(object, ...) {
 #' @param k penalty for the parameters (k=2 by default)
 #'
 #' @importFrom stats logLik
+#' @importFrom purrr %>% map_dbl
 #'
 #' @export
 #'
@@ -481,6 +494,7 @@ AIC.InactivationFit <- function(object, ..., k=2) {
 #' @param line_size2 Same as line_size, but for the environmental factor. Ignored if `environment="constant"`
 #' @param line_type2 Same as lin_type, but for the environmental factor. Ignored if `environment="constant"`
 #' @param label_x Label of the x-axis
+#' @param type number identifying the type of plot. See details.
 #'
 #' @export
 #'
@@ -488,6 +502,7 @@ AIC.InactivationFit <- function(object, ..., k=2) {
 #' @importFrom rlang .data
 #' @importFrom graphics plot
 #' @importFrom cowplot theme_cowplot plot_grid
+#' @importFrom stats fitted
 #'
 plot.InactivationFit <- function(x, y=NULL, ...,
                            add_factor = NULL,
@@ -561,7 +576,7 @@ plot.InactivationFit <- function(x, y=NULL, ...,
 
       x$data %>%
         mutate(pred = fitted(x)) %>%
-        ggplot(aes(x = logN, y = pred)) +
+        ggplot(aes(x = .data$logN, y = .data$pred)) +
         geom_point() +
         geom_smooth(approach = "lm", se = FALSE) +
         geom_abline(slope = 1, intercept = 0, linetype = 2, colour = "gray")
@@ -580,7 +595,7 @@ plot.InactivationFit <- function(x, y=NULL, ...,
     p <- x$best_prediction %>% map(plot)
     
     p <- map2(p, x$data,
-         ~ .x + geom_point(aes(x = time, y = logN), data = .y)
+         ~ .x + geom_point(aes(x = .data$time, y = .data$logN), data = .y)
          )
     
     plot_grid(plotlist = p, labels = names(p))

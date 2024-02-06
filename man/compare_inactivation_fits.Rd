@@ -13,10 +13,10 @@ Every model should be of the same class. Otherwise, some functions may give unex
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-This function is a constructor for \link{InactivationComparison} or \link{GlobalInactivationComparison},
+This function is a constructor for \link{InactivationComparison} or \link{GlobalComparison},
 a class that provides several functions for model comparison and model selection
 for inactivation models fitted using \code{\link[=fit_inactivation]{fit_inactivation()}}. Please see the help pages for
-\link{InactivationComparison} or \link{GlobalInactivationComparison} for further details.
+\link{InactivationComparison} or \link{GlobalComparison} for further details.
 
 Although it is not necessary, we recommend passing the models as a named list,
 as these names will later be kept in plots and tables.

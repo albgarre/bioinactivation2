@@ -14,6 +14,23 @@ dynamic_residuals(
   cost = NULL
 )
 }
+\arguments{
+\item{this_p}{a named numeric vector of candidate parameter values as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{fit_data}{a tibble (or data.frame) with the data used for fitting. It must have two
+columns: \code{time} and \code{logN}}
+
+\item{primary_model_name}{a character describing the primary model as in \code{\link[=primary_model_data]{primary_model_data()}}}
+
+\item{sec_models}{a nested list describing the structure of the secondary models as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{known}{a named numeric vector of known parameter values as in \code{\link[=fit_inactivation]{fit_inactivation()}}}
+
+\item{env_conditions}{a tibble describing the environmental conditions as per
+\code{\link[=predict_inactivation]{predict_inactivation()}}}
+
+\item{cost}{an instance of \code{\link[=modCost]{modCost()}} (for multiple fitting)}
+}
 \description{
 Residuals for dynamic fitting
 }

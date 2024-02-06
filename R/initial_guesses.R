@@ -73,6 +73,12 @@ make_guess_factor <- function(model_name, x, y) {
 #'
 #' The function uses some heuristics to provide initial guesses for the parameters
 #' of the growth model selected that can be used with [fit_inactivation_secondary()].
+#' 
+#' @param fit_data a tibble (or data.frame) with the data as in [fit_inactivation_secondary()]
+#' @param model_name a character with the secondary model according to [secondary_model_data()]
+#' @param formula a two-sided formula describing the model structure as in [fit_inactivation_secondary()]
+#' 
+#' @importFrom stats median
 #'
 #' @export
 #'

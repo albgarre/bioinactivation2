@@ -51,7 +51,11 @@ those in the \code{secondary_models} argument).}
 
 \item{niter}{number of iterations of the MCMC algorithm. Ignored when algorithm = 'regression'}
 
+\item{...}{additional arguments passed to \code{\link[=modMCMC]{modMCMC()}} or \code{\link[=modFit]{modFit()}}}
+
 \item{check}{whether to do some basic checks of input consistency. By default, TRUE.}
+
+\item{formula}{a formula describing the variables names for the primary model. By default, \code{logN ~ time}}
 }
 \value{
 an instance of \link{InactivationFit} with the fitted model

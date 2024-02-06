@@ -58,6 +58,9 @@
 
 \item{...}{ignored.}
 
+\item{step}{for \code{approach == "two-steps"}, whether to show the results of the
+first or second step. By default, \code{2}. Ignored for other approaches.}
+
 \item{times}{numeric vector describing the time points for the prediction.
 If \code{NULL} (default), uses the same points as those used for fitting.}
 
@@ -101,6 +104,8 @@ that condition is plotted in the secondary axis. Ignored if \code{environment="c
 \item{line_size2}{Same as line_size, but for the environmental factor. Ignored if \code{environment="constant"}}
 
 \item{line_type2}{Same as lin_type, but for the environmental factor. Ignored if \code{environment="constant"}}
+
+\item{type}{number identifying the type of plot. See details.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

@@ -27,7 +27,7 @@ secondary_model_data <- function(model_name=NULL) {
                    ref = paste(
                      "Bigelow, W. D., & Esty, J. R. (1920).",
                      "The thermal death point in relation to time of typical thermophilic organisms.",
-                     "The Journal of Infectious Diseases, 602–617."
+                     "The Journal of Infectious Diseases, 602-617."
                    )
     ),
     genBigelow = list(identifier = "genBigelow",
@@ -54,7 +54,7 @@ secondary_model_data <- function(model_name=NULL) {
                      model = sec_logExponential,
                      ref = paste(
                        "Peleg, M., & Cole, M. B. (1998). Reinterpretation of Microbial Survival Curves.",
-                       "Critical Reviews in Food Science and Nutrition, 38(5), 353–380. https://doi.org/10.1080/10408699891274246"
+                       "Critical Reviews in Food Science and Nutrition, 38(5), 353-380. https://doi.org/10.1080/10408699891274246"
                        )
     )
     

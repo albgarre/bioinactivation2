@@ -1,8 +1,25 @@
 
-#' AA
+#' Prediction of microbial inactivation with uncertainty
+#' 
+#' @description 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Simulation of microbial inactivation considering uncertainty in the model parameters. 
+#' Calculations are based on Monte Carlo simulations, considering the parameters follow 
+#' a multivariate normal distribution.
 #'
 #' @importFrom MASS mvrnorm
 #' @importFrom rlang .data
+#' @importFrom dplyr row_number group_by summarize
+#' @importFrom stats quantile
+#' 
+#' @param model_name a character defining the primary model according to [primary_model_data()]
+#' @param times a numeric vector of time points where the simulation should be calculated
+#' @param n_sims number of Monte Carlo simulations
+#' @param pars a tibble (or data.frame) describing the distribution of the model parameters. It must have a column
+#' named `par` defining the parameter (according to [primary_model_data()]), one
+#' named `mean` (expected value) and one named `sd` (standard deviation).
+#' @param corr_matrix a correlation matrix. An identity matrix my default.
 #'
 #' @export
 #'

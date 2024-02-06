@@ -47,7 +47,7 @@ NULL
 #' 
 #' @importFrom tibble tibble
 #' @importFrom purrr imap_dfr
-#' @importFrom ggplot2 ggplot geom_line geom_point aes_string geom_errorbar facet_wrap geom_hline
+#' @importFrom ggplot2 ggplot geom_line geom_point aes_string geom_errorbar facet_wrap geom_hline theme_bw
 #' @importFrom dplyr select
 #' 
 #' @export
@@ -163,6 +163,7 @@ print.GlobalComparison <- function(x, ...) {
 #' @param ... ignored
 #' 
 #' @importFrom dplyr arrange left_join
+#' @importFrom stats AIC
 #' 
 #' @export
 #' 

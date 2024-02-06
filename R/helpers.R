@@ -9,6 +9,8 @@
 #' @param env_conditions a named numeric vector with the values fo the environmental conditions
 #' (just 1 time point)
 #' 
+#' @importFrom purrr imap_dbl
+#' 
 #' @returns a named numeric vector with the effect of each factor on the reference
 #' value.
 #'
@@ -27,8 +29,7 @@ get_effects <- function(this_par, env_conditions) {
   ## Calculate the effect for each factor
 
   effects <- this_par %>%
-    imap_dbl(.,
-             ~ switch(this_model,
+    imap_dbl(~ switch(this_model,
                       Bigelow = sec_Bigelow(
                         x = env_conditions[[.y]],
                         xref = .x[["xref"]], z = .x[["z"]]

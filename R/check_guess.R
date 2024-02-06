@@ -5,6 +5,8 @@
 #' @param primary_model_name model identifier as per [primary_model_data()]
 #' @param guess a named numeric vector with the initial guess, as in [predict_inactivation()]
 #' 
+#' @importFrom rlang .data
+#' 
 #' @returns an instance of ggplot comparing the prediction against the data.
 #' 
 show_guess_primary <- function(fit_data, primary_model_name, guess) {
@@ -21,7 +23,7 @@ show_guess_primary <- function(fit_data, primary_model_name, guess) {
   ## Make the plot
   
   plot(pred) +
-    geom_point(aes(x = time, y = logN), data = fit_data)
+    geom_point(aes(x = .data$time, y = .data$logN), data = fit_data)
   
 }
 
@@ -33,6 +35,7 @@ show_guess_primary <- function(fit_data, primary_model_name, guess) {
 #' in [fit_inactivation()]
 #' 
 #' @importFrom stringr str_detect
+#' @importFrom rlang .data
 #' 
 #' @returns an instance of ggplot comparing the prediction against the data
 #' 
@@ -68,7 +71,7 @@ show_guess_dynamic <- function(fit_data, primary_model_name, guess,
   ## Make the plot
   
   plot(pred) +
-    geom_point(aes(x = time, y = logN), data = fit_data)
+    geom_point(aes(x = .data$time, y = .data$logN), data = fit_data)
   
 }
 
@@ -225,7 +228,12 @@ check_inactivation_guess <- function(method,
 #' @param formula a formula defining the model variables as in [fit_inactivation_secondary()]
 #' 
 #' @importFrom cowplot plot_grid
-#' 
+#' @importFrom tidyselect matches
+#' @importFrom dplyr mutate
+#' @importFrom ggplot2 aes geom_smooth geom_abline
+#' @importFrom purrr map2 imap
+#' @importFrom rlang .data
+#'
 #' @returns an instance of ggplot with two subplots: an observed vs predicted plot 
 #' and a predicted vs residuals plot
 #' 
@@ -259,14 +267,14 @@ check_secondary_guess <- function(fit_data,
   
   fit_data <- fit_data %>%
     mutate(res = res,
-           pred = my_par - res)
+           pred = .data$my_par - res)
   
-  p1 <- ggplot(fit_data, aes(x = my_par, y = pred)) +
+  p1 <- ggplot(fit_data, aes(x = .data$my_par, y = .data$pred)) +
     geom_point() +
     geom_smooth(method = "lm", se = FALSE) +
     geom_abline(slope = 1, intercept = 0, linetype = 2)
   
-  p2 <- ggplot(fit_data, aes(x = pred, y = res)) +
+  p2 <- ggplot(fit_data, aes(x = .data$pred, y = .data$res)) +
     geom_point() +
     geom_smooth(se = FALSE) +
     geom_hline(yintercept = 0, linetype = 2) 

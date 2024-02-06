@@ -65,6 +65,8 @@ that condition is plotted in the secondary axis. Ignored for \code{environment="
 \item{line_type2}{Same as lin_type, but for the environmental factor.}
 
 \item{label_x}{Label of the x-axis.}
+
+\item{type}{type of plot. See details.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

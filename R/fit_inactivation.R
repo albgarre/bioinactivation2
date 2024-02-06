@@ -136,6 +136,8 @@
 #' those in the `secondary_models` argument). 
 #' @param niter number of iterations of the MCMC algorithm. Ignored when algorithm = 'regression'
 #' @param check whether to do some basic checks of input consistency. By default, TRUE.
+#' @param ... additional arguments passed to [modMCMC()] or [modFit()]
+#' @param formula a formula describing the variables names for the primary model. By default, `logN ~ time` 
 #' 
 #' @returns an instance of [InactivationFit] with the fitted model
 #' 

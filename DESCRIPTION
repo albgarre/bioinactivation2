@@ -31,6 +31,7 @@ Imports:
     tidyr (>= 1.0.2),
     formula.tools (>= 1.7.1),
     stringr (>= 1.5.0),
+    tidyselect (>= 1.2.0),
     lifecycle
 Depends: 
   R (>= 2.10)
