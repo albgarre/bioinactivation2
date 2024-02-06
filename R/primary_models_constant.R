@@ -70,10 +70,10 @@ iso_Geeraerd = function(times, N0, D, Nres, SL) {
 #' @returns A numerical vector of log-microbial concentrations
 #'
 iso_Metselaar = function(times, Delta, N0, D, p) {
-
+  
   logN0 <- log10(N0)
 
-  p$logN0 - Delta*(times/Delta/D)^p
+  logN0 - Delta*(times/Delta/D)^p
 
 }
 
@@ -107,6 +107,9 @@ iso_Weibull_2phase = function(times, N0, delta1, delta2, p1, p2, alpha) {
 #' @param Nres microbial concentration at the tail (1D numeric)
 #' @param SL shoulder length (1D numeric)
 #' 
+#' @importFrom rlang .data
+#' @importFrom dplyr pull
+#' 
 #' @returns A numerical vector of log-microbial concentrations
 #'
 iso_Trilinear = function(times, N0, SL, D, Nres) {
@@ -115,9 +118,9 @@ iso_Trilinear = function(times, N0, SL, D, Nres) {
   logNres <- log10(Nres)
 
   tibble(logN = logN0 - (times - SL)/D) %>%
-    mutate(logN = ifelse(times < SL, logN0, logN),
-           logN = ifelse(logN < logNres, logNres, logN)) %>%
-    pull(logN)
+    mutate(logN = ifelse(times < SL, logN0, .data$logN),
+           logN = ifelse(.data$logN < logNres, logNres, .data$logN)) %>%
+    pull("logN")
 }
 
 #' Geeraerd model for constant conditions (based on k)
