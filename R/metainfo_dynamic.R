@@ -125,6 +125,20 @@ dynamic_model_data <- function(model_name=NULL) {
         "Structural model requirements to describe microbial inactivation during a mild heat treatment.",
         "International Journal of Food Microbiology, 59(3), 185-209. https://doi.org/10.1016/S0168-1605(00)00362-7"
       )
+    ),
+    Acclimation = list(
+      identifier = "Acclimation",
+      name = "Modification of the Bigelow model considering stress acclimation",
+      pars_primary = c("N0", "p0"),
+      pars_secondary = c("D", "c", "k"),
+      model = dyna_acclimation,
+      ref = paste(
+        "Garre, A., Huertas, J. P., González-Tejedor, G. A., Fernández, P. S., Egea, J. A., Palop, A., & Esnoz, A. (2018).",
+        "Mathematical quantification of the induced stress resistance of microbial populations during",
+        "non-isothermal stresses. International Journal of Food Microbiology,",
+        "266, 133–141. https://doi.org/10.1016/j.ijfoodmicro.2017.11.023"
+        
+      )
     )
     
   )

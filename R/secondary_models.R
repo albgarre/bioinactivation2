@@ -60,6 +60,24 @@ sec_logExponential <- function(x, k, xc) {
   log( 1 + exp( k*(x - xc) ) )
 }
 
+#' Secondary model for p in the acclimation model
+#' 
+#' @param x value of the environmental condition
+#' @param E E-parameter of the secondary model
+#' @param Xsi value of x inducing stress response 
+#'
+#'
+sec_Acclimation <- function(x, E, Xsi) {
+  
+  ifelse(x > Xsi,
+         exp(-E/(x - Xsi)),
+         0
+         )
+  
+}
+
+
+
 
 
 

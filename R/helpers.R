@@ -49,6 +49,11 @@ get_effects <- function(this_par, env_conditions) {
                       LogExponential = sec_logExponential(
                         x = env_conditions[[.y]],
                         k = .x[["k"]], xc = .x[["Xcrit"]]),
+                      kAcclimation = sec_Acclimation(
+                        x = env_conditions[[.y]],
+                        E = .x[["E"]], Xsi = .x[["Xsi"]]
+                      ),
+                      
                       stop(paste("Unknown model:", this_model))
              )
     )
@@ -71,6 +76,10 @@ apply_secondary_models <- function(env_conditions, secondary_models) {
   out <- lapply(secondary_models, function(this_par) {
 
     effects <- get_effects(this_par, env_conditions)
+    
+    ###########
+    # browser()
+    ##########
 
     ## Put together and apply
 
@@ -80,7 +89,11 @@ apply_secondary_models <- function(env_conditions, secondary_models) {
 
       10^(log10(this_par$ref) + full_effect)
 
-    } else {
+    } else if (this_par$model %in% c("kAcclimation")) {
+      
+      this_par$ref * full_effect
+      
+    }  else {
 
       this_par$ref + full_effect
 

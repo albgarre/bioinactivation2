@@ -49,13 +49,24 @@ secondary_model_data <- function(model_name=NULL) {
                      ref = paste("")
     ),
     logExponential = list(identifier = "logExponential",
-                     name = "log-exponential secondary model",
-                     pars = c("xref", "Ea"),
-                     model = sec_logExponential,
-                     ref = paste(
-                       "Peleg, M., & Cole, M. B. (1998). Reinterpretation of Microbial Survival Curves.",
-                       "Critical Reviews in Food Science and Nutrition, 38(5), 353-380. https://doi.org/10.1080/10408699891274246"
-                       )
+                          name = "log-exponential secondary model",
+                          pars = c("xref", "Ea"),
+                          model = sec_logExponential,
+                          ref = paste(
+                            "Peleg, M., & Cole, M. B. (1998). Reinterpretation of Microbial Survival Curves.",
+                            "Critical Reviews in Food Science and Nutrition, 38(5), 353-380. https://doi.org/10.1080/10408699891274246"
+                          )
+    ),
+    kAcclimation = list(identifier = "kAcclimation",
+                          name = "secondary model for the acclimation model",
+                          pars = c("E", "Xsi"),
+                          model = sec_Acclimation,
+                          ref = paste(
+                            "Garre, A., Huertas, J. P., González-Tejedor, G. A., Fernández, P. S., Egea, J. A., Palop, A., & Esnoz, A. (2018).",
+                            "Mathematical quantification of the induced stress resistance of microbial populations during",
+                            "non-isothermal stresses. International Journal of Food Microbiology,",
+                            "266, 133–141. https://doi.org/10.1016/j.ijfoodmicro.2017.11.023"
+                          )
     )
     
   )

@@ -257,6 +257,41 @@ aa <- predict_inactivation(times, primary_model, environment = "dynamic",
 plot(aa)
 ```
 
+### Acclimation model
+
+```{r}
+times <- seq(0, 50, length = 1000)
+primary_model <- list(model = "Acclimation", logN0 = 7, p0 = 1e-3)
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(40, 60, 55))
+
+secondary_models <- list(
+  list(par = "logD",
+       model = "Bigelow",
+       temp = c("xref" = 55, z = 5),
+       ref = 1
+  ),
+  list(par = "c",
+       model = "Bigelow",
+       ref = 8),
+  list(par = "k",
+       model = "kAcclimation",
+       temp = c(E = .01, Xsi = 30),
+       ref = .1)
+)
+
+aa <- predict_inactivation(times, primary_model, environment = "dynamic",
+                           secondary_models, env_conditions)
+
+plot(aa)
+plot(aa, type = 2)
+plot(aa, type = 3)
+
+ggplot(aa$simulation) +
+  geom_line(aes(x = time, y = p))
+
+```
 
 
 

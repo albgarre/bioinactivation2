@@ -358,6 +358,74 @@ dyna_Geeraerd_noSL_k <- function(time, state, primary_pars, env_interpolator, se
   
 }
 
+#' Modification of the Bigelow model with stress aclimation
+#' 
+#' The functions is defined to be called from [ode()] from the deSolve package.
+#' 
+#' @param time a 1D numeric with the treatment time
+#' @param state a named numeric vector with one element defining the microbial concentration
+#' @param primary_pars ignored. Just a dumpster for the param argument from ode
+#' @param env_interpolator  an interpolator for the environmental conditions as returned by [approx_env()]
+#' @param secondary_models a nested list defining the secondary models as per [apply_secondary_models()]
+#' 
+#' @returns a list with dP/dt dN/dt as per [ode()]
+#'
+dyna_acclimation <- function(time, state, primary_pars, env_interpolator, secondary_models) {
+  
+  ############
+  # browser()
+  ##############
+  
+  ## Get the environmental conditions
+  
+  env_conditions <-  map(env_interpolator, ~.(time))
+  
+  ## Apply the secondary models
+  
+  p <- apply_secondary_models(env_conditions, secondary_models)
+  
+  state <- as.list(state)
+  
+  dp <- p$k * (1 - state$p)
+  # dp <- 0
+  
+  k1 <- log(10)/p$D
+  k2 <- 1/(1 + p$c * state$p)
+  
+  dN <- - k1 * k2 * state$N
+  
+  # dp <- p$a * exp( -p$E/() )
+  
+  # dP <- p$a * exp( -p$E/() )
+  # 
+  # dP <- p$k * (1 - (state$P/pars$Pmax)^pars$m)
+  # 
+  # dN <- -log(10)*state$N/p$D
+  # 
+  # list(c(P = dP, N = dN))
+  # 
+  # ####################
+  # 
+  # pars <- as.list(pars)
+  # state <- as.list(state)
+  # 
+  # temp <- get_temp(Time)
+  # k <- get_k(pars, temp)
+  # 
+  # dP <- k * (1 - (state$P/pars$Pmax)^pars$m)
+  # 
+  # normal_D <- 10^( log10(pars$D_R) - (temp - pars$temp_ref)/pars$z )
+  # new_D <- 1 + pars$C * state$P
+  # 
+  # dN <- -log(10)/normal_D/new_D * state$N
+  
+  return(list(c(dN, dp)))
+  
+  
+  
+}
+
+
 
 
 
