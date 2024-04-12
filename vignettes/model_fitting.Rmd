@@ -204,6 +204,75 @@ plot(aa)
 
 ```
 
+```{r}
+data("dynamic_experiment")
+
+env_conditions <- tibble(time = c(0, 3, 5),
+                         temp = c(55, 60, 55))
+
+sec_models <- list(
+  list(par = "D",
+       model = "Bigelow",
+       depends_on = c("temp")
+  ),
+  list(
+    par = "c",
+    model = "Bigelow",
+    depends_on = c()
+  ),
+  list(
+    par = "k",
+    model = "kAcclimation",
+    depends_on = c("temp")
+  )
+)
+
+guess <- c(logN0 = 7,
+           c_ref = 8,
+           k_temp_E = .01, 
+           k_ref = .1
+)
+
+known <- c(D_temp_xref = 55,
+           D_temp_z = 5,
+           D_logref = 1,
+           p0 = 1e-6,
+           k_temp_Xsi = 30
+)
+
+
+check_inactivation_guess("dynamic", 
+                         dynamic_experiment,
+                         primary_model_name = "Acclimation",
+                         c(guess, known),
+                         secondary_models = sec_models,
+                         env_conditions = env_conditions
+)
+
+bb <- fit_inactivation("dynamic", 
+                       dynamic_experiment, 
+                       "Acclimation",
+                       guess, 
+                       known, 
+                       lower = c(logN0 = 6,
+                                 c_ref = 6,
+                                 k_temp_E = .001, 
+                                 k_ref = .01),
+                       upper = c(logN0 = 8,
+                                 c_ref = 9,
+                                 k_temp_E = .1, 
+                                 k_ref = 1
+                                 ),
+                       secondary_models = sec_models,
+                       env_conditions = env_conditions,
+                       algorithm = "regression")#,
+                       # niter = 1000)
+
+plot(bb)
+summary(bb)
+```
+
+
 ## One-step fit
 
 ```{r}

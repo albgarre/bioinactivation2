@@ -24,8 +24,6 @@ dynamic_residuals <- function(this_p,
                               cost = NULL
                               ) {
 
-  # browser()
-
   ## Put the parameters together
 
   p <- c(this_p, known)
@@ -49,6 +47,16 @@ dynamic_residuals <- function(this_p,
     names(aa) <- NULL
     primary_model[[names(initial)]] <- aa
   }
+  
+  ## If acclimation, extract p0
+  
+  if (str_detect(primary_model_name, "Acclimation")) {
+    initial <- p[str_detect(names(p), "p0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+  }
+  
 
   ## Prepare the secondary models
 
@@ -68,7 +76,7 @@ dynamic_residuals <- function(this_p,
   mod <- pred$simulation %>%
     select("time", "logN") %>%
     as.data.frame()
-    
+
   modCost(
       model = mod,
       obs = as.data.frame(fit_data),
@@ -170,6 +178,13 @@ fit_dynamic_inactivation <- function(fit_data,
       primary_model[[names(initial)]] <- aa
     }
     
+    if (str_detect(model_name, "Acclimation")) {
+      initial <- p[str_detect(names(p), "p0")]
+      aa <- initial
+      names(aa) <- NULL
+      primary_model[[names(initial)]] <- aa
+    }
+    
     t <- seq(0, max(fit_data$time), length = 1000)
     
     sec <- convert_dynamic_guess(secondary_models, p, c())
@@ -215,7 +230,7 @@ fit_dynamic_inactivation <- function(fit_data,
                      niter = niter,
                      ...
     )
-    
+
     ## Calculate the best prediction
     
     p <- c(my_fit$bestpar, unlist(known))
@@ -229,6 +244,13 @@ fit_dynamic_inactivation <- function(fit_data,
     
     if (str_detect(model_name, "Geeraerd")) {
       initial <- p[str_detect(names(p), "C0")]
+      aa <- initial
+      names(aa) <- NULL
+      primary_model[[names(initial)]] <- aa
+    }
+    
+    if (str_detect(model_name, "Acclimation")) {
+      initial <- p[str_detect(names(p), "p0")]
       aa <- initial
       names(aa) <- NULL
       primary_model[[names(initial)]] <- aa

@@ -58,6 +58,13 @@ show_guess_dynamic <- function(fit_data, primary_model_name, guess,
     primary_model[[names(initial)]] <- aa
   }
   
+  if (str_detect(primary_model_name, "Acclimation")) {
+    initial <- guess[str_detect(names(guess), "p0")]
+    aa <- initial
+    names(aa) <- NULL
+    primary_model[[names(initial)]] <- aa
+  }
+  
   t <- seq(0, max(fit_data$time), length = 1000)
   
   sec <- convert_dynamic_guess(sec_models, guess, c())
