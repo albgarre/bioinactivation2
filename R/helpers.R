@@ -46,7 +46,7 @@ get_effects <- function(this_par, env_conditions) {
                         x = env_conditions[[.y]],
                         xref = .x[["xref"]], Ea = .x[["Ea"]]
                       ),
-                      LogExponential = sec_logExponential(
+                      logExponential = sec_logExponential(
                         x = env_conditions[[.y]],
                         k = .x[["k"]], xc = .x[["Xcrit"]]),
                       kAcclimation = sec_Acclimation(

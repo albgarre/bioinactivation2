@@ -50,7 +50,7 @@ secondary_model_data <- function(model_name=NULL) {
     ),
     logExponential = list(identifier = "logExponential",
                           name = "log-exponential secondary model",
-                          pars = c("k", "xc"),
+                          pars = c("k", "Xcrit"),
                           model = sec_logExponential,
                           ref = paste(
                             "Peleg, M., & Cole, M. B. (1998). Reinterpretation of Microbial Survival Curves.",

@@ -62,7 +62,7 @@ secondary_residuals <- function(this_p,
                  x = .x,
                  xref = p[[paste0(.y, "_", "xref")]], Ea = p[[paste0(.y, "_", "Ea")]]
                ),
-               LogExponential = sec_logExponential(
+               logExponential = sec_logExponential(
                  x = .x,
                  k = p[[paste0(.y, "_", "k")]], xc = p[[paste0(.y, "_", "Xcrit")]]
                ),
