@@ -58,7 +58,7 @@ dynamic_model_data <- function(model_name=NULL) {
       identifier = "Geeraerd",
       name = "Geeraerd model parameterized using the D-value",
       pars_primary = c("N0", "C0"),
-      pars_secondary = c("D", "Nres", "C"),
+      pars_secondary = c("D", "Nres"),
       model = dyna_Geeraerd,
       ref = paste(
         "Geeraerd, A. H., Herremans, C. H., & Van Impe, J. F. (2000).",
