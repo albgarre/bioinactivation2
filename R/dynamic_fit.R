@@ -64,7 +64,9 @@ dynamic_residuals <- function(this_p,
 
   ## Make the prediction
 
-  pred <- predict_inactivation(fit_data$time,
+  t <- seq(0, max(fit_data$time), length = 1000)
+
+  pred <- predict_inactivation(t,
                                primary_model,
                                environment = "dynamic",
                                sec,

@@ -68,7 +68,7 @@ show_guess_dynamic <- function(fit_data, primary_model_name, guess,
   t <- seq(0, max(fit_data$time), length = 1000)
   
   sec <- convert_dynamic_guess(sec_models, guess, c())
-  
+
   pred <- predict_inactivation(t,
                                primary_model,
                                environment = "dynamic",
